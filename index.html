@@ -12,7 +12,7 @@
 <!-- HEADER -->
 <header class="hero">
   <img src="logo.png" class="logo">
-  <p class="subtitle animate-text">Conectamos vecinos con promociones reales<br>en su comuna</p>
+  <p class="subtitle">Conectamos vecinos<br>con promociones reales en su comuna</p>
 </header>
 
 <!-- CAJA DE BÚSQUEDA -->
@@ -31,26 +31,28 @@
 </p>
 
 <!-- SECCIONES DE PROMOCIONES -->
-<h2 class="section-title">💸 Lo más barato hoy</h2>
-<div id="cheap-scroll"></div>
+<section class="section cheap-section">
+  <h2 class="section-title">💸 Lo más barato hoy</h2>
+  <div id="cheap-scroll" class="scroll-container"></div>
+</section>
 
-<h2 class="section-title">🔥 Destacados de tu comuna</h2>
-<div id="featured-scroll"></div>
+<section class="section featured-section">
+  <h2 class="section-title">🔥 Destacados de tu comuna</h2>
+  <div id="featured-scroll" class="scroll-container"></div>
+</section>
 
-<h2 class="section-title">📍 Todas las promociones</h2>
-<ul id="product-list"></ul>
+<section class="section all-section">
+  <h2 class="section-title">📍 Todas las promociones</h2>
+  <ul id="product-list"></ul>
+</section>
 
-<!-- BOTONES -->
+<!-- BOTÓN PUBLICAR -->
 <button id="whatsapp-btn">📝 Publicar promoción</button>
 
-<!-- FOOTER COMPLETO -->
-<footer>
-  <button id="contact-footer-btn">📩 Contacto</button>
-  <div class="footer-links">
-    <a href="#">Política de privacidad</a> | 
-    <a href="#">Términos y condiciones</a>
-  </div>
+<!-- FOOTER -->
+<footer class="footer">
   <p>© 2026 RedBarrio. All rights reserved.</p>
+  <button id="contact-btn">📩 Contacto</button>
 </footer>
 
 <!-- SCRIPT -->

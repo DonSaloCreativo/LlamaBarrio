@@ -1,9 +1,7 @@
-/* =========================
-   ESTILO GENERAL
-========================= */
+/* GLOBAL */
 body {
   font-family: 'Poppins', sans-serif;
-  background: linear-gradient(180deg, #f5f7fb, #e8ecf3);
+  background: #f5f7fb;
   margin: 0;
   text-align: center;
   display: flex;
@@ -11,13 +9,11 @@ body {
   align-items: center;
 }
 
-/* =========================
-   HEADER / BANNER
-========================= */
+/* HEADER */
 .hero {
-  background-color: #F4C430; /* amarillo mostaza */
+  background-color: #f4c95d; /* amarillo mostaza */
   color: white;
-  padding: 30px 20px; /* ajustado */
+  padding: 30px 20px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -25,30 +21,25 @@ body {
 }
 
 .logo {
-  width: 220px; /* logo más grande */
-  transition: all 0.3s ease;
-}
-
-.main-title {
-  display: none; /* ocultamos REDBARRIO de arriba */
+  width: 250px;
+  max-width: 80%;
+  margin-bottom: 15px;
 }
 
 .subtitle {
-  color: white;
   font-size: 24px;
   font-weight: 600;
-  margin-top: 20px;
-  text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
-  animation: fadeIn 1s ease-in-out;
-  line-height: 1.4;
+  color: white;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  line-height: 1.3;
+  margin: 0;
 }
 
-/* =========================
-   CAJA DE BÚSQUEDA
-========================= */
+/* BUSQUEDA */
 .search-box {
   background: white;
-  margin: -10px auto 20px;
+  margin: -20px auto 20px;
   padding: 20px;
   border-radius: 20px;
   max-width: 500px;
@@ -70,52 +61,60 @@ body {
   margin-top: 10px;
   width: 100%;
   padding: 12px;
-  background-color: #25D366;
-  color: white;
+  background: #25D366;
   border: none;
-  border-radius: 10px;
+  color: white;
   font-weight: 600;
+  border-radius: 12px;
   cursor: pointer;
 }
 
-/* =========================
-   TEXTO DE ALERTA
-========================= */
+/* ALERTA */
 .info-text {
   font-size: 13px;
   color: #666;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
-/* =========================
-   SECCIONES DE PROMOCIONES
-========================= */
+/* SECCIONES */
+.section {
+  width: 100%;
+  max-width: 900px;
+  padding: 15px;
+  margin-bottom: 30px;
+  border-radius: 16px;
+}
+
+.cheap-section { background: #fff7e6; }
+.featured-section { background: #e0f7ff; }
+.all-section { background: #ffffff; }
+
 .section-title {
-  margin-top: 20px;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  text-align: left;
 }
 
 /* SCROLL HORIZONTAL */
-#featured-scroll,
-#cheap-scroll {
+.scroll-container {
   display: flex;
   overflow-x: auto;
   gap: 12px;
-  padding: 15px;
-  width: 100%;
-  max-width: 900px;
+  padding-bottom: 10px;
 }
 
 /* TARJETAS */
 .featured-card,
 .cheap-card {
   min-width: 260px;
+  flex-shrink: 0;
   border-radius: 16px;
   overflow: hidden;
-  flex-shrink: 0;
 }
 
 .featured-card {
-  background: #f0fbff;
+  background: #d0f0ff;
   border: 2px solid #00bcd4;
 }
 
@@ -147,10 +146,8 @@ body {
 
 /* LISTA NORMAL */
 #product-list {
-  width: 100%;
-  max-width: 900px;
   list-style: none;
-  padding: 15px;
+  padding: 0;
 }
 
 #product-list li {
@@ -183,60 +180,38 @@ body {
   cursor: pointer;
 }
 
-/* =========================
-   FOOTER
-========================= */
-footer {
-  margin-top: 40px;
-  padding: 20px;
+/* FOOTER */
+.footer {
   width: 100%;
-  background: #222;
+  background: #111;
   color: white;
-  font-size: 13px;
+  padding: 20px;
+  text-align: center;
+  margin-top: 40px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 10px;
 }
 
-footer a {
-  color: #25D366;
-  text-decoration: none;
-  margin-top: 5px;
+.footer button {
+  background: #6a0dad;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 20px;
+  cursor: pointer;
 }
 
-/* =========================
-   ANIMACIONES
-========================= */
-@keyframes fadeIn {
-  from {opacity: 0; transform: translateY(10px);}
-  to {opacity: 1; transform: translateY(0);}
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
+/* RESPONSIVE */
 @media screen and (max-width: 767px) {
-  .subtitle {
-    font-size: 20px;
-    line-height: 1.4;
-    text-align: center;
-  }
+  .logo { width: 200px; }
+  .subtitle { font-size: 20px; line-height: 1.5; margin-top: 10px; }
+  .search-box { margin-top: 25px; }
 
-  .logo {
-    width: 180px;
-  }
-}
-
-@media screen and (min-width: 768px) {
-  .logo {
-    width: 220px;
-  }
-
-  .subtitle {
-    font-size: 28px;
-  }
-
-  .hero {
-    padding: 40px 20px;
-  }
+  .scroll-container { gap: 8px; padding-bottom: 10px; }
+  .featured-card,
+  .cheap-card { min-width: 180px; flex-shrink: 1; }
+  .featured-card img,
+  .cheap-card img { height: 120px; }
+  .product-img { height: 150px; }
 }
