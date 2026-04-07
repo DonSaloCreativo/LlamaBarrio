@@ -1,39 +1,44 @@
-// EJEMPLO DE PRODUCTOS
 const allProducts = [
-  {name: 'Pizza Pepperoni', comuna: 'Providencia', type: 'cheap', img:'img1.jpg'},
-  {name: 'Sushi Roll', comuna: 'Ñuñoa', type: 'cheap', img:'img2.jpg'},
-  {name: 'Pastel de choclo', comuna: 'Providencia', type: 'featured', img:'img3.jpg'},
-  {name: 'Café Latte', comuna: 'Ñuñoa', type: 'featured', img:'img4.jpg'}
+  { name: "Casera", image: "images/casera.jpg", price: 5000 },
+  { name: "Completo", image: "images/completo.jpg", price: 6000 },
+  { name: "Empanadas", image: "images/empanadas.jpg", price: 2000 },
+  { name: "Pizza", image: "images/pizza.jpg", price: 8000 },
+  { name: "Sushi", image: "images/sushi.jpg", price: 9000 }
 ];
 
-// FUNCION MOSTRAR PRODUCTOS
-function displayProducts(products){
-  const cheapContainer = document.getElementById('cheap-scroll');
-  const featuredContainer = document.getElementById('featured-scroll');
-  const productList = document.getElementById('product-list');
+const cheapScroll = document.getElementById("cheap-scroll");
+const featuredScroll = document.getElementById("featured-scroll");
+const productList = document.getElementById("product-list");
 
-  cheapContainer.innerHTML = '';
-  featuredContainer.innerHTML = '';
-  productList.innerHTML = '';
+function displayProducts(products) {
+  cheapScroll.innerHTML = "";
+  featuredScroll.innerHTML = "";
+  productList.innerHTML = "";
 
   products.forEach(p => {
-    const card = document.createElement('div');
-    card.classList.add(p.type === 'cheap' ? 'cheap-card' : 'featured-card');
-    card.innerHTML = `<img src="${p.img}" alt="${p.name}">
-                      <div class="info"><h4>${p.name}</h4><button class="contact-business">Contactar</button></div>`;
-    if(p.type === 'cheap') cheapContainer.appendChild(card);
-    if(p.type === 'featured') featuredContainer.appendChild(card);
-    // Todos los productos
-    const li = document.createElement('li');
-    li.innerHTML = `<img class="product-img" src="${p.img}" alt="${p.name}"><div class="product-info"><h4>${p.name}</h4></div>`;
+    // Lo más barato
+    const cheapCard = document.createElement("div");
+    cheapCard.className = "cheap-card";
+    cheapCard.innerHTML = `<img src="${p.image}"><div class="info"><strong>${p.name}</strong><br> $${p.price}</div>`;
+    cheapScroll.appendChild(cheapCard);
+
+    // Destacados (puedes aplicar lógica real si quieres)
+    const featuredCard = document.createElement("div");
+    featuredCard.className = "featured-card";
+    featuredCard.innerHTML = `<img src="${p.image}"><div class="info"><strong>${p.name}</strong><br> $${p.price}</div>`;
+    featuredScroll.appendChild(featuredCard);
+
+    // Todas las promociones
+    const li = document.createElement("li");
+    li.innerHTML = `<img class="product-img" src="${p.image}"><div class="product-info"><strong>${p.name}</strong><br>$${p.price}</div>`;
     productList.appendChild(li);
   });
 }
 
-// FUNCIÓN BUSCAR
+// FILTRO BÁSICO
 function buscar() {
   displayProducts(allProducts);
 }
 
-// CARGAR INICIAL
+// Inicializar
 displayProducts(allProducts);

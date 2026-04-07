@@ -26,8 +26,8 @@ body {
 }
 
 .logo {
-  width: 180px; /* tamaño base */
-  max-width: 220px;
+  width: 180px;
+  max-width: 250px;
 }
 
 .subtitle {
@@ -37,15 +37,25 @@ body {
   text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
 }
 
+.search-btn-banner {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #25D366;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
 /* ======================= */
 /* MEDIA QUERY PARA PC */
 /* ======================= */
 @media screen and (min-width: 1024px) {
   .logo {
-    width: 260px; /* logo más grande en PC */
+    width: 250px; /* logo más grande en PC */
   }
   .subtitle {
-    font-size: 1.6rem; /* subtítulo más grande */
+    font-size: 1.5rem; /* subtítulo más grande */
   }
 }
 
@@ -53,8 +63,8 @@ body {
 /* CAJA DE BÚSQUEDA */
 /* ======================= */
 .search-box {
-  background: #f3c13a; /* igual al banner */
-  margin: 30px auto 40px; /* más espacio arriba y abajo */
+  background: #f3c13a;
+  margin: 20px auto 30px;
   padding: 20px;
   border-radius: 20px;
   max-width: 500px;
@@ -93,16 +103,16 @@ body {
 .section-title {
   margin-top: 20px;
   padding: 8px 15px;
-  display: inline-block; 
-  border-radius: 12px; /* bordes redondeados */
+  display: inline-block;
+  border-radius: 12px;
   color: white;
   font-weight: 600;
 }
 
-/* Fondo específico para cada sección */
+/* Fondos */
 .purple-bg { background-color: #5a0080; } /* Lo más barato hoy */
-.blue-bg { background-color: #00bcd4; } /* Destacados de tu comuna */
-.yellow-bg { background-color: #f3c13a; } /* Todas las promociones */
+.blue-bg { background-color: #00bcd4; }    /* Destacados de tu comuna */
+.yellow-bg { background-color: #f3c13a; }  /* Todas las promociones */
 
 /* ======================= */
 /* SCROLL HORIZONTAL */
@@ -124,7 +134,7 @@ body {
 .cheap-card {
   background: #fff7e6;
   border: 2px solid #ff9800;
-  min-width: 200px; 
+  min-width: 200px; /* más pequeñas que las featured */
   max-width: 220px;
   border-radius: 16px;
 }
@@ -146,15 +156,6 @@ body {
 .info {
   padding: 10px;
   text-align: left;
-}
-
-.contact-business {
-  background: #00bcd4;
-  color: white;
-  border: none;
-  padding: 8px;
-  width: 100%;
-  cursor: pointer;
 }
 
 /* ======================= */
@@ -196,10 +197,6 @@ body {
   border: none;
   padding: 14px;
   border-radius: 30px;
-}
-
-#contact-btn {
-  display: none;
 }
 
 /* ======================= */
