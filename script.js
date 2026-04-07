@@ -8,28 +8,6 @@ const cheapList = document.getElementById("cheap-scroll");
 const searchInput = document.getElementById("search-input");
 const locationFilter = document.getElementById("location-filter");
 const whatsappButton = document.getElementById("whatsapp-btn");
-const contactBtnFooter = document.getElementById("contact-btn-footer");
-
-// CONTACTO GENERAL
-contactBtnFooter.addEventListener("click", () => {
-  window.open("https://wa.me/56984368260?text=Hola, quiero saber más sobre RedBarrio");
-});
-
-// BOTÓN NEGOCIO
-function botonNegocio(p) {
-  const telefono = (p.telefono || "").trim();
-
-  if (!telefono) {
-    return `<button class="contact-business" disabled>Sin contacto</button>`;
-  }
-
-  return `
-    <button class="contact-business"
-      onclick="window.open('https://wa.me/${telefono}?text=Hola, te hablo por ${encodeURIComponent(p.nombre)}')">
-      Contactar negocio
-    </button>
-  `;
-}
 
 // MOSTRAR PRODUCTOS
 function displayProducts(products) {
@@ -92,15 +70,20 @@ function displayProducts(products) {
   });
 }
 
+// BOTÓN NEGOCIO
+function botonNegocio(p) {
+  const telefono = (p.telefono || "").trim();
+  if (!telefono) return `<button class="contact-business" disabled>Sin contacto</button>`;
+  return `<button class="contact-business" onclick="window.open('https://wa.me/${telefono}?text=Hola, te hablo por ${encodeURIComponent(p.nombre)}')">Contactar negocio</button>`;
+}
+
 // CARGAR DATOS
 fetch(apiUrl)
   .then(res => res.json())
   .then(data => {
     allProducts = data;
-
     const comunas = ["Todas", ...new Set(data.map(p => p.comuna))];
     locationFilter.innerHTML = comunas.map(c => `<option>${c}</option>`);
-
     displayProducts(allProducts);
   });
 
@@ -108,12 +91,12 @@ fetch(apiUrl)
 searchInput.addEventListener("input", () => displayProducts(allProducts));
 locationFilter.addEventListener("change", () => displayProducts(allProducts));
 
-// BOTÓN FORMULARIO
-whatsappButton.addEventListener("click", () => {
-  window.open("https://forms.gle/yNVktkjKFGuWC7MP8");
-});
-
 // FUNCIÓN BUSCAR
 function buscar() {
   displayProducts(allProducts);
 }
+
+// BOTÓN WHATSAPP
+whatsappButton.addEventListener("click", () => {
+  window.open("https://forms.gle/yNVktkjKFGuWC7MP8");
+});
