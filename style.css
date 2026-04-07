@@ -26,18 +26,12 @@ body {
 }
 
 .logo {
-  width: 150px; /* tamaño base, se ajusta en PC con media query */
-  max-width: 200px;
-}
-
-.main-title {
-  font-size: 2.2rem;
-  font-weight: 700;
-  margin: 10px 0 5px;
+  width: 180px; /* tamaño base */
+  max-width: 220px;
 }
 
 .subtitle {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 600;
   margin-top: 5px;
   text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
@@ -48,7 +42,7 @@ body {
 /* ======================= */
 @media screen and (min-width: 1024px) {
   .logo {
-    width: 260px; /* logo más grande en PC */
+    width: 250px; /* logo más grande en PC */
   }
   .subtitle {
     font-size: 1.5rem; /* subtítulo más grande */
@@ -60,7 +54,7 @@ body {
 /* ======================= */
 .search-box {
   background: #f3c13a; /* igual al banner */
-  margin: 20px auto 30px; /* más espacio arriba y abajo */
+  margin: 20px auto 30px;
   padding: 20px;
   border-radius: 20px;
   max-width: 500px;
@@ -76,7 +70,7 @@ body {
 .search-box input,
 .search-box select {
   width: 100%;
-  padding: 8px; /* uniformizado */
+  padding: 8px;
   border-radius: 10px;
   border: 1px solid #ccc;
   margin-top: 5px;
@@ -108,19 +102,19 @@ body {
 .section-title {
   margin-top: 20px;
   padding: 8px 15px;
-  display: inline-block; /* solo rodea el texto */
-  border-radius: 20px; /* bordes redondeados */
+  display: inline-block;
+  border-radius: 20px;
   color: white;
   font-weight: 600;
 }
 
-/* Fondo específico para cada sección */
+/* Fondos específicos */
 .section-title.purple-bg {
   background-color: #5a0080 !important; /* morado oscuro */
 }
 
 .section-title.blue-bg {
-  background-color: #00bcd4; /* celeste */
+  background-color: #00bcd4 !important; /* celeste */
 }
 
 /* ======================= */
@@ -143,8 +137,8 @@ body {
 .cheap-card {
   background: #fff7e6;
   border: 2px solid #ff9800;
-  min-width: 180px; /* más pequeñas */
-  max-width: 200px;
+  min-width: 160px;
+  max-width: 180px;
   border-radius: 16px;
 }
 
