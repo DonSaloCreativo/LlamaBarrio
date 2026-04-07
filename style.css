@@ -1,3 +1,6 @@
+/* ======================= */
+/* ESTILO GENERAL DEL BODY */
+/* ======================= */
 body {
   font-family: 'Poppins', sans-serif;
   background: linear-gradient(180deg, #f5f7fb, #e8ecf3);
@@ -8,46 +11,56 @@ body {
   align-items: center;
 }
 
-/* HEADER */
+/* ======================= */
+/* HEADER / BANNER PRINCIPAL */
+/* ======================= */
 .hero {
-  background: #f2c94c; /* mostaza */
+  background-color: #f3c13a; /* amarillo mostaza */
   color: white;
-  padding: 15px 20px;
+  padding: 20px 10px;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .logo {
-  width: 120px; /* logo grande */
+  width: 150px; /* tamaño base, se ajusta en PC con media query */
+  max-width: 200px;
+}
+
+.main-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 10px 0 5px;
 }
 
 .subtitle {
-  font-size: 20px;
+  font-size: 1.1rem;
   font-weight: 600;
-  color: white;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
-  margin-top: 10px;
+  margin-top: 5px;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
 }
 
-/* SECCIONES */
-.section-title {
-  margin-top: 20px;
-  padding: 10px 0;
+/* ======================= */
+/* MEDIA QUERY PARA PC */
+/* ======================= */
+@media screen and (min-width: 1024px) {
+  .logo {
+    width: 220px; /* logo más grande en PC */
+  }
+  .subtitle {
+    font-size: 1.5rem; /* subtítulo más grande */
+  }
 }
 
-.purple-bg {
-  background: #6a0dad;
-  color: white;
-}
-
-.blue-bg {
-  background: #00bcd4;
-  color: white;
-}
-
+/* ======================= */
 /* CAJA DE BÚSQUEDA */
+/* ======================= */
 .search-box {
-  background: #f2c94c; /* mostaza */
-  margin: 15px auto 20px;
+  background: #f3c13a; /* igual al banner */
+  margin: 20px auto 30px; /* más espacio arriba y abajo */
   padding: 20px;
   border-radius: 20px;
   max-width: 500px;
@@ -56,27 +69,63 @@ body {
   text-align: left;
 }
 
+.search-box label {
+  font-weight: 600;
+}
+
 .search-box input,
 .search-box select {
   width: 100%;
-  padding: 10px;
+  padding: 8px; /* uniformizado */
   border-radius: 10px;
   border: 1px solid #ccc;
   margin-top: 5px;
 }
 
 .search-btn {
-  background: #25D366;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #25D366;
   color: white;
   border: none;
-  padding: 10px;
-  width: 100%;
-  margin-top: 10px;
-  border-radius: 12px;
+  border-radius: 10px;
   cursor: pointer;
+  width: 100%;
 }
 
+/* ======================= */
+/* ALERTA INFO TEXT */
+/* ======================= */
+.info-text {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+/* ======================= */
+/* SECCIONES DE PROMOCIONES */
+/* ======================= */
+.section-title {
+  margin-top: 20px;
+  padding: 8px 15px;
+  display: inline-block; /* solo rodea el texto */
+  border-radius: 12px; /* bordes redondeados */
+  color: white;
+  font-weight: 600;
+}
+
+/* Fondo específico para cada sección */
+#cheap-scroll ~ .section-title {
+  background-color: #5a0080; /* morado oscuro para "Lo más barato hoy" */
+}
+
+#featured-scroll ~ .section-title {
+  background-color: #00bcd4; /* celeste para "Destacados de tu comuna" */
+}
+
+/* ======================= */
 /* SCROLL HORIZONTAL */
+/* ======================= */
 #featured-scroll,
 #cheap-scroll {
   display: flex;
@@ -85,25 +134,25 @@ body {
   padding: 15px;
   width: 100%;
   max-width: 900px;
+  margin-bottom: 20px;
 }
 
+/* ======================= */
 /* TARJETAS */
-.featured-card,
+/* ======================= */
 .cheap-card {
-  min-width: 260px;
+  background: #fff7e6;
+  border: 2px solid #ff9800;
+  min-width: 200px; /* más pequeñas */
+  max-width: 220px;
   border-radius: 16px;
-  overflow: hidden;
-  flex-shrink: 0;
 }
 
 .featured-card {
   background: #f0fbff;
   border: 2px solid #00bcd4;
-}
-
-.cheap-card {
-  background: #fff7e6;
-  border: 2px solid #ff9800;
+  min-width: 260px;
+  border-radius: 16px;
 }
 
 .featured-card img,
@@ -127,7 +176,9 @@ body {
   cursor: pointer;
 }
 
+/* ======================= */
 /* LISTA NORMAL */
+/* ======================= */
 #product-list {
   width: 100%;
   max-width: 900px;
@@ -152,7 +203,9 @@ body {
   padding: 10px;
 }
 
-/* BOTÓN PUBLICAR */
+/* ======================= */
+/* BOTONES FIJOS */
+/* ======================= */
 #whatsapp-btn {
   position: fixed;
   bottom: 20px;
@@ -164,16 +217,18 @@ body {
   border-radius: 30px;
 }
 
+#contact-btn {
+  display: none;
+}
+
+/* ======================= */
 /* FOOTER */
+/* ======================= */
 footer {
   width: 100%;
-  background: #000; /* negro */
+  background-color: black;
+  color: white;
   padding: 15px 10px;
   font-size: 12px;
-  color: white;
   text-align: center;
-}
-footer a {
-  color: #00bcd4;
-  text-decoration: none;
 }
