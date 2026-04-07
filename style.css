@@ -17,7 +17,7 @@ body {
 .hero {
   background-color: #f3c13a; /* amarillo mostaza */
   color: white;
-  padding: 15px 10px; /* más ajustado verticalmente */
+  padding: 20px 10px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -26,14 +26,20 @@ body {
 }
 
 .logo {
-  width: 180px; /* base */
-  max-width: 250px; /* más grande en PC */
+  width: 150px; /* tamaño base, se ajusta en PC con media query */
+  max-width: 200px;
+}
+
+.main-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 10px 0 5px;
 }
 
 .subtitle {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  margin-top: 8px;
+  margin-top: 5px;
   text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
 }
 
@@ -45,7 +51,7 @@ body {
     width: 260px; /* logo más grande en PC */
   }
   .subtitle {
-    font-size: 1.6rem; /* subtítulo más grande */
+    font-size: 1.5rem; /* subtítulo más grande */
   }
 }
 
@@ -54,7 +60,7 @@ body {
 /* ======================= */
 .search-box {
   background: #f3c13a; /* igual al banner */
-  margin: 25px auto 40px; /* más espacio arriba y abajo */
+  margin: 20px auto 30px; /* más espacio arriba y abajo */
   padding: 20px;
   border-radius: 20px;
   max-width: 500px;
@@ -65,8 +71,6 @@ body {
 
 .search-box label {
   font-weight: 600;
-  display: block;
-  margin-top: 10px;
 }
 
 .search-box input,
@@ -76,11 +80,10 @@ body {
   border-radius: 10px;
   border: 1px solid #ccc;
   margin-top: 5px;
-  box-sizing: border-box;
 }
 
 .search-btn {
-  margin-top: 12px;
+  margin-top: 10px;
   padding: 10px;
   background-color: #25D366;
   color: white;
@@ -105,19 +108,19 @@ body {
 .section-title {
   margin-top: 20px;
   padding: 8px 15px;
-  display: inline-block;
-  border-radius: 20px; /* bordes más curvos */
+  display: inline-block; /* solo rodea el texto */
+  border-radius: 20px; /* bordes redondeados */
   color: white;
   font-weight: 600;
 }
 
 /* Fondo específico para cada sección */
-.purple-bg {
-  background-color: #5a0080; /* morado oscuro para "Lo más barato hoy" */
+.section-title.purple-bg {
+  background-color: #5a0080 !important; /* morado oscuro */
 }
 
-.blue-bg {
-  background-color: #00bcd4; /* celeste para "Destacados de tu comuna" */
+.section-title.blue-bg {
+  background-color: #00bcd4; /* celeste */
 }
 
 /* ======================= */
@@ -131,7 +134,7 @@ body {
   padding: 15px;
   width: 100%;
   max-width: 900px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 /* ======================= */
@@ -142,7 +145,7 @@ body {
   border: 2px solid #ff9800;
   min-width: 180px; /* más pequeñas */
   max-width: 200px;
-  border-radius: 12px;
+  border-radius: 16px;
 }
 
 .featured-card {
