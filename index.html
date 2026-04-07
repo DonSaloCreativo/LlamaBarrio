@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RedBarrio</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="hero">
+  <img src="logo.png" class="logo">
+  <h1>RedBarrio</h1>
+  <p class="tagline">Encuentra picadas y ofertas cerca de ti 🔥</p>
+  <p class="sub">Promociones reales de tu comuna, sin delivery</p>
+</header>
+
+<div class="search-box">
+  <label>📍 ¿En qué comuna estás?</label>
+  <select id="location-filter"></select>
+
+  <label>🍔 ¿Qué estás buscando?</label>
+  <input type="text" id="search-input" placeholder="Ej: pizza, sushi, gasfiter...">
+</div>
+
+<p class="info-text">
+  ⚠️ RedBarrio no vende productos. Solo conecta promociones locales.
+</p>
+
+<p class="about">
+RedBarrio conecta vecinos con promociones reales de su comuna 🏡
+</p>
+
+<h2 class="section-title">💸 Lo más barato hoy</h2>
+<div id="cheap-scroll"></div>
+
+<h2 class="section-title">🔥 Destacados de tu comuna</h2>
+<div id="featured-scroll"></div>
+
+<h2 class="section-title">📍 Todas las promociones</h2>
+<ul id="product-list"></ul>
+
+<button id="whatsapp-btn">📝 Publicar promoción</button>
+<button id="contact-btn">📩 Contacto</button>
+
+<script src="script.js"></script>
+</body>
+</html>
