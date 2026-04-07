@@ -1,4 +1,4 @@
-/* BODY GENERAL */
+/* FUENTE Y BODY */
 body {
   font-family: 'Poppins', sans-serif;
   background: linear-gradient(180deg, #f5f7fb, #e8ecf3);
@@ -13,41 +13,46 @@ body {
 .hero {
   background: linear-gradient(135deg, #6a0dad, #00bcd4);
   color: white;
-  padding: 40px 20px 30px 20px;
+  padding: 20px;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .logo {
-  width: 150px; /* más visible en PC */
-  max-width: 90%; /* se adapta a móviles */
-  height: auto; /* mantiene proporción */
+  width: 200px;          /* tamaño grande en PC */
+  max-width: 90%;        /* adaptable en móviles */
+  height: auto;
+  margin-top: 10px;
 }
 
-/* FRASE DEBAJO DEL LOGO */
+.main-title {
+  font-size: 36px;
+  font-weight: 800;
+  margin: 10px 0 5px 0;
+}
+
 .subtitle {
-  font-size: 44px;       /* potente en PC */
-  font-weight: 700;      /* bold */
-  color: white;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-  margin-top: 20px;
-  line-height: 1.2;
-  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 10px 0;
 }
 
-/* Responsive para móviles */
-@media (max-width: 480px) {
+/* ADAPTACIÓN MÓVIL */
+@media (max-width: 500px) {
   .logo {
-    width: 120px; /* se reduce en pantallas pequeñas */
+    width: 150px;
+  }
+  .main-title {
+    font-size: 28px;
+  }
+  .subtitle {
+    font-size: 18px;
   }
 }
 
 /* CAJA DE BÚSQUEDA */
 .search-box {
   background: white;
-  margin: -20px auto 20px;
+  margin: -20px auto 10px;
   padding: 20px;
   border-radius: 20px;
   max-width: 500px;
@@ -66,22 +71,21 @@ body {
 }
 
 .search-btn {
-  margin-top: 10px;
-  width: 100%;
   background: #25D366;
   color: white;
   border: none;
-  padding: 12px;
-  border-radius: 12px;
+  padding: 10px 15px;
+  border-radius: 10px;
   cursor: pointer;
-  font-weight: 600;
+  margin-top: 10px;
+  width: 100%;
 }
 
 /* ALERTA */
 .info-text {
   font-size: 13px;
   color: #666;
-  margin-bottom: 20px;
+  margin: 10px 0;
 }
 
 /* SECCIONES */

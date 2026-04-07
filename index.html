@@ -11,7 +11,8 @@
 
 <!-- HEADER -->
 <header class="hero">
-  <img src="logo.png" class="logo">
+  <img src="logo.png" class="logo" alt="RedBarrio logo">
+  <h1 class="main-title">REDBARRIO</h1>
   <p class="subtitle">Conectamos vecinos con promociones reales en su comuna</p>
 </header>
 
@@ -22,7 +23,7 @@
 
   <label>🍔 ¿Qué estás buscando?</label>
   <input type="text" id="search-input" placeholder="Ej: pizza, sushi, gasfiter...">
-  <button id="search-btn" class="search-btn">Buscar</button>
+  <button onclick="buscar()" class="search-btn">Buscar</button>
 </div>
 
 <!-- ALERTA -->
@@ -46,15 +47,6 @@
 
 <!-- SCRIPT -->
 <script src="script.js"></script>
-
-<script>
-// FUNCIONALIDAD DEL BOTÓN BUSCAR
-const searchBtn = document.getElementById("search-btn");
-searchBtn.addEventListener("click", () => {
-  const inputEvent = new Event('input', { bubbles: true });
-  document.getElementById("search-input").dispatchEvent(inputEvent);
-});
-</script>
 
 </body>
 </html>
