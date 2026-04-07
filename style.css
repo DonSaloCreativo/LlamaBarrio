@@ -17,7 +17,7 @@ body {
 .hero {
   background-color: #f3c13a; /* amarillo mostaza */
   color: white;
-  padding: 20px 10px;
+  padding: 15px 10px; /* más ajustado verticalmente */
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -26,20 +26,14 @@ body {
 }
 
 .logo {
-  width: 150px; /* tamaño base, se ajusta en PC con media query */
-  max-width: 200px;
-}
-
-.main-title {
-  font-size: 2.2rem;
-  font-weight: 700;
-  margin: 10px 0 5px;
+  width: 180px; /* base */
+  max-width: 250px; /* más grande en PC */
 }
 
 .subtitle {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 600;
-  margin-top: 5px;
+  margin-top: 8px;
   text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
 }
 
@@ -48,10 +42,10 @@ body {
 /* ======================= */
 @media screen and (min-width: 1024px) {
   .logo {
-    width: 220px; /* logo más grande en PC */
+    width: 260px; /* logo más grande en PC */
   }
   .subtitle {
-    font-size: 1.5rem; /* subtítulo más grande */
+    font-size: 1.6rem; /* subtítulo más grande */
   }
 }
 
@@ -60,7 +54,7 @@ body {
 /* ======================= */
 .search-box {
   background: #f3c13a; /* igual al banner */
-  margin: 20px auto 30px; /* más espacio arriba y abajo */
+  margin: 25px auto 40px; /* más espacio arriba y abajo */
   padding: 20px;
   border-radius: 20px;
   max-width: 500px;
@@ -71,6 +65,8 @@ body {
 
 .search-box label {
   font-weight: 600;
+  display: block;
+  margin-top: 10px;
 }
 
 .search-box input,
@@ -80,10 +76,11 @@ body {
   border-radius: 10px;
   border: 1px solid #ccc;
   margin-top: 5px;
+  box-sizing: border-box;
 }
 
 .search-btn {
-  margin-top: 10px;
+  margin-top: 12px;
   padding: 10px;
   background-color: #25D366;
   color: white;
@@ -108,18 +105,18 @@ body {
 .section-title {
   margin-top: 20px;
   padding: 8px 15px;
-  display: inline-block; /* solo rodea el texto */
-  border-radius: 12px; /* bordes redondeados */
+  display: inline-block;
+  border-radius: 20px; /* bordes más curvos */
   color: white;
   font-weight: 600;
 }
 
 /* Fondo específico para cada sección */
-#cheap-scroll ~ .section-title {
+.purple-bg {
   background-color: #5a0080; /* morado oscuro para "Lo más barato hoy" */
 }
 
-#featured-scroll ~ .section-title {
+.blue-bg {
   background-color: #00bcd4; /* celeste para "Destacados de tu comuna" */
 }
 
@@ -134,7 +131,7 @@ body {
   padding: 15px;
   width: 100%;
   max-width: 900px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 /* ======================= */
@@ -143,9 +140,9 @@ body {
 .cheap-card {
   background: #fff7e6;
   border: 2px solid #ff9800;
-  min-width: 200px; /* más pequeñas */
-  max-width: 220px;
-  border-radius: 16px;
+  min-width: 180px; /* más pequeñas */
+  max-width: 200px;
+  border-radius: 12px;
 }
 
 .featured-card {
