@@ -8,10 +8,10 @@ const cheapList = document.getElementById("cheap-scroll");
 const searchInput = document.getElementById("search-input");
 const locationFilter = document.getElementById("location-filter");
 const whatsappButton = document.getElementById("whatsapp-btn");
-const contactBtn = document.getElementById("contact-btn");
+const contactFooterBtn = document.getElementById("contact-footer-btn");
 
 // CONTACTO GENERAL
-contactBtn.addEventListener("click", () => {
+contactFooterBtn.addEventListener("click", () => {
   window.open("https://wa.me/56984368260?text=Hola, quiero saber más sobre RedBarrio");
 });
 
@@ -113,7 +113,7 @@ whatsappButton.addEventListener("click", () => {
   window.open("https://forms.gle/yNVktkjKFGuWC7MP8");
 });
 
-// FUNCIÓN BUSCAR BOTÓN
+// FUNCIÓN BUSCAR
 function buscar() {
   displayProducts(allProducts);
 }

@@ -1,4 +1,6 @@
-/* ======== GENERAL ======== */
+/* =========================
+   ESTILO GENERAL
+========================= */
 body {
   font-family: 'Poppins', sans-serif;
   background: linear-gradient(180deg, #f5f7fb, #e8ecf3);
@@ -9,10 +11,13 @@ body {
   align-items: center;
 }
 
+/* =========================
+   HEADER / BANNER
+========================= */
 .hero {
-  background-color: #FFC107; /* Banner mostaza plano */
+  background-color: #F4C430; /* amarillo mostaza */
   color: white;
-  padding: 20px 10px 40px 10px;
+  padding: 30px 20px; /* ajustado */
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -20,24 +25,30 @@ body {
 }
 
 .logo {
-  width: 250px; /* logo grande en PC */
+  width: 220px; /* logo más grande */
+  transition: all 0.3s ease;
 }
 
 .main-title {
-  display: none; /* eliminar REDBARRIO duplicado */
+  display: none; /* ocultamos REDBARRIO de arriba */
 }
 
 .subtitle {
-  font-size: 24px; /* tamaño PC más grande */
+  color: white;
+  font-size: 24px;
   font-weight: 600;
-  margin: 20px 0 30px 0; /* más separación de la caja */
-  text-align: center;
+  margin-top: 20px;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+  animation: fadeIn 1s ease-in-out;
+  line-height: 1.4;
 }
 
-/* CAJA DE BÚSQUEDA */
+/* =========================
+   CAJA DE BÚSQUEDA
+========================= */
 .search-box {
   background: white;
-  margin: 0 auto 20px auto;
+  margin: -10px auto 20px;
   padding: 20px;
   border-radius: 20px;
   max-width: 500px;
@@ -58,21 +69,27 @@ body {
 .search-btn {
   margin-top: 10px;
   width: 100%;
-  padding: 10px;
-  border: none;
-  background-color: #4CAF50;
+  padding: 12px;
+  background-color: #25D366;
   color: white;
+  border: none;
   border-radius: 10px;
+  font-weight: 600;
   cursor: pointer;
 }
 
+/* =========================
+   TEXTO DE ALERTA
+========================= */
 .info-text {
   font-size: 13px;
   color: #666;
-  max-width: 500px;
-  margin: 0 auto 20px auto;
+  margin-bottom: 10px;
 }
 
+/* =========================
+   SECCIONES DE PROMOCIONES
+========================= */
 .section-title {
   margin-top: 20px;
 }
@@ -153,7 +170,7 @@ body {
   padding: 10px;
 }
 
-/* BOTONES FIJOS */
+/* BOTONES */
 #whatsapp-btn {
   position: fixed;
   bottom: 20px;
@@ -166,34 +183,60 @@ body {
   cursor: pointer;
 }
 
-#contact-btn {
-  position: fixed;
-  bottom: 80px;
-  right: 20px;
-  background: #6a0dad;
+/* =========================
+   FOOTER
+========================= */
+footer {
+  margin-top: 40px;
+  padding: 20px;
+  width: 100%;
+  background: #222;
   color: white;
-  border: none;
-  padding: 12px;
-  border-radius: 30px;
-  cursor: pointer;
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* ======== MÓVIL ======== */
-@media (max-width: 500px) {
-  .logo {
-    width: 180px;
-    height: auto;
-  }
+footer a {
+  color: #25D366;
+  text-decoration: none;
+  margin-top: 5px;
+}
 
+/* =========================
+   ANIMACIONES
+========================= */
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(10px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media screen and (max-width: 767px) {
   .subtitle {
-    font-size: 18px;
-    font-weight: 600;
-    margin: 20px 10px 30px 10px;
-    line-height: 1.4; /* permite dividir en 2 líneas */
+    font-size: 20px;
+    line-height: 1.4;
     text-align: center;
   }
 
-  .search-box {
-    margin-top: 20px;
+  .logo {
+    width: 180px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .logo {
+    width: 220px;
+  }
+
+  .subtitle {
+    font-size: 28px;
+  }
+
+  .hero {
+    padding: 40px 20px;
   }
 }
