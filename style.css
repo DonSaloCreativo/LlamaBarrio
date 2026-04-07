@@ -21,8 +21,9 @@ body {
 }
 
 .logo {
-  width: 120px; /* más visible */
-  max-width: 80%;
+  width: 150px; /* más visible en PC */
+  max-width: 90%; /* se adapta a móviles */
+  height: auto; /* mantiene proporción */
 }
 
 /* FRASE DEBAJO DEL LOGO */
