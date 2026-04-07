@@ -26,35 +26,35 @@ body {
 }
 
 .logo {
-  width: 180px;
-  max-width: 220px;
+  width: 150px; /* tamaño base */
+  max-width: 200px;
+}
+
+.main-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 10px 0 5px;
 }
 
 .subtitle {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  margin-top: 8px;
+  margin-top: 5px;
   text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
 }
 
-/* ======================= */
-/* MEDIA QUERY PARA PC */
-/* ======================= */
+/* MEDIA QUERY PC */
 @media screen and (min-width: 1024px) {
-  .logo {
-    width: 250px; /* logo más grande en PC */
-  }
-  .subtitle {
-    font-size: 1.7rem; /* subtítulo más grande */
-  }
+  .logo { width: 240px; }
+  .subtitle { font-size: 1.5rem; }
 }
 
 /* ======================= */
 /* CAJA DE BÚSQUEDA */
 /* ======================= */
 .search-box {
-  background: #f3c13a; /* igual al banner */
-  margin: 25px auto 30px; /* más espacio arriba y abajo */
+  background: #f3c13a;
+  margin: 20px auto 30px;
   padding: 20px;
   border-radius: 20px;
   max-width: 500px;
@@ -63,9 +63,7 @@ body {
   text-align: left;
 }
 
-.search-box label {
-  font-weight: 600;
-}
+.search-box label { font-weight: 600; }
 
 .search-box input,
 .search-box select {
@@ -88,44 +86,9 @@ body {
 }
 
 /* ======================= */
-/* ALERTA INFO TEXT */
-/* ======================= */
-.info-text {
-  font-size: 13px;
-  color: #666;
-  margin-bottom: 10px;
-}
-
-/* ======================= */
-/* SECCIONES DE PROMOCIONES */
-/* ======================= */
-.section-title {
-  margin-top: 20px;
-  padding: 8px 15px;
-  display: inline-block; /* solo rodea el texto */
-  border-radius: 12px; /* bordes redondeados */
-  color: white;
-  font-weight: 600;
-}
-
-/* Fondos específicos */
-.section-title.purple-bg {
-  background-color: #5a0080; /* morado para "Lo más barato hoy" */
-}
-
-.section-title.blue-bg {
-  background-color: #00bcd4; /* celeste para "Destacados de tu comuna" */
-}
-
-.section-title.yellow-bg {
-  background-color: #f3c13a; /* mostaza para "Todas las promociones" */
-}
-
-/* ======================= */
 /* SCROLL HORIZONTAL */
 /* ======================= */
-#featured-scroll,
-#cheap-scroll {
+#cheap-scroll, #featured-scroll {
   display: flex;
   overflow-x: auto;
   gap: 12px;
@@ -133,116 +96,91 @@ body {
   width: 100%;
   max-width: 900px;
   margin-bottom: 20px;
+  position: relative;
+  scroll-behavior: smooth;
+}
+
+/* SOMBRA LATERAL */
+#cheap-scroll::after,
+#featured-scroll::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(to left, rgba(255,255,255,0.8), rgba(255,255,255,0));
+  border-radius: 16px;
+}
+
+/* ======================= */
+/* INDICADOR DE SCROLL */
+.scroll-hint {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 5px;
+  text-align: right;
+  font-weight: 500;
 }
 
 /* ======================= */
 /* TARJETAS */
 /* ======================= */
-.cheap-card {
-  background: #fff7e6;
-  border: 2px solid #ff9800;
-  min-width: 200px;
-  max-width: 220px;
-  border-radius: 16px;
-}
+.cheap-card { background: #fff7e6; border: 2px solid #ff9800; min-width: 200px; max-width: 220px; border-radius: 16px; }
+.featured-card { background: #f0fbff; border: 2px solid #00bcd4; min-width: 260px; border-radius: 16px; }
 
-.featured-card {
-  background: #f0fbff;
-  border: 2px solid #00bcd4;
-  min-width: 260px;
-  border-radius: 16px;
-}
+.cheap-card img, .featured-card img { width: 100%; height: 140px; object-fit: cover; border-radius: 16px 16px 0 0; }
 
-.cheap-card img,
-.featured-card img {
-  width: 100%;
-  height: 140px;
-  object-fit: cover;
-  border-radius: 16px 16px 0 0; /* redondea solo las esquinas superiores */
-}
+.info { padding: 10px; text-align: left; }
 
-.info {
-  padding: 10px;
-  text-align: left;
-}
-
-.contact-business {
-  background: #00bcd4;
-  color: white;
-  border: none;
-  padding: 8px;
-  width: 100%;
-  cursor: pointer;
-}
+.contact-business { background: #00bcd4; color: white; border: none; padding: 8px; width: 100%; cursor: pointer; }
 
 /* ======================= */
-/* TODAS LAS PROMOCIONES - LISTA NORMAL */
-/* ======================= */
-#product-list {
-  width: 100%;
-  max-width: 900px;
-  list-style: none;
-  padding: 15px;
-}
-
-#product-list li {
-  background: white;
-  border-radius: 16px;
-  margin-bottom: 15px;
-  overflow: hidden;
-  border: 2px solid #f3c13a; /* borde mostaza */
-}
-
-.product-img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 16px 16px 0 0; /* solo esquinas superiores */
-}
-
-.product-info {
-  padding: 10px;
-}
+/* LISTA NORMAL */
+#product-list { width: 100%; max-width: 900px; list-style: none; padding: 15px; }
+#product-list li { background: #f3c13a; border-radius: 16px; margin-bottom: 15px; overflow: hidden; }
+.product-img { width: 100%; height: 180px; object-fit: cover; }
+.product-info { padding: 10px; }
 
 /* ======================= */
 /* BOTONES FIJOS */
-/* ======================= */
 #whatsapp-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #25D366;
-  color: white;
-  border: none;
-  padding: 14px;
-  border-radius: 30px;
-  cursor: pointer;
-}
-
-#contact-btn {
-  display: none;
+  position: fixed; bottom: 20px; right: 20px;
+  background: #25D366; color: white; border: none; padding: 14px; border-radius: 30px;
 }
 
 /* ======================= */
-/* FOOTER AJUSTADO */
+/* FOOTER */
+footer { width: 100%; background-color: black; color: white; padding: 15px 10px; font-size: 12px; text-align: center; }
+
 /* ======================= */
-footer {
-  width: 100%;
-  background-color: black;
+/* ANIMACIÓN INICIAL PARA TARJETAS */
+@keyframes scrollHintAnim {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(-15px); }
+  100% { transform: translateX(0); }
+}
+#cheap-scroll .cheap-card:first-child,
+#featured-scroll .featured-card:first-child {
+  animation: scrollHintAnim 1s ease-in-out 1;
+}
+/* Indicador de scroll */
+.scroll-hint {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.4);
   color: white;
-  padding: 15px 10px;
+  padding: 4px 8px;
+  border-radius: 12px;
   font-size: 12px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: 5px; /* espacio entre los párrafos */
+  pointer-events: none;
+  transition: opacity 0.3s;
 }
 
-footer a {
-  color: #25D366; /* verde WhatsApp */
-  text-decoration: none;
-}
-
-footer a:hover {
-  text-decoration: underline;
+/* Para que el contenedor de scroll sea relativo y el hint se posicione */
+#cheap-scroll, #featured-scroll {
+  position: relative;
 }

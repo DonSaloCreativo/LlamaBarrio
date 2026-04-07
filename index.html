@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RedBarrio</title>
+  <!-- Forzar carga de CSS reciente -->
   <link rel="stylesheet" href="style.css?v=3">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
@@ -13,11 +14,11 @@
 <header class="hero">
   <img src="images/logo.png" class="logo">
   <p class="subtitle">Conectando vecinos con promociones reales desde 2025</p>
-  <button class="search-btn-banner" onclick="document.getElementById('search-input').focus()">📝 Publica tu promoción</button>
 </header>
 
 <!-- SECCIÓN LO MÁS BARATO -->
 <h2 class="section-title purple-bg">💸 Lo más barato hoy</h2>
+<div class="scroll-hint">Desliza →</div>
 <div id="cheap-scroll"></div>
 
 <!-- CAJA DE BÚSQUEDA -->
@@ -32,13 +33,14 @@
 
 <!-- SECCIÓN DESTACADOS -->
 <h2 class="section-title blue-bg">🔥 Destacados de tu comuna</h2>
+<div class="scroll-hint">Desliza →</div>
 <div id="featured-scroll"></div>
 
 <!-- TODAS LAS PROMOCIONES -->
 <h2 class="section-title yellow-bg">📍 Todas las promociones</h2>
 <ul id="product-list"></ul>
 
-<!-- BOTÓN WHATSAPP -->
+<!-- BOTÓN PUBLICAR -->
 <button id="whatsapp-btn">📝 Publicar promoción</button>
 
 <!-- FOOTER -->
