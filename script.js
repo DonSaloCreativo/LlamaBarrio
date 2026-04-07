@@ -18,7 +18,11 @@ contactBtn.addEventListener("click", () => {
 // BOTÓN NEGOCIO
 function botonNegocio(p) {
   const telefono = (p.telefono || "").trim();
-  if (!telefono) return `<button class="contact-business" disabled>Sin contacto</button>`;
+
+  if (!telefono) {
+    return `<button class="contact-business" disabled>Sin contacto</button>`;
+  }
+
   return `
     <button class="contact-business"
       onclick="window.open('https://wa.me/${telefono}?text=Hola, te hablo por ${encodeURIComponent(p.nombre)}')">
@@ -108,3 +112,8 @@ locationFilter.addEventListener("change", () => displayProducts(allProducts));
 whatsappButton.addEventListener("click", () => {
   window.open("https://forms.gle/yNVktkjKFGuWC7MP8");
 });
+
+// FUNCIÓN BUSCAR DEL BOTÓN
+function buscar() {
+  displayProducts(allProducts);
+}
