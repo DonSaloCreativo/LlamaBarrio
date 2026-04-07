@@ -113,7 +113,7 @@ whatsappButton.addEventListener("click", () => {
   window.open("https://forms.gle/yNVktkjKFGuWC7MP8");
 });
 
-// FUNCIÓN BUSCAR DEL BOTÓN
+// FUNCIÓN BUSCAR BOTÓN
 function buscar() {
   displayProducts(allProducts);
 }
