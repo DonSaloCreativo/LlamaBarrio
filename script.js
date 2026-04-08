@@ -1,9 +1,9 @@
 const allProducts = [
-  { name: "Casera", image: "images/casera.jpg", price: 5000, comuna: "Providencia", tipo: "barato" },
-  { name: "Completo", image: "images/completo.jpg", price: 6000, comuna: "Las Condes", tipo: "destacado" },
-  { name: "Empanadas", image: "images/empanadas.jpg", price: 2000, comuna: "Ñuñoa", tipo: "barato" },
-  { name: "Pizza", image: "images/pizza.jpg", price: 8000, comuna: "Providencia", tipo: "destacado" },
-  { name: "Sushi", image: "images/sushi.jpg", price: 9000, comuna: "Las Condes", tipo: "barato" }
+  { name: "Casera", image: "images/casera.jpg", price: 5000, comuna: "Providencia" },
+  { name: "Completo", image: "images/completo.jpg", price: 6000, comuna: "Las Condes" },
+  { name: "Empanadas", image: "images/empanadas.jpg", price: 2000, comuna: "Ñuñoa" },
+  { name: "Pizza", image: "images/pizza.jpg", price: 8000, comuna: "Providencia" },
+  { name: "Sushi", image: "images/sushi.jpg", price: 9000, comuna: "Las Condes" }
 ];
 
 const cheapScroll = document.getElementById("cheap-scroll");
@@ -17,50 +17,47 @@ const normalizeText = (text) => {
 };
 
 function displayProducts(products) {
+  // Limpiar antes de mostrar
   cheapScroll.innerHTML = "";
   featuredScroll.innerHTML = "";
   productList.innerHTML = "";
 
   if (products.length === 0) {
-    productList.innerHTML = "<p style='padding:20px;'>No hay resultados.</p>";
+    productList.innerHTML = "<p style='color:gray; padding:20px;'>No se encontraron resultados.</p>";
     return;
   }
 
   products.forEach(p => {
-    // Formato moneda chilena
-    const formattedPrice = "$" + p.price.toLocaleString('es-CL');
+    const priceText = "$" + p.price.toLocaleString('es-CL');
 
-    // Tarjeta para los scrolls superiores
-    const card = document.createElement("div");
-    card.className = "cheap-card";
-    card.innerHTML = `
-      <img src="${p.image}" alt="${p.name}">
-      <div class="price-tag">${formattedPrice}</div>
-      <div class="info">
-        <strong>${p.name}</strong><br>
-        <small>${p.comuna}</small>
-      </div>
-    `;
-
-    if (p.tipo === "barato") {
-      cheapScroll.appendChild(card);
-    } else {
-      card.className = "featured-card";
-      featuredScroll.appendChild(card);
-    }
-
-    // Lista vertical inferior
-    const li = document.createElement("li");
-    li.innerHTML = `
-      <img class="product-img" src="${p.image}">
-      <div class="product-info">
-        <div style="display:flex; justify-content:space-between;">
-          <strong>${p.name}</strong>
-          <span style="color:#25D366; font-weight:bold;">${formattedPrice}</span>
+    // 1. Tarjetas para los Scrolls (Diseño compacto)
+    const card = `
+      <div class="cheap-card" style="min-width:200px; position:relative;">
+        <img src="${p.image}" style="width:100%; height:140px; object-fit:cover;">
+        <div class="price-tag" style="position:absolute; top:10px; right:10px; background:#25D366; color:black; padding:4px 8px; border-radius:8px; font-weight:bold;">${priceText}</div>
+        <div style="padding:10px; text-align:left;">
+          <strong>${p.name}</strong><br>
+          <small style="color:gray;">${p.comuna}</small>
         </div>
-        <small>${p.comuna}</small>
-      </div>
-    `;
+      </div>`;
+    
+    cheapScroll.innerHTML += card;
+    featuredScroll.innerHTML += card.replace("cheap-card", "featured-card");
+
+    // 2. Lista Vertical (Diseño estirado)
+    const li = document.createElement("li");
+    li.style.listStyle = "none";
+    li.innerHTML = `
+      <div style="background:white; margin-bottom:15px; border-radius:15px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+        <img src="${p.image}" style="width:100%; height:180px; object-fit:cover;">
+        <div style="padding:15px; text-align:left; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <strong>${p.name}</strong><br>
+            <small>${p.comuna}</small>
+          </div>
+          <span style="background:#25D366; padding:5px 10px; border-radius:10px; font-weight:bold;">${priceText}</span>
+        </div>
+      </div>`;
     productList.appendChild(li);
   });
 }
@@ -78,5 +75,5 @@ function buscar() {
   displayProducts(filtered);
 }
 
-// Carga inicial
+// Iniciar aplicación
 displayProducts(allProducts);
