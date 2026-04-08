@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RedBarrio</title>
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=7">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -14,6 +14,9 @@
   <img src="images/logo.png" class="logo">
   <p class="subtitle">Conectando vecinos con promociones reales</p>
 </header>
+
+<!-- MICRO COPY UX -->
+<p class="helper-text">¿Eres negocio o vecino?</p>
 
 <!-- LO MÁS BARATO -->
 <h2 class="section-title purple-bg">💸 Lo más barato hoy</h2>
@@ -37,78 +40,65 @@
 <h2 class="section-title yellow-bg">📍 Todas las promociones</h2>
 <ul id="product-list"></ul>
 
-<!-- BOTÓN FLOTANTE PUBLICAR -->
+<!-- BOTÓN NEGOCIO -->
 <a href="#" class="btn-publicar" onclick="abrirFormPromo()">
-  Soy Negocio 🚀
+  🏪 Soy negocio
 </a>
 
-<!-- BOTÓN FLOTANTE PICADAS -->
+<!-- BOTÓN USUARIO -->
 <a href="#" class="btn-picada" onclick="abrirFormDato()">
-  📸 Vi una Oferta
+  📸 Vi una oferta
 </a>
 
 <!-- FOOTER -->
 <footer>
-  <p>📩 Contacto: <a href="https://wa.me/56984368260">Envíanos un mensaje</a></p>
   <p>© 2026 RedBarrio. All rights reserved.</p>
 </footer>
 
-<!-- POPUP PROMO -->
+<!-- POPUP NEGOCIO -->
 <div id="popupPromo" class="popup-overlay" style="display:none;">
   <div class="popup-content" style="width:90%; max-width:600px;">
-    
     <button class="popup-close" onclick="cerrarFormPromo()">X</button>
-
     <iframe 
       src="https://docs.google.com/forms/d/e/1FAIpQLSe-NoZ-wev8KO0U6LT2ko9Ly0NyZcCjkZ4A0eBF-1TbH2qZxA/viewform?embedded=true" 
       width="100%" 
-      height="500" 
+      height="500"
       style="border:none; border-radius:12px;">
     </iframe>
-
   </div>
 </div>
 
-<!-- POPUP DATO (TALLY) -->
+<!-- POPUP USUARIO -->
 <div id="popupDato" class="popup-overlay" style="display:none;">
   <div class="popup-content" style="width:90%; max-width:600px;">
-    
     <button class="popup-close" onclick="cerrarFormDato()">X</button>
-
     <iframe 
       src="https://tally.so/r/ja7DOQ" 
       width="100%" 
-      height="500" 
+      height="500"
       style="border:none; border-radius:12px;">
     </iframe>
-
   </div>
 </div>
 
-<!-- SCRIPTS -->
 <script src="script.js"></script>
 
 <script>
 function abrirFormPromo() {
   document.getElementById("popupPromo").style.display = "flex";
 }
-
 function cerrarFormPromo() {
   document.getElementById("popupPromo").style.display = "none";
 }
-
 function abrirFormDato() {
   document.getElementById("popupDato").style.display = "flex";
 }
-
 function cerrarFormDato() {
   document.getElementById("popupDato").style.display = "none";
 }
-
 window.onclick = function(e) {
   const promo = document.getElementById("popupPromo");
   const dato = document.getElementById("popupDato");
-
   if (e.target === promo) promo.style.display = "none";
   if (e.target === dato) dato.style.display = "none";
 }

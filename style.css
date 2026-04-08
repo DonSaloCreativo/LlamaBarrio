@@ -288,3 +288,54 @@ footer {
 .btn-picada:hover {
   background: #e64a19;
 }
+/* TEXTO GUIA */
+.helper-text {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* BOTÓN NEGOCIO (DERECHA) */
+.btn-publicar {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #25D366;
+  color: white;
+  padding: 14px 18px;
+  border-radius: 30px;
+  font-weight: 600;
+  text-decoration: none;
+  z-index: 999;
+  animation: rebote 2s infinite;
+}
+
+/* BOTÓN USUARIO (IZQUIERDA) */
+.btn-picada {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: #ff5722;
+  color: white;
+  padding: 14px 18px;
+  border-radius: 30px;
+  font-weight: 600;
+  text-decoration: none;
+  z-index: 999;
+  animation: rebote 2s infinite;
+}
+
+/* ANIMACIÓN SUAVE */
+@keyframes rebote {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
+}
+
+/* HOVER */
+.btn-publicar:hover {
+  background: #1ebe5d;
+}
+.btn-picada:hover {
+  background: #e64a19;
+}
