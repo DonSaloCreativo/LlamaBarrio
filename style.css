@@ -15,7 +15,7 @@ body {
 /* HEADER / BANNER PRINCIPAL */
 /* ======================= */
 .hero {
-  background-color: #f3c13a; /* amarillo mostaza */
+  background-color: #f3c13a;
   color: white;
   padding: 20px 10px;
   width: 100%;
@@ -39,16 +39,20 @@ body {
 
 .info-text {
   font-size: 13px;
-  margin-top: 8px;
-  font-weight: 500;
+  color: #333;
+  margin-top: 5px;
 }
 
 /* ======================= */
 /* MEDIA QUERY PARA PC */
 /* ======================= */
 @media screen and (min-width: 1024px) {
-  .logo { width: 220px; }
-  .subtitle { font-size: 1.5rem; }
+  .logo {
+    width: 220px;
+  }
+  .subtitle {
+    font-size: 1.5rem;
+  }
 }
 
 /* ======================= */
@@ -65,7 +69,9 @@ body {
   text-align: left;
 }
 
-.search-box label { font-weight: 600; }
+.search-box label {
+  font-weight: 600;
+}
 
 .search-box input,
 .search-box select {
@@ -87,22 +93,6 @@ body {
   width: 100%;
 }
 
-.quick-tags {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin: 10px 0;
-}
-
-.quick-tags button {
-  background: #fff;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
 /* ======================= */
 /* SECCIONES DE PROMOCIONES */
 /* ======================= */
@@ -119,8 +109,11 @@ body {
 .blue-bg { background-color: #00bcd4; }
 .yellow-bg { background-color: #f3c13a; }
 
-/* Scroll horizontal */
-.scrollable {
+/* ======================= */
+/* SCROLL HORIZONTAL */
+/* ======================= */
+#featured-scroll,
+#cheap-scroll {
   display: flex;
   overflow-x: auto;
   gap: 12px;
@@ -131,36 +124,41 @@ body {
   position: relative;
 }
 
-/* Flecha indicadora de scroll */
-.scrollable::after {
+/* Flechas indicadoras de scroll */
+#featured-scroll::after,
+#cheap-scroll::after {
   content: "→";
   position: absolute;
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 2rem;
-  opacity: 0.3;
+  color: rgba(0,0,0,0.2);
+  pointer-events: none;
 }
 
 /* ======================= */
 /* TARJETAS */
+/* ======================= */
+.cheap-card, .featured-card {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
 .cheap-card {
   background: #fff7e6;
   border: 2px solid #ff9800;
   min-width: 200px;
   max-width: 220px;
-  border-radius: 16px;
 }
 
 .featured-card {
   background: #f0fbff;
   border: 2px solid #00bcd4;
   min-width: 260px;
-  border-radius: 16px;
 }
 
-.cheap-card img,
-.featured-card img {
+.cheap-card img, .featured-card img {
   width: 100%;
   height: 140px;
   object-fit: cover;
@@ -168,19 +166,26 @@ body {
   border-top-right-radius: 16px;
 }
 
-.info { padding: 10px; text-align: left; }
+.info {
+  padding: 10px;
+  text-align: left;
+}
 
-.contact-business {
-  background: #00bcd4;
+.price-tag {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #25D366;
   color: white;
-  border: none;
-  padding: 8px;
-  width: 100%;
-  cursor: pointer;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
 }
 
 /* ======================= */
-/* LISTA NORMAL */
+/* TODAS LAS PROMOCIONES */
+/* ======================= */
 #product-list {
   width: 100%;
   max-width: 900px;
@@ -201,10 +206,13 @@ body {
   object-fit: cover;
 }
 
-.product-info { padding: 10px; }
+.product-info {
+  padding: 10px;
+}
 
 /* ======================= */
 /* BOTONES FIJOS */
+/* ======================= */
 #whatsapp-btn {
   position: fixed;
   bottom: 20px;
@@ -218,6 +226,7 @@ body {
 
 /* ======================= */
 /* FOOTER */
+/* ======================= */
 footer {
   width: 100%;
   background-color: black;
