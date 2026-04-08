@@ -17,44 +17,46 @@ const normalizeText = (text) => {
 };
 
 function displayProducts(products) {
-  // Limpiamos todo antes de rellenar
   cheapScroll.innerHTML = "";
   featuredScroll.innerHTML = "";
   productList.innerHTML = "";
 
   if (products.length === 0) {
-    productList.innerHTML = `<p style="padding: 20px; color: #666;">No hay resultados para esta búsqueda.</p>`;
+    productList.innerHTML = "<p style='padding:20px;'>No hay resultados.</p>";
     return;
   }
 
   products.forEach(p => {
-    // 1. Crear tarjeta para los Scrolls Horizontales
-    const cardHTML = `
-      <div class="cheap-card"> 
-        <img src="${p.image}" alt="${p.name}">
-        <div class="price-tag">$${p.price.toLocaleString('es-CL')}</div>
-        <div class="info">
-          <strong>${p.name}</strong><br>
-          <small>${p.comuna}</small>
-        </div>
+    // Formato moneda chilena
+    const formattedPrice = "$" + p.price.toLocaleString('es-CL');
+
+    // Tarjeta para los scrolls superiores
+    const card = document.createElement("div");
+    card.className = "cheap-card";
+    card.innerHTML = `
+      <img src="${p.image}" alt="${p.name}">
+      <div class="price-tag">${formattedPrice}</div>
+      <div class="info">
+        <strong>${p.name}</strong><br>
+        <small>${p.comuna}</small>
       </div>
     `;
 
-    // Distribuimos según el tipo o mostramos en ambos si es búsqueda
     if (p.tipo === "barato") {
-      cheapScroll.innerHTML += cardHTML;
+      cheapScroll.appendChild(card);
     } else {
-      featuredScroll.innerHTML += cardHTML.replace("cheap-card", "featured-card");
+      card.className = "featured-card";
+      featuredScroll.appendChild(card);
     }
 
-    // 2. Crear elemento para la lista vertical (Todas las promociones)
+    // Lista vertical inferior
     const li = document.createElement("li");
     li.innerHTML = `
       <img class="product-img" src="${p.image}">
       <div class="product-info">
-        <div style="display:flex; justify-content:between; align-items:center;">
-           <strong style="font-size:1.2rem;">${p.name}</strong>
-           <span style="margin-left:auto; background:#25D366; padding:2px 8px; border-radius:5px; font-weight:bold;">$${p.price.toLocaleString('es-CL')}</span>
+        <div style="display:flex; justify-content:space-between;">
+          <strong>${p.name}</strong>
+          <span style="color:#25D366; font-weight:bold;">${formattedPrice}</span>
         </div>
         <small>${p.comuna}</small>
       </div>
@@ -76,5 +78,5 @@ function buscar() {
   displayProducts(filtered);
 }
 
-// Inicializar
+// Carga inicial
 displayProducts(allProducts);
