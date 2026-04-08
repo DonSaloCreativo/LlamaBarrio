@@ -216,3 +216,56 @@ footer {
   cursor:pointer;
   font-weight:bold;
 }
+/* BOTÓN PUBLICAR PROMOCIÓN */
+.btn-publicar {
+  display: inline-block;
+  background: #25D366; /* mismo verde de WhatsApp */
+  color: white;
+  padding: 12px 20px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: all 0.2s ease;
+}
+
+/* HOVER (efecto al pasar el mouse) */
+.btn-publicar:hover {
+  background: #1ebe5d;
+  transform: scale(1.05);
+}
+
+/* CLICK (efecto al presionar) */
+.btn-publicar:active {
+  transform: scale(0.97);
+}
+/* BOTÓN PUBLICAR PROMOCIÓN (MISMA LÍNEA, NO SE BAJA) */
+/* BOTÓN PUBLICAR PROMOCIÓN FLOTANTE (TIPO WHATSAPP) */
+.btn-publicar {
+  position: fixed;
+  bottom: 80px; /* arriba del botón de WhatsApp */
+  right: 20px;
+  background: #007bff; /* azul para diferenciarlo */
+  color: white;
+  padding: 14px 18px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 999;
+  transition: all 0.2s ease;
+}
+
+/* hover */
+.btn-publicar:hover {
+  background: #0069d9;
+  transform: scale(1.05);
+}
+
+/* click */
+.btn-publicar:active {
+  transform: scale(0.95);
+}
