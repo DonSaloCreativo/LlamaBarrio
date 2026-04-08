@@ -269,3 +269,22 @@ footer {
 .btn-publicar:active {
   transform: scale(0.95);
 }
+/* BOTÓN PICADAS (IZQUIERDA) */
+.btn-picada {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: #ff5722;
+  color: white;
+  padding: 14px 18px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  z-index: 999;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.btn-picada:hover {
+  background: #e64a19;
+}
