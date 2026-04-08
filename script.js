@@ -27,24 +27,20 @@ modal.style.cssText = `
   position: fixed;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%) scale(0);
-  background: #fffb9e; /* fondo llamativo */
+  background: #fffae6;
   padding: 15px 20px;
   border-radius: 12px;
   box-shadow: 0 6px 18px rgba(0,0,0,0.3);
   z-index: 9999;
   width: 280px;
   text-align: center;
-  transition: transform 0.25s ease-out;
+  transition: transform 0.25s cubic-bezier(.68,-0.55,.27,1.55);
 `;
 document.body.appendChild(modal);
 
 const modalClose = document.createElement("span");
 modalClose.textContent = "✖";
-modalClose.style.cssText = `
-  position:absolute; top:8px; right:10px;
-  cursor:pointer; font-size:18px; font-weight:700;
-  color:red;
-`;
+modalClose.style.cssText = "position:absolute; top:8px; right:10px; cursor:pointer; font-size:22px; color:red; font-weight:bold;";
 modal.appendChild(modalClose);
 
 const modalImg = document.createElement("img");
@@ -158,25 +154,15 @@ function displayProducts(products){
 }
 
 // ==========================
-// MOSTRAR MODAL CON REBOTE SUAVE ADAPTADO
+// MOSTRAR MODAL CON REBOTE SUAVE
 // ==========================
 function showModal(product){
   modalImg.src = product.image;
   modalName.textContent = product.name;
   modalComuna.textContent = product.comuna;
   modalPrice.textContent = `$${product.price.toLocaleString('es-CL')}`;
-
-  const isMobile = window.innerWidth < 768;
-
-  if(isMobile){
-    modal.style.transform = "translate(-50%, -50%) scale(0.95)";
-    modal.style.transition = "transform 0.25s ease-out";
-    setTimeout(()=> modal.style.transform = "translate(-50%, -50%) scale(1)", 50);
-  } else {
-    modal.style.transform = "translate(-50%, -50%) scale(0.8)";
-    modal.style.transition = "transform 0.4s cubic-bezier(.25,.8,.25,1)";
-    setTimeout(()=> modal.style.transform = "translate(-50%, -50%) scale(1)", 50);
-  }
+  modal.style.transform = "translate(-50%, -50%) scale(1.05)";
+  setTimeout(()=> modal.style.transform = "translate(-50%, -50%) scale(1)", 150);
 }
 
 // ==========================
