@@ -1,6 +1,4 @@
-/* ======================= */
-/* ESTILO GENERAL DEL BODY */
-/* ======================= */
+/* GENERAL */
 body {
   font-family: 'Poppins', sans-serif;
   background: #f5f7fb;
@@ -11,9 +9,7 @@ body {
   text-align: center;
 }
 
-/* ======================= */
-/* HEADER / BANNER PRINCIPAL */
-/* ======================= */
+/* HEADER */
 .hero {
   background-color: #f3c13a;
   color: white;
@@ -23,19 +19,10 @@ body {
   flex-direction: column;
   align-items: center;
 }
-.logo {
-  width: 150px;
-  max-width: 200px;
-}
-.subtitle {
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-top: 5px;
-}
+.logo { width: 150px; max-width: 200px; }
+.subtitle { font-size: 1rem; font-weight: 600; margin-top: 5px; }
 
-/* ======================= */
-/* CAJA DE BÚSQUEDA */
-/* ======================= */
+/* BUSCADOR */
 .search-box {
   background: #f3c13a;
   margin: 20px auto 30px;
@@ -66,9 +53,7 @@ body {
   font-weight: 600;
 }
 
-/* ======================= */
-/* SECCIONES DE PROMOCIONES */
-/* ======================= */
+/* SECCIONES */
 .section-title {
   margin-top: 15px;
   padding: 6px 12px;
@@ -76,15 +61,13 @@ body {
   border-radius: 12px;
   color: white;
   font-weight: 600;
-  font-size: 1rem; /* tamaño más equilibrado que antes */
+  font-size: 1.1rem; /* más pequeño para que no compita con logo */
 }
 .purple-bg { background-color: #5a0080; }
 .blue-bg { background-color: #00bcd4; }
 .yellow-bg { background-color: #f3c13a; color:#111; }
 
-/* ======================= */
 /* SCROLL HORIZONTAL */
-/* ======================= */
 #cheap-scroll, #featured-scroll {
   display: flex;
   overflow-x: auto;
@@ -94,36 +77,22 @@ body {
   max-width: 900px;
   margin-bottom: 20px;
   scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
-
-/* ======================= */
-/* TARJETAS */
-/* ======================= */
 .cheap-card, .featured-card {
+  flex: 0 0 auto;
+  min-width: 200px;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-  min-width: 200px;
-  flex-shrink: 0;
   background: #fff;
-  transition: transform 0.2s, box-shadow 0.2s;
   position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
-.cheap-card:hover, .featured-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-}
-.cheap-card img, .featured-card img {
-  width: 100%;
-  height: 140px;
-  object-fit: cover;
-}
-.cheap-card .info, .featured-card .info {
-  padding: 10px;
-  font-size: 0.95rem;
-}
+.cheap-card:hover, .featured-card:hover { transform: scale(1.05); box-shadow: 0 6px 18px rgba(0,0,0,0.25); }
+.cheap-card img, .featured-card img { width: 100%; height: 140px; object-fit: cover; }
+.cheap-card .info, .featured-card .info { padding: 10px; font-size: 0.95rem; }
 
-/* ======================= */
 /* BADGES */
 .badge {
   position: absolute;
@@ -143,7 +112,6 @@ body {
   100% { transform: scale(1); opacity: 1; }
 }
 
-/* ======================= */
 /* LISTA VERTICAL */
 #product-list {
   width: 100%;
@@ -162,12 +130,16 @@ body {
   height: 180px;
   object-fit: cover;
 }
-.product-info {
-  padding: 10px;
+.product-info { padding: 10px; }
+
+/* MENSAJES SIN RESULTADOS */
+.no-results {
+  padding: 20px;
+  color: #666;
+  text-align: center;
 }
 
-/* ======================= */
-/* BOTÓN WHATSAPP FIJO */
+/* BOTÓN WHATSAPP */
 #whatsapp-btn {
   position: fixed;
   bottom: 20px;
@@ -181,7 +153,6 @@ body {
   cursor: pointer;
 }
 
-/* ======================= */
 /* FOOTER */
 footer {
   width: 100%;
