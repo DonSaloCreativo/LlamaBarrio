@@ -1,7 +1,7 @@
 /* GENERAL */
 body {
   font-family: 'Poppins', sans-serif;
-  background: #f5f7fb;
+  background: #f3c13a; /* fondo mostaza */
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -11,8 +11,8 @@ body {
 
 /* HEADER */
 .hero {
-  background-color: #f3c13a;
-  color: white;
+  background-color: #ffffff; /* banner blanco */
+  color: #111; /* texto oscuro */
   padding: 20px 10px;
   width: 100%;
   display: flex;
@@ -20,11 +20,12 @@ body {
   align-items: center;
 }
 .logo { width: 150px; max-width: 200px; }
-.subtitle { font-size: 1.2rem; font-weight: 600; margin-top: 5px; }
+.subtitle { font-size: 1.2rem; font-weight: 600; margin-top: 5px; color:#111; }
 
 /* BUSCADOR */
 .search-box {
-  background: #f3c13a;
+  background: #ffffff; /* fondo blanco */
+  border: 2px solid #f3c13a; /* borde mostaza */
   margin: 20px auto 30px;
   padding: 20px;
   border-radius: 20px;
@@ -59,11 +60,11 @@ body {
   padding: 8px 15px;
   display: inline-block;
   border-radius: 12px;
-  color: white;
+  color: #111; /* texto oscuro */
   font-weight: 600;
 }
-.purple-bg { background-color: #5a0080; }
-.blue-bg { background-color: #00bcd4; }
+.purple-bg { background-color: #5a0080; color:white; }
+.blue-bg { background-color: #00bcd4; color:white; }
 .yellow-bg { background-color: #f3c13a; color:#111; }
 
 /* SCROLL HORIZONTAL */
@@ -130,7 +131,7 @@ body {
   padding: 15px;
 }
 #product-list li {
-  background: #f3c13a;
+  background: #ffffff;
   border-radius: 16px;
   margin-bottom: 15px;
   overflow: hidden;
@@ -173,6 +174,7 @@ footer {
   .logo { width: 260px; }
   .subtitle { font-size: 2.2rem; font-weight: 600; }
 }
+
 /* POPUP */
 .popup-overlay {
   position: fixed;
@@ -216,86 +218,8 @@ footer {
   cursor:pointer;
   font-weight:bold;
 }
+
 /* BOTÓN PUBLICAR PROMOCIÓN */
-.btn-publicar {
-  display: inline-block;
-  background: #25D366; /* mismo verde de WhatsApp */
-  color: white;
-  padding: 12px 20px;
-  border-radius: 12px;
-  text-decoration: none;
-  font-weight: 600;
-  text-align: center;
-  cursor: pointer;
-  margin-top: 15px;
-  transition: all 0.2s ease;
-}
-
-/* HOVER (efecto al pasar el mouse) */
-.btn-publicar:hover {
-  background: #1ebe5d;
-  transform: scale(1.05);
-}
-
-/* CLICK (efecto al presionar) */
-.btn-publicar:active {
-  transform: scale(0.97);
-}
-/* BOTÓN PUBLICAR PROMOCIÓN (MISMA LÍNEA, NO SE BAJA) */
-/* BOTÓN PUBLICAR PROMOCIÓN FLOTANTE (TIPO WHATSAPP) */
-.btn-publicar {
-  position: fixed;
-  bottom: 80px; /* arriba del botón de WhatsApp */
-  right: 20px;
-  background: #007bff; /* azul para diferenciarlo */
-  color: white;
-  padding: 14px 18px;
-  border-radius: 30px;
-  text-decoration: none;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  z-index: 999;
-  transition: all 0.2s ease;
-}
-
-/* hover */
-.btn-publicar:hover {
-  background: #0069d9;
-  transform: scale(1.05);
-}
-
-/* click */
-.btn-publicar:active {
-  transform: scale(0.95);
-}
-/* BOTÓN PICADAS (IZQUIERDA) */
-.btn-picada {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  background: #ff5722;
-  color: white;
-  padding: 14px 18px;
-  border-radius: 30px;
-  text-decoration: none;
-  font-weight: 600;
-  cursor: pointer;
-  z-index: 999;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-
-.btn-picada:hover {
-  background: #e64a19;
-}
-/* TEXTO GUIA */
-.helper-text {
-  margin-top: 10px;
-  font-size: 0.9rem;
-  color: #666;
-}
-
-/* BOTÓN NEGOCIO (DERECHA) */
 .btn-publicar {
   position: fixed;
   bottom: 20px;
@@ -309,6 +233,8 @@ footer {
   z-index: 999;
   animation: rebote 2s infinite;
 }
+.btn-publicar:hover { background: #1ebe5d; }
+.btn-publicar:active { transform: scale(0.95); }
 
 /* BOTÓN USUARIO (IZQUIERDA) */
 .btn-picada {
@@ -324,18 +250,18 @@ footer {
   z-index: 999;
   animation: rebote 2s infinite;
 }
+.btn-picada:hover { background: #e64a19; }
+
+/* TEXTO GUIA */
+.helper-text {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #666;
+}
 
 /* ANIMACIÓN SUAVE */
 @keyframes rebote {
   0% { transform: translateY(0); }
   50% { transform: translateY(-4px); }
   100% { transform: translateY(0); }
-}
-
-/* HOVER */
-.btn-publicar:hover {
-  background: #1ebe5d;
-}
-.btn-picada:hover {
-  background: #e64a19;
 }
