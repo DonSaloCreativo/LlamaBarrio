@@ -16,17 +16,19 @@ body { font-family:'Poppins',sans-serif; background:#fff7d6; margin:0; display:f
 /* BUSCADOR */
 .search-box { background:#fff; margin:20px auto 30px; padding:20px; border-radius:20px; max-width:500px; width:90%; box-shadow:0 4px 12px rgba(0,0,0,0.1); text-align:left; }
 .search-box label { font-weight:600; display:block; margin-top:10px; }
-.search-box select { width:100%; padding:8px; border-radius:10px; border:1px solid #ccc; margin-top:5px; }
-.search-btn { margin-top:15px; padding:10px; background-color:#25D366; color:white; border:none; border-radius:10px; cursor:pointer; width:100%; font-weight:600; }
+.search-box select { width:100%; padding:10px; border-radius:12px; border:1px solid #ccc; margin-top:5px; font-size:1rem; }
 
 /* BOTONES FILTRO */
 .filter-buttons { display:flex; gap:10px; overflow-x:auto; padding-bottom:5px; margin-top:10px; }
 .filter-buttons::-webkit-scrollbar { height:6px; }
 .filter-buttons::-webkit-scrollbar-thumb { background:#ccc; border-radius:3px; }
-.filter-btn { padding:6px 12px; border-radius:12px; border:1px solid #25D366; background:#fff; color:#25D366; font-weight:600; cursor:pointer; white-space:nowrap; flex-shrink:0; transition:0.2s; }
+.filter-btn { padding:8px 14px; border-radius:12px; border:1px solid #25D366; background:#fff; color:#25D366; font-weight:600; cursor:pointer; white-space:nowrap; flex-shrink:0; transition:0.2s; font-size:0.95rem; }
 .filter-btn.active { background:#25D366; color:#fff; }
 .filter-btn[data-category="Vida Nocturna"] { background:#000; color:#fff; border:1px solid #000; }
 .filter-btn[data-category="Vida Nocturna"]:hover { background:#222; }
+
+/* BOTON BUSCAR */
+.search-btn { margin-top:15px; padding:10px; background-color:#25D366; color:white; border:none; border-radius:10px; cursor:pointer; width:100%; font-weight:600; font-size:1rem; }
 
 /* SECCIONES */
 .section-title { margin-top:20px; padding:8px 15px; display:inline-block; font-weight:600; }

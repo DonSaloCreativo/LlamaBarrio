@@ -52,9 +52,8 @@ filterButtons.forEach(btn => {
   });
 });
 
-// MOSTRAR PICADAS DE VECINOS
+// MOSTRAR PRODUCTOS
 function displayProducts(products){
-  // PICADAS DE VECINOS
   cheapScroll.innerHTML = "";
   products.forEach(p => {
     const card = document.createElement("div");
@@ -109,7 +108,7 @@ function displayProducts(products){
   }
 }
 
-// BÚSQUEDA
+// BUSCAR
 function buscar(){
   const comuna = locationFilter.value;
   let filtered = allProducts.filter(p => comuna ? p.comuna === comuna : true);
