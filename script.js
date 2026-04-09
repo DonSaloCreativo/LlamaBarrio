@@ -15,7 +15,7 @@ const locationFilter = document.getElementById("location-filter");
 const searchInput = document.getElementById("search-input");
 
 // COMUNAS
-const comunas = [ "Colina","Lampa","Til Til","Pirque","Puente Alto","San José de Maipo","Buin", "Calera de Tango","Paine","San Bernardo","Alhué","Curacaví","María Pinto", "Melipilla","San Pedro","Cerrillos","Cerro Navia","Conchalí","El Bosque", "Estación Central","Huechuraba","Independencia","La Cisterna","La Granja","La Florida","La Pintana","La Reina","Las Condes","Lo Barnechea","Lo Espejo","Lo Prado","Macul","Maipú","Ñuñoa","Pedro Aguirre Cerda","Peñalolén", "Providencia","Pudahuel","Quilicura","Quinta Normal","Recoleta","Renca", "San Miguel","San Joaquín","San Ramón","Santiago","Vitacura","El Monte", "Isla de Maipo","Padre Hurtado","Peñaflor","Talagante" ];
+const comunas = [ "Colina","Lampa","Til Til","Pirque","Puente Alto","San José de Maipo","Buin", "Calera de Tango","Paine","San Bernardo","Alhué","Curacaví","María Pinto", "Melipilla","San Pedro","Cerrillos","Cerro Navia","Conchalí","El Bosque","Estación Central","Huechuraba","Independencia","La Cisterna","La Granja","La Florida","La Pintana","La Reina","Las Condes","Lo Barnechea","Lo Espejo","Lo Prado","Macul","Maipú","Ñuñoa","Pedro Aguirre Cerda","Peñalolén", "Providencia","Pudahuel","Quilicura","Quinta Normal","Recoleta","Renca", "San Miguel","San Joaquín","San Ramón","Santiago","Vitacura","El Monte", "Isla de Maipo","Padre Hurtado","Peñaflor","Talagante" ];
 
 // LLENAR SELECT
 locationFilter.innerHTML = '<option value="">Todas las comunas</option>';

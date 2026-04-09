@@ -1,7 +1,7 @@
 /* GENERAL */
 body {
   font-family: 'Poppins', sans-serif;
-  background: #FFF4CC; /* mostaza clarito */
+  background: #fff7d6; /* mostaza clarito más suave */
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -12,7 +12,7 @@ body {
 /* HEADER */
 .hero {
   background-color: #ffffff; /* banner blanco */
-  color: #25D366; /* verde del logo */
+  color: #000000; /* subtitulo negro */
   padding: 15px 10px;
   width: 100%;
   display: flex;
@@ -21,23 +21,22 @@ body {
 }
 
 .logo {
-  width: 180px; /* achicado un poco */
-  max-width: 220px;
+  width: 200px; /* un poquito más pequeño */
+  max-width: 250px;
 }
 
 .subtitle {
-  font-size: 1.8rem; /* más grande */
-  font-weight: 600;
-  margin-top: 5px;
-  color: #000;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 10px;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
 }
 
 /* BOTONES BANNER */
 .banner-buttons {
   display: flex;
-  gap: 12px;
-  margin-top: 10px;
+  gap: 25px;
+  margin-top: 15px;
 }
 
 .btn-banner {
@@ -60,16 +59,49 @@ body {
   box-shadow: 0 6px 18px rgba(0,0,0,0.3);
 }
 
-/* BOTÓN DESTACADO (Comparte tu picada) */
+/* BOTÓN QUE RESALTA */
 .btn-banner.highlight {
-  background-color: #FF6D00; /* naranja */
+  background-color: #FF6B00; /* naranja resaltante */
   animation: pulse 2s infinite;
 }
 
+/* ANIMACIÓN PULSANTE */
 @keyframes pulse {
-  0% { transform: scale(1); background-color: #FF6D00; }
-  50% { transform: scale(1.05); background-color: #FF8C42; }
-  100% { transform: scale(1); background-color: #FF6D00; }
+  0% { transform: scale(1); background-color: #FF6B00; }
+  50% { transform: scale(1.05); background-color: #FF8C33; }
+  100% { transform: scale(1); background-color: #FF6B00; }
+}
+
+/* BUSCADOR */
+.search-box {
+  background: #ffffff; /* blanco para resaltar */
+  margin: 20px auto 30px;
+  padding: 20px;
+  border-radius: 20px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: left;
+}
+
+.search-box label { font-weight: 600; }
+.search-box input, .search-box select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin-top: 5px;
+}
+.search-btn {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #25D366;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+  font-weight: 600;
 }
 
 /* SECCIONES */
@@ -77,12 +109,12 @@ body {
   margin-top: 20px;
   padding: 8px 15px;
   display: inline-block;
-  border-radius: 12px;
   font-weight: 600;
 }
 
-.purple-text { color: #5a0080; background: none; }
-.blue-text { color: #00bcd4; background: none; }
+/* texto sin fondo */
+.purple-text { color: #5a0080; }
+.blue-text { color: #00bcd4; }
 .yellow-bg { background-color: #f3c13a; color:#111; }
 
 /* SCROLL HORIZONTAL */
@@ -108,14 +140,11 @@ body {
   transition: transform 0.2s, box-shadow 0.2s;
   position: relative;
 }
-
 .cheap-card:hover, .featured-card:hover {
   transform: scale(1.05);
   box-shadow: 0 6px 18px rgba(0,0,0,0.25);
 }
-
 .cheap-card img, .featured-card img { width: 100%; height: 140px; object-fit: cover; }
-
 .cheap-card .info, .featured-card .info { padding: 10px; font-size: 0.95rem; }
 
 /* BADGES */
@@ -129,10 +158,9 @@ body {
   font-size: 0.75rem;
   border-radius: 12px;
   font-weight: 600;
-  animation: pulseBadge 1.5s infinite;
+  animation: pulse-badge 1.5s infinite;
 }
-
-@keyframes pulseBadge {
+@keyframes pulse-badge {
   0% { transform: scale(1); opacity: 1; }
   50% { transform: scale(1.1); opacity: 0.9; }
   100% { transform: scale(1); opacity: 1; }
@@ -145,55 +173,18 @@ body {
   list-style: none;
   padding: 15px;
 }
-
 #product-list li {
   background: #f3c13a;
   border-radius: 16px;
   margin-bottom: 15px;
   overflow: hidden;
 }
-
 .product-img {
   width: 100%;
   height: 180px;
   object-fit: cover;
 }
-
 .product-info { padding: 10px; }
-
-/* BUSCADOR */
-.search-box {
-  background: #fff; /* ahora blanco */
-  margin: 20px auto 30px;
-  padding: 20px;
-  border-radius: 20px;
-  max-width: 500px;
-  width: 90%;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  text-align: left;
-}
-
-.search-box label { font-weight: 600; }
-
-.search-box input, .search-box select {
-  width: 100%;
-  padding: 8px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  margin-top: 5px;
-}
-
-.search-btn {
-  margin-top: 10px;
-  padding: 10px;
-  background-color: #25D366;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  width: 100%;
-  font-weight: 600;
-}
 
 /* FOOTER */
 footer {
@@ -203,54 +194,4 @@ footer {
   padding: 15px 10px;
   font-size: 12px;
   text-align: center;
-}
-
-/* POPUP */
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left:0;
-  width:100%;
-  height:100%;
-  background: rgba(0,0,0,0.6);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  z-index: 1000;
-}
-
-.popup-content {
-  background: #fff;
-  width: 300px;
-  max-width: 90%;
-  padding: 15px;
-  border-radius: 16px;
-  position: relative;
-}
-
-.popup-content img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-.popup-close {
-  position: absolute;
-  top:10px;
-  right:10px;
-  background:#ff5252;
-  color:white;
-  border:none;
-  border-radius:50%;
-  width:28px;
-  height:28px;
-  cursor:pointer;
-  font-weight:bold;
-}
-
-/* AJUSTES EN ESCRITORIO */
-@media screen and (min-width: 1024px) {
-  .logo { width: 200px; }
-  .subtitle { font-size: 2.4rem; }
 }
