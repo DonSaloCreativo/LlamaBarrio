@@ -1,7 +1,7 @@
 /* GENERAL */
 body {
   font-family: 'Poppins', sans-serif;
-  background: #f3c13a; /* fondo mostaza */
+  background: #FFF4CC; /* mostaza clarito */
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -12,46 +12,64 @@ body {
 /* HEADER */
 .hero {
   background-color: #ffffff; /* banner blanco */
-  color: #111; /* texto oscuro */
-  padding: 20px 10px;
+  color: #25D366; /* verde del logo */
+  padding: 15px 10px;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-.logo { width: 150px; max-width: 200px; }
-.subtitle { font-size: 1.2rem; font-weight: 600; margin-top: 5px; color:#111; }
 
-/* BUSCADOR */
-.search-box {
-  background: #ffffff; /* fondo blanco */
-  border: 2px solid #f3c13a; /* borde mostaza */
-  margin: 20px auto 30px;
-  padding: 20px;
-  border-radius: 20px;
-  max-width: 500px;
-  width: 90%;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  text-align: left;
+.logo {
+  width: 180px; /* achicado un poco */
+  max-width: 220px;
 }
-.search-box label { font-weight: 600; }
-.search-box input, .search-box select {
-  width: 100%;
-  padding: 8px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
+
+.subtitle {
+  font-size: 1.8rem; /* más grande */
+  font-weight: 600;
   margin-top: 5px;
+  color: #000;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
-.search-btn {
+
+/* BOTONES BANNER */
+.banner-buttons {
+  display: flex;
+  gap: 12px;
   margin-top: 10px;
-  padding: 10px;
+}
+
+.btn-banner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   background-color: #25D366;
   color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  width: 100%;
+  padding: 8px 14px;
+  border-radius: 12px;
   font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  transition: all 0.2s ease;
+}
+
+.btn-banner:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+}
+
+/* BOTÓN DESTACADO (Comparte tu picada) */
+.btn-banner.highlight {
+  background-color: #FF6D00; /* naranja */
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); background-color: #FF6D00; }
+  50% { transform: scale(1.05); background-color: #FF8C42; }
+  100% { transform: scale(1); background-color: #FF6D00; }
 }
 
 /* SECCIONES */
@@ -60,11 +78,11 @@ body {
   padding: 8px 15px;
   display: inline-block;
   border-radius: 12px;
-  color: #111; /* texto oscuro */
   font-weight: 600;
 }
-.purple-bg { background-color: #5a0080; color:white; }
-.blue-bg { background-color: #00bcd4; color:white; }
+
+.purple-text { color: #5a0080; background: none; }
+.blue-text { color: #00bcd4; background: none; }
 .yellow-bg { background-color: #f3c13a; color:#111; }
 
 /* SCROLL HORIZONTAL */
@@ -90,19 +108,15 @@ body {
   transition: transform 0.2s, box-shadow 0.2s;
   position: relative;
 }
+
 .cheap-card:hover, .featured-card:hover {
   transform: scale(1.05);
   box-shadow: 0 6px 18px rgba(0,0,0,0.25);
 }
-.cheap-card img, .featured-card img {
-  width: 100%;
-  height: 140px;
-  object-fit: cover;
-}
-.cheap-card .info, .featured-card .info {
-  padding: 10px;
-  font-size: 0.95rem;
-}
+
+.cheap-card img, .featured-card img { width: 100%; height: 140px; object-fit: cover; }
+
+.cheap-card .info, .featured-card .info { padding: 10px; font-size: 0.95rem; }
 
 /* BADGES */
 .badge {
@@ -115,9 +129,10 @@ body {
   font-size: 0.75rem;
   border-radius: 12px;
   font-weight: 600;
-  animation: pulse 1.5s infinite;
+  animation: pulseBadge 1.5s infinite;
 }
-@keyframes pulse {
+
+@keyframes pulseBadge {
   0% { transform: scale(1); opacity: 1; }
   50% { transform: scale(1.1); opacity: 0.9; }
   100% { transform: scale(1); opacity: 1; }
@@ -130,33 +145,54 @@ body {
   list-style: none;
   padding: 15px;
 }
+
 #product-list li {
-  background: #ffffff;
+  background: #f3c13a;
   border-radius: 16px;
   margin-bottom: 15px;
   overflow: hidden;
 }
+
 .product-img {
   width: 100%;
   height: 180px;
   object-fit: cover;
 }
-.product-info {
-  padding: 10px;
+
+.product-info { padding: 10px; }
+
+/* BUSCADOR */
+.search-box {
+  background: #fff; /* ahora blanco */
+  margin: 20px auto 30px;
+  padding: 20px;
+  border-radius: 20px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: left;
 }
 
-/* BOTÓN WHATSAPP FIJO */
-#whatsapp-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #25D366;
+.search-box label { font-weight: 600; }
+
+.search-box input, .search-box select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin-top: 5px;
+}
+
+.search-btn {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #25D366;
   color: white;
   border: none;
-  padding: 14px;
-  border-radius: 30px;
-  font-weight: 600;
+  border-radius: 10px;
   cursor: pointer;
+  width: 100%;
+  font-weight: 600;
 }
 
 /* FOOTER */
@@ -167,12 +203,6 @@ footer {
   padding: 15px 10px;
   font-size: 12px;
   text-align: center;
-}
-
-/* AJUSTES EN ESCRITORIO */
-@media screen and (min-width: 1024px) {
-  .logo { width: 260px; }
-  .subtitle { font-size: 2.2rem; font-weight: 600; }
 }
 
 /* POPUP */
@@ -219,49 +249,8 @@ footer {
   font-weight:bold;
 }
 
-/* BOTÓN PUBLICAR PROMOCIÓN */
-.btn-publicar {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #25D366;
-  color: white;
-  padding: 14px 18px;
-  border-radius: 30px;
-  font-weight: 600;
-  text-decoration: none;
-  z-index: 999;
-  animation: rebote 2s infinite;
-}
-.btn-publicar:hover { background: #1ebe5d; }
-.btn-publicar:active { transform: scale(0.95); }
-
-/* BOTÓN USUARIO (IZQUIERDA) */
-.btn-picada {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  background: #ff5722;
-  color: white;
-  padding: 14px 18px;
-  border-radius: 30px;
-  font-weight: 600;
-  text-decoration: none;
-  z-index: 999;
-  animation: rebote 2s infinite;
-}
-.btn-picada:hover { background: #e64a19; }
-
-/* TEXTO GUIA */
-.helper-text {
-  margin-top: 10px;
-  font-size: 0.9rem;
-  color: #666;
-}
-
-/* ANIMACIÓN SUAVE */
-@keyframes rebote {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
-  100% { transform: translateY(0); }
+/* AJUSTES EN ESCRITORIO */
+@media screen and (min-width: 1024px) {
+  .logo { width: 200px; }
+  .subtitle { font-size: 2.4rem; }
 }

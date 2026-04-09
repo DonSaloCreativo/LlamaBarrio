@@ -6,6 +6,7 @@
   <title>RedBarrio</title>
   <link rel="stylesheet" href="style.css?v=7">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -13,42 +14,32 @@
 <header class="hero">
   <img src="images/logo.png" class="logo">
   <p class="subtitle">Conectando vecinos con promociones reales</p>
+  <div class="banner-buttons">
+    <a href="#" class="btn-banner highlight"><i class="fas fa-camera"></i> Comparte tu picada</a>
+    <a href="#" class="btn-banner"><i class="fas fa-store"></i> Soy Negocio</a>
+  </div>
 </header>
-
-<!-- MICRO COPY UX -->
-<p class="helper-text">¿Eres negocio o vecino?</p>
-
-<!-- LO MÁS BARATO -->
-<h2 class="section-title purple-bg">💸 Lo más barato hoy</h2>
-<div id="cheap-scroll"></div>
 
 <!-- BUSCADOR -->
 <div class="search-box">
   <label>📍 ¿En qué comuna estás?</label>
   <select id="location-filter"></select>
-
   <label>🍔 ¿Qué estás buscando?</label>
   <input type="text" id="search-input" placeholder="Ej: pizza, sushi, gasfiter...">
   <button onclick="buscar()" class="search-btn">Buscar</button>
 </div>
 
+<!-- LO MÁS BARATO -->
+<h2 class="section-title purple-text">💸 Lo más barato hoy</h2>
+<div id="cheap-scroll"></div>
+
 <!-- DESTACADOS -->
-<h2 class="section-title blue-bg">🔥 Destacados de tu comuna</h2>
+<h2 class="section-title blue-text">🔥 Destacados de tu comuna</h2>
 <div id="featured-scroll"></div>
 
 <!-- TODAS LAS PROMOCIONES -->
 <h2 class="section-title yellow-bg">📍 Todas las promociones</h2>
 <ul id="product-list"></ul>
-
-<!-- BOTÓN NEGOCIO -->
-<a href="#" class="btn-publicar" onclick="abrirFormPromo()">
-  🏪 Soy negocio
-</a>
-
-<!-- BOTÓN USUARIO -->
-<a href="#" class="btn-picada" onclick="abrirFormDato()">
-  📸 Vi una oferta
-</a>
 
 <!-- FOOTER -->
 <footer>
@@ -59,12 +50,7 @@
 <div id="popupPromo" class="popup-overlay" style="display:none;">
   <div class="popup-content" style="width:90%; max-width:600px;">
     <button class="popup-close" onclick="cerrarFormPromo()">X</button>
-    <iframe 
-      src="https://docs.google.com/forms/d/e/1FAIpQLSe-NoZ-wev8KO0U6LT2ko9Ly0NyZcCjkZ4A0eBF-1TbH2qZxA/viewform?embedded=true" 
-      width="100%" 
-      height="500"
-      style="border:none; border-radius:12px;">
-    </iframe>
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe-NoZ-wev8KO0U6LT2ko9Ly0NyZcCjkZ4A0eBF-1TbH2qZxA/viewform?embedded=true" width="100%" height="500" style="border:none; border-radius:12px;"></iframe>
   </div>
 </div>
 
@@ -72,30 +58,16 @@
 <div id="popupDato" class="popup-overlay" style="display:none;">
   <div class="popup-content" style="width:90%; max-width:600px;">
     <button class="popup-close" onclick="cerrarFormDato()">X</button>
-    <iframe 
-      src="https://tally.so/r/ja7DOQ" 
-      width="100%" 
-      height="500"
-      style="border:none; border-radius:12px;">
-    </iframe>
+    <iframe src="https://tally.so/r/ja7DOQ" width="100%" height="500" style="border:none; border-radius:12px;"></iframe>
   </div>
 </div>
 
 <script src="script.js"></script>
-
 <script>
-function abrirFormPromo() {
-  document.getElementById("popupPromo").style.display = "flex";
-}
-function cerrarFormPromo() {
-  document.getElementById("popupPromo").style.display = "none";
-}
-function abrirFormDato() {
-  document.getElementById("popupDato").style.display = "flex";
-}
-function cerrarFormDato() {
-  document.getElementById("popupDato").style.display = "none";
-}
+function abrirFormPromo() { document.getElementById("popupPromo").style.display = "flex"; }
+function cerrarFormPromo() { document.getElementById("popupPromo").style.display = "none"; }
+function abrirFormDato() { document.getElementById("popupDato").style.display = "flex"; }
+function cerrarFormDato() { document.getElementById("popupDato").style.display = "none"; }
 window.onclick = function(e) {
   const promo = document.getElementById("popupPromo");
   const dato = document.getElementById("popupDato");
@@ -103,6 +75,5 @@ window.onclick = function(e) {
   if (e.target === dato) dato.style.display = "none";
 }
 </script>
-
 </body>
 </html>
