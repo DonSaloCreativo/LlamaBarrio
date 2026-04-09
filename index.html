@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RedBarrio</title>
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=7">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
@@ -15,8 +15,14 @@
   <img src="images/logo.png" class="logo">
   <p class="subtitle">Conectando vecinos con promociones reales</p>
   <div class="banner-buttons">
-    <a href="#" class="btn-banner highlight"> <i class="fas fa-camera"></i> Comparte tu picada </a>
-    <a href="#" class="btn-banner"> <i class="fas fa-store"></i> Soy Negocio </a>
+    <!-- BOTÓN TALLY -->
+    <a href="javascript:void(0)" class="btn-banner highlight" onclick="abrirFormDato()">
+      <i class="fas fa-camera"></i> Comparte tu picada
+    </a>
+    <!-- BOTÓN GOOGLE FORM -->
+    <a href="javascript:void(0)" class="btn-banner" onclick="abrirFormPromo()">
+      <i class="fas fa-store"></i> Soy Negocio
+    </a>
   </div>
 </header>
 
@@ -46,7 +52,7 @@
   <p>© 2026 RedBarrio. All rights reserved.</p>
 </footer>
 
-<!-- POPUP NEGOCIO -->
+<!-- POPUP GOOGLE FORM (Soy Negocio) -->
 <div id="popupPromo" class="popup-overlay" style="display:none;">
   <div class="popup-content" style="width:90%; max-width:600px;">
     <button class="popup-close" onclick="cerrarFormPromo()">X</button>
@@ -54,7 +60,7 @@
   </div>
 </div>
 
-<!-- POPUP USUARIO -->
+<!-- POPUP TALLY (Comparte tu picada) -->
 <div id="popupDato" class="popup-overlay" style="display:none;">
   <div class="popup-content" style="width:90%; max-width:600px;">
     <button class="popup-close" onclick="cerrarFormDato()">X</button>
@@ -64,16 +70,19 @@
 
 <script src="script.js"></script>
 <script>
-function abrirFormPromo() { document.getElementById("popupPromo").style.display = "flex"; }
-function cerrarFormPromo() { document.getElementById("popupPromo").style.display = "none"; }
-function abrirFormDato() { document.getElementById("popupDato").style.display = "flex"; }
-function cerrarFormDato() { document.getElementById("popupDato").style.display = "none"; }
-window.onclick = function(e) {
-  const promo = document.getElementById("popupPromo");
-  const dato = document.getElementById("popupDato");
-  if (e.target === promo) promo.style.display = "none";
-  if (e.target === dato) dato.style.display = "none";
-}
+  // ABRIR / CERRAR POPUPS
+  function abrirFormPromo() { document.getElementById("popupPromo").style.display = "flex"; }
+  function cerrarFormPromo() { document.getElementById("popupPromo").style.display = "none"; }
+  function abrirFormDato() { document.getElementById("popupDato").style.display = "flex"; }
+  function cerrarFormDato() { document.getElementById("popupDato").style.display = "none"; }
+
+  // CERRAR AL HACER CLICK FUERA DEL POPUP
+  window.onclick = function(e) {
+    const promo = document.getElementById("popupPromo");
+    const dato = document.getElementById("popupDato");
+    if (e.target === promo) promo.style.display = "none";
+    if (e.target === dato) dato.style.display = "none";
+  }
 </script>
 </body>
 </html>
