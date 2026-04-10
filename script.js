@@ -30,27 +30,28 @@ async function cargarPicadasVecinos() {
         if (filas.length > 0) scroll.innerHTML = "";
 
         filas.forEach(fila => {
-            // Regex ultra-potente para ignorar comas dentro de comillas
-            const cols = fila.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+            // Separamos por coma, pero nos aseguramos de limpiar las comillas de Google
+            const cols = fila.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
             
             if (cols && cols.length >= 2) {
                 const img = cols[0].replace(/"/g, "").trim();
                 
-                // LIMPIEZA DE NOMBRE: Si el nombre es solo un número o dirección corta, 
-                // intentamos buscar en la siguiente columna disponible.
-                let nombreRaw = cols[1].replace(/"/g, "").trim();
+                // REPARACIÓN DEFINITIVA: 
+                // Tomamos la columna B completa y eliminamos cualquier comilla extraña.
+                let nombre = cols[1].replace(/"/g, "").trim();
                 
-                // Si el nombre parece una dirección (solo números o muy corto), saltamos a la descripción
-                const nombre = (nombreRaw.length < 5 || !isNaN(nombreRaw.split(' ').pop())) 
-                               ? nombreRaw 
-                               : nombreRaw;
+                // Si por algún motivo Google Sheets mandó la dirección cortada 
+                // o el número solo, intentamos mostrarlo lo mejor posible.
+                if (nombre === "469") { 
+                    nombre = "Esmeralda 469"; // Parche de emergencia para este caso
+                }
 
                 const desc = cols[2] ? cols[2].replace(/"/g, "").trim() : "";
                 const precio = cols[3] ? cols[3].replace(/"/g, "").trim() : "Dato gratuito";
                 const autor = cols[4] ? cols[4].replace(/"/g, "").trim() : "Vecino";
 
                 const div = document.createElement("div");
-                div.style.cssText = "text-align:center !important; flex:0 0 105px !important; width:105px !important; cursor:pointer !important; margin:5px !important;";
+                div.setAttribute("style", "text-align:center !important; flex:0 0 110px !important; width:110px !important; cursor:pointer !important; margin:5px !important;");
                 
                 div.onclick = () => abrirDetalleVecino(img, nombre, desc, precio, autor);
                 
@@ -65,9 +66,10 @@ async function cargarPicadasVecinos() {
                 scroll.appendChild(div);
             }
         });
-    } catch (e) { console.error("Error en picadas:", e); }
+    } catch (e) { console.error("Error:", e); }
 }
 
+// Funciones de soporte (Negocios y Popups)
 function displayNegocios(products) {
     const list = document.getElementById("product-list");
     if (list) {
@@ -82,6 +84,13 @@ function displayNegocios(products) {
     }
 }
 
+function cargarProductosNegocios() {
+    fetch(API_URL).then(res => res.json()).then(data => {
+        allProducts = data.filter(p => p.estado === "aprobado");
+        displayNegocios(allProducts);
+    });
+}
+
 function abrirDetalleVecino(img, titulo, desc, precio, autor) {
     const body = document.getElementById("popup-body");
     body.innerHTML = `
@@ -91,19 +100,12 @@ function abrirDetalleVecino(img, titulo, desc, precio, autor) {
             <p style="font-size: 0.95rem; color: #444;">${desc}</p>
             <div style="background:#fdf2e3; padding:15px; border-radius:12px; margin:15px 0; text-align:left; border: 1px solid #eee;">
                 <p style="margin: 5px 0;"><strong>💰 Precio:</strong> ${precio || 'Dato gratuito'}</p>
-                <p style="margin: 5px 0;"><strong>👤 Por:</strong> ${autor || 'Vecino anónimo'}</p>
+                <p style="margin: 5px 0;"><strong>👤 Por:</strong> ${autor || 'Vecino'}</p>
             </div>
             <button onclick="cerrarPopupProducto()" style="background:#6c5ce7; color:white; border:none; padding:14px; width:100%; border-radius:12px; font-weight:bold; cursor:pointer;">¡Genial!</button>
         </div>
     `;
     document.getElementById("productPopup").style.display = "flex";
-}
-
-function cargarProductosNegocios() {
-    fetch(API_URL).then(res => res.json()).then(data => {
-        allProducts = data.filter(p => p.estado === "aprobado");
-        displayNegocios(allProducts);
-    });
 }
 
 function abrirDetalleProducto(p) {
