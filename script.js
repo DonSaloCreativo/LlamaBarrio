@@ -24,26 +24,24 @@ async function cargarPicadasVecinos() {
     try {
         const res = await fetch(CSV_VECINOS_URL);
         const csvText = await res.text();
-        const filas = csvText.split(/\r?\n/).filter(f => f.trim() !== "").slice(1);
+        let filas = csvText.split(/\r?\n/).filter(f => f.trim() !== "").slice(1);
         const scroll = document.getElementById("cheap-scroll");
         
-        if (filas.length > 0) scroll.innerHTML = "";
+        if (filas.length > 0) {
+            scroll.innerHTML = "";
+            // Mezclamos las picadas de los vecinos al azar
+            filas = filas.sort(() => 0.5 - Math.random());
+        }
 
         filas.forEach(fila => {
-            // Separamos por coma, pero nos aseguramos de limpiar las comillas de Google
             const cols = fila.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
             
             if (cols && cols.length >= 2) {
                 const img = cols[0].replace(/"/g, "").trim();
-                
-                // REPARACIÓN DEFINITIVA: 
-                // Tomamos la columna B completa y eliminamos cualquier comilla extraña.
                 let nombre = cols[1].replace(/"/g, "").trim();
                 
-                // Si por algún motivo Google Sheets mandó la dirección cortada 
-                // o el número solo, intentamos mostrarlo lo mejor posible.
                 if (nombre === "469") { 
-                    nombre = "Esmeralda 469"; // Parche de emergencia para este caso
+                    nombre = "Esmeralda 469"; 
                 }
 
                 const desc = cols[2] ? cols[2].replace(/"/g, "").trim() : "";
@@ -69,9 +67,11 @@ async function cargarPicadasVecinos() {
     } catch (e) { console.error("Error:", e); }
 }
 
-// Funciones de soporte (Negocios y Popups)
 function displayNegocios(products) {
     const list = document.getElementById("product-list");
+    const comunaList = document.getElementById("comuna-list");
+
+    // 1. Mostrar resultados (los filtrados o todos)
     if (list) {
         list.innerHTML = "";
         products.forEach(p => {
@@ -80,6 +80,20 @@ function displayNegocios(products) {
             card.onclick = () => abrirDetalleProducto(p);
             card.innerHTML = `<img src="${p.imagen}" class="res-thumb"><div class="res-info"><strong>${p.nombre}</strong><br><small>📍 ${p.comuna}</small><div style="color:#FF4500; font-weight:700; margin-top:5px;">$${Number(p.precio).toLocaleString('es-CL')}</div></div>`;
             list.appendChild(card);
+        });
+    }
+
+    // 2. Lógica de "Picadas en tu comuna" (Muestra 3 al azar siempre)
+    if (comunaList && allProducts.length > 0) {
+        comunaList.innerHTML = "";
+        const randomPicks = [...allProducts].sort(() => 0.5 - Math.random()).slice(0, 3);
+        
+        randomPicks.forEach(p => {
+            const card = document.createElement("div");
+            card.className = "res-card";
+            card.onclick = () => abrirDetalleProducto(p);
+            card.innerHTML = `<img src="${p.imagen}" class="res-thumb"><div class="res-info"><strong>${p.nombre}</strong><br><small>📍 ${p.comuna}</small><div style="color:#FF4500; font-weight:700; margin-top:5px;">$${Number(p.precio).toLocaleString('es-CL')}</div></div>`;
+            comunaList.appendChild(card);
         });
     }
 }
