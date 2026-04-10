@@ -2,8 +2,8 @@ const comunas = ["Cerrillos", "Cerro Navia", "Conchalí", "El Bosque", "Estació
 
 let allProducts = [];
 
-// URL DE TU GOOGLE APPS SCRIPT
-const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz5kgFCQU9hn_Ih1Mfo9HENhk7LJL0Zb5QAaU-jad7SIjamxSC8T0fVqZe-xYRc3xPrkg/exec';
+// URL DE TU GOOGLE APPS SCRIPT - ACTUALIZADA
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6n8qir_m3tq4RtUNrHFN5Oq4oRpXlax-R1cavve3LNaGuED1DmUbYIyQZoyO5MvjWOQ/exec';
 
 async function cargarDatosDeSheet() {
     try {
@@ -11,17 +11,24 @@ async function cargarDatosDeSheet() {
         const response = await fetch(GOOGLE_APPS_SCRIPT_URL);
         
         if (!response.ok) {
+            console.error('❌ Error HTTP:', response.status);
             throw new Error('Error en la respuesta del servidor: ' + response.status);
         }
         
         const datos = await response.json();
         console.log('✅ Datos cargados:', datos);
         
+        if (!Array.isArray(datos) || datos.length === 0) {
+            console.warn('⚠️ No hay datos en el Sheet o no están aprobados');
+            displayProducts([]);
+            return;
+        }
+        
         allProducts = datos.map(row => ({
             nombre: row.nombre || '',
             imagen: row.imagen || 'images/placeholder.jpg',
             categoria: row.categoria || '',
-            precio: row.precio || 0,
+            precio: parseInt(row.precio) || 0,
             comuna: row.comuna || '',
             telefono: row.telefono || '',
             tags: Array.isArray(row.tags) ? row.tags : (row.tags ? row.tags.split(',').map(t => t.trim()) : []),
@@ -30,15 +37,21 @@ async function cargarDatosDeSheet() {
             estado: row.estado || ''
         }));
         
-        // Filtrar solo aprobados
-        allProducts = allProducts.filter(p => p.estado.toLowerCase() === "aprobado");
+        console.log('📊 Productos cargados:', allProducts.length);
         
-        console.log('📊 Productos aprobados encontrados:', allProducts.length);
+        // Filtrar solo aprobados
+        const aprobados = allProducts.filter(p => p.estado.toLowerCase() === "aprobado");
+        allProducts = aprobados;
+        
+        console.log('✅ Productos aprobados encontrados:', allProducts.length);
         init();
         
     } catch (error) {
         console.error('❌ Error cargando datos de Sheet:', error);
-        alert('⚠️ Error al cargar los datos. Por favor recarga la página.');
+        console.log('Si ves este error, verifica que:');
+        console.log('1. La URL del Apps Script sea correcta');
+        console.log('2. El Apps Script esté desplegado como "Web app"');
+        console.log('3. El acceso sea "Cualquiera"');
     }
 }
 
