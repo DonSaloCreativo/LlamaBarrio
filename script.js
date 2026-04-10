@@ -2,56 +2,71 @@ const comunas = ["Cerrillos", "Cerro Navia", "Conchalí", "El Bosque", "Estació
 
 let allProducts = [];
 
-// URL DE TU GOOGLE APPS SCRIPT - ACTUALIZADA
+// URL DE TU GOOGLE APPS SCRIPT
 const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6n8qir_m3tq4RtUNrHFN5Oq4oRpXlax-R1cavve3LNaGuED1DmUbYIyQZoyO5MvjWOQ/exec';
 
 async function cargarDatosDeSheet() {
     try {
         console.log('🔄 Cargando datos del Sheet...');
-        const response = await fetch(GOOGLE_APPS_SCRIPT_URL);
+        console.log('URL:', GOOGLE_APPS_SCRIPT_URL);
+        
+        const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        console.log('📊 Response status:', response.status);
+        console.log('📊 Response ok:', response.ok);
         
         if (!response.ok) {
-            console.error('❌ Error HTTP:', response.status);
-            throw new Error('Error en la respuesta del servidor: ' + response.status);
+            throw new Error('HTTP Error: ' + response.status);
         }
         
-        const datos = await response.json();
-        console.log('✅ Datos cargados:', datos);
+        const text = await response.text();
+        console.log('📄 Raw response:', text.substring(0, 200));
         
-        if (!Array.isArray(datos) || datos.length === 0) {
-            console.warn('⚠️ No hay datos en el Sheet o no están aprobados');
-            displayProducts([]);
+        const datos = JSON.parse(text);
+        console.log('✅ Datos parseados:', datos);
+        console.log('📊 Cantidad de datos:', datos.length);
+        
+        if (!Array.isArray(datos)) {
+            throw new Error('Los datos no son un array');
+        }
+        
+        if (datos.length === 0) {
+            console.warn('⚠️ No hay datos en el Sheet');
+            allProducts = [];
+            init();
             return;
         }
         
-        allProducts = datos.map(row => ({
-            nombre: row.nombre || '',
-            imagen: row.imagen || 'images/placeholder.jpg',
-            categoria: row.categoria || '',
-            precio: parseInt(row.precio) || 0,
-            comuna: row.comuna || '',
-            telefono: row.telefono || '',
-            tags: Array.isArray(row.tags) ? row.tags : (row.tags ? row.tags.split(',').map(t => t.trim()) : []),
-            direccion: row.direccion || '',
-            horario: row.horario || '',
-            estado: row.estado || ''
-        }));
+        allProducts = datos.map((row, idx) => {
+            console.log('Procesando fila ' + idx + ':', row);
+            return {
+                nombre: row.nombre || '',
+                imagen: row.imagen || 'images/placeholder.jpg',
+                categoria: row.categoria || '',
+                precio: parseInt(row.precio) || 0,
+                comuna: row.comuna || '',
+                telefono: row.telefono || '',
+                tags: Array.isArray(row.tags) ? row.tags : (row.tags ? row.tags.split(',').map(t => t.trim()) : []),
+                direccion: row.direccion || '',
+                horario: row.horario || '',
+                estado: row.estado || ''
+            };
+        });
         
-        console.log('📊 Productos cargados:', allProducts.length);
+        console.log('✅ Productos procesados:', allProducts.length);
+        console.log('Productos:', allProducts);
         
-        // Filtrar solo aprobados
-        const aprobados = allProducts.filter(p => p.estado.toLowerCase() === "aprobado");
-        allProducts = aprobados;
-        
-        console.log('✅ Productos aprobados encontrados:', allProducts.length);
         init();
+        displayProducts(allProducts);
         
     } catch (error) {
-        console.error('❌ Error cargando datos de Sheet:', error);
-        console.log('Si ves este error, verifica que:');
-        console.log('1. La URL del Apps Script sea correcta');
-        console.log('2. El Apps Script esté desplegado como "Web app"');
-        console.log('3. El acceso sea "Cualquiera"');
+        console.error('❌ ERROR COMPLETO:', error);
+        console.error('Stack:', error.stack);
     }
 }
 
@@ -97,6 +112,8 @@ function displayProducts(products) {
     const list = document.getElementById("product-list");
     const scroll = document.getElementById("cheap-scroll");
     const comunaList = document.getElementById("comuna-list");
+
+    console.log('🎨 Mostrando productos:', products.length);
 
     if(scroll){
         scroll.innerHTML = "";
@@ -239,11 +256,11 @@ function buscar() {
     displayProducts(res);
 }
 
-// Recargar datos cada 30 segundos para ver cambios nuevos en el Sheet
+// Recargar datos cada 10 segundos
 setInterval(() => {
     console.log('🔄 Actualizando datos...');
     cargarDatosDeSheet();
-}, 30000);
+}, 10000);
 
 window.onclick = (e) => { 
     if(e.target.className === 'popup-overlay') {
