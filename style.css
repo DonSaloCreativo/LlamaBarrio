@@ -50,8 +50,32 @@ body { font-family: 'Poppins', sans-serif; background-color: var(--bg-light); ma
 .res-info { padding: 15px; }
 
 .circle-scroll { display: flex; gap: 20px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
-.circle-item { min-width: 100px; text-align: center; cursor: pointer; }
-.circle-img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid white; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+
+/* NUEVOS ESTILOS PICADAS VECINOS */
+.picada-card-dinamica {
+    min-width: 100px;
+    text-align: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: 0.2s;
+}
+.picada-card-dinamica:hover { transform: scale(1.05); }
+.picada-img-dinamica {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--morado);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.picada-info-txt {
+    font-size: 0.75rem;
+    color: var(--morado);
+    font-weight: 800;
+    display: block;
+    margin-top: 5px;
+    text-transform: uppercase;
+}
 
 .promo-banner { display: flex; justify-content: center; width: 100%; }
 .promo-card { max-width: 1000px; width: 100%; border-radius: 15px; overflow: hidden; margin: 40px 0; }

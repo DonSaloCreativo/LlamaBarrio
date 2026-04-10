@@ -6,39 +6,6 @@
     <title>LlamaBarrio - Tu comunidad conectada</title>
     <link rel="stylesheet" href="style.css?v=52">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        /* Estilos específicos para las nuevas picadas dinámicas */
-        .picada-card-dinamica {
-            min-width: 150px;
-            max-width: 150px;
-            text-align: center;
-            margin-right: 15px;
-            flex-shrink: 0;
-        }
-        .picada-img-wrapper {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 8px;
-            border-radius: 50%;
-            border: 2px solid #39FF14; /* Verde neón */
-            overflow: hidden;
-            box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
-        }
-        .picada-img-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .picada-info-txt {
-            font-size: 0.8rem;
-            color: #fff;
-            font-weight: 600;
-            display: block;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-    </style>
 </head>
 <body>
 
@@ -74,8 +41,8 @@
 
     <section class="suggestions highlighted-border">
         <h2 class="tag-picadas-morado">🔥 Las picadas de los vecinos</h2>
-        <div id="cheap-scroll" class="circle-scroll" style="display: flex; overflow-x: auto; padding: 10px 0;">
-            <p style="color: #fff; font-size: 0.8rem; opacity: 0.6; padding-left: 20px;">Cargando picadas...</p>
+        <div id="cheap-scroll" class="circle-scroll">
+            <p style="color: var(--morado); font-size: 0.8rem; padding-left: 20px;">Cargando picadas...</p>
         </div>
     </section>
 
@@ -135,49 +102,5 @@
 </div>
 
 <script src="script.js"></script>
-
-<script>
-    // PEGA AQUÍ EL ENLACE CSV QUE COPIASTE DE GOOGLE SHEETS (PASO 4 ANTERIOR)
-    const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRWzx7f1vqDJI0loZSkE0nMI9ZNc65LU9VU3Dejgj1eByfSAFHu3Nea8XsMlWwQgYoCJFjCA8UpU2ui/pub?gid=1515086148&single=true&output=csv"; 
-
-    async function cargarPicadasExcel() {
-        try {
-            const res = await fetch(CSV_URL);
-            const csvText = await res.text();
-            const filas = csvText.split("\n").slice(1);
-            const scrollContainer = document.getElementById('cheap-scroll');
-            
-            scrollContainer.innerHTML = ""; // Limpiar el "Cargando..."
-
-            filas.forEach(fila => {
-                // Regex para manejar comas y comillas del CSV
-                const cols = fila.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
-                
-                if (cols && cols.length >= 2) {
-                    const imgUrl = cols[0].replace(/"/g, "").trim();
-                    const nombre = cols[1].replace(/"/g, "").trim();
-                    
-                    // Creamos el círculo de picada
-                    const item = `
-                        <div class="picada-card-dinamica">
-                            <div class="picada-img-wrapper">
-                                <img src="${imgUrl}" alt="${nombre}" onerror="this.src='images/logo.png'">
-                            </div>
-                            <span class="picada-info-txt">${nombre}</span>
-                        </div>
-                    `;
-                    scrollContainer.innerHTML += item;
-                }
-            });
-        } catch (e) {
-            console.error("Error al cargar picadas:", e);
-        }
-    }
-
-    // Ejecutar al cargar la página
-    if(CSV_URL !== "TU_ENLACE_AQUI") {
-        cargarPicadasExcel();
-    }
-</script>
 </body>
 </html>
