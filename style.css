@@ -19,22 +19,9 @@ html, body {
 /* CONTROL MOBILE */
 .mobile-only { display: none; }
 
-/* SECCIONES */
-.results.section-resultados {
-    background-color: #ffffff;
-    padding: 25px 15px;
-    border-radius: 20px;
-    margin: 20px 0;
-    border-left: 6px solid var(--primary);
-}
-
-.results.section-recomendaciones {
-    background-color: #fff9db;
-    padding: 25px 15px;
-    border-radius: 20px;
-    margin: 20px 0;
-}
-
+/* ============================================================
+   NAVBAR
+   ============================================================ */
 .navbar { 
     background: var(--white); 
     padding: 12px 20px; 
@@ -82,6 +69,7 @@ html, body {
     outline: none; 
     font-weight: 600; 
     font-size: 0.9rem; 
+    font-family: 'Poppins', sans-serif;
 }
 
 .search-icon-btn.minimal { 
@@ -111,6 +99,7 @@ html, body {
     font-weight: 700; 
     cursor: pointer;
     transition: all 0.2s ease;
+    font-family: 'Poppins', sans-serif;
 }
 
 .btn-picada-destacado { 
@@ -133,6 +122,9 @@ html, body {
     transform: translateY(-2px);
 }
 
+/* ============================================================
+   CONTENIDO PRINCIPAL
+   ============================================================ */
 .content-wrapper { 
     max-width: 1150px; 
     margin: 0 auto; 
@@ -145,6 +137,24 @@ html, body {
     font-weight: 800; 
     text-align: center; 
     margin: 40px 0; 
+}
+
+/* ============================================================
+   SECCIONES
+   ============================================================ */
+.results.section-resultados {
+    background-color: #ffffff;
+    padding: 25px 15px;
+    border-radius: 20px;
+    margin: 20px 0;
+    border-left: 6px solid var(--primary);
+}
+
+.results.section-recomendaciones {
+    background-color: #fff9db;
+    padding: 25px 15px;
+    border-radius: 20px;
+    margin: 20px 0;
 }
 
 .section-tag-bg { 
@@ -165,13 +175,15 @@ html, body {
     color: #333; 
 }
 
-/* 🔥 TITULO PICADAS */
 .tag-picadas-morado {
     color: var(--morado);
     font-weight: 800;
     margin-bottom: 10px;
 }
 
+/* ============================================================
+   GRILLA DE RESULTADOS
+   ============================================================ */
 .results-grid { 
     display: grid; 
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
@@ -194,6 +206,7 @@ html, body {
 
 .res-card:focus {
     outline: 2px solid var(--primary);
+    outline-offset: 2px;
 }
 
 .res-thumb { 
@@ -204,6 +217,44 @@ html, body {
 
 .res-info { padding: 15px; }
 
+.card-nombre {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+.card-comuna {
+    display: block;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.card-tags {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+.card-tag {
+    background: #FFE4CC;
+    color: var(--primary);
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.card-precio {
+    color: var(--primary);
+    font-weight: 800;
+    margin-top: 8px;
+    font-size: 1rem;
+}
+
+/* ============================================================
+   SCROLL DE PICADAS
+   ============================================================ */
 .circle-scroll { 
     display: flex; 
     gap: 15px; 
@@ -212,19 +263,16 @@ html, body {
     scrollbar-width: none; 
 }
 
-.circle-scroll::-webkit-scrollbar {
-    display: none;
-}
+.circle-scroll::-webkit-scrollbar { display: none; }
 
 .circle-item {
     cursor: pointer;
     transition: all 0.2s ease;
     flex-shrink: 0;
+    text-align: center;
 }
 
-.circle-item:hover {
-    transform: scale(1.05);
-}
+.circle-item:hover { transform: scale(1.05); }
 
 .circle-img { 
     width: 85px; 
@@ -233,13 +281,15 @@ html, body {
     object-fit: cover;
     border: 2px solid transparent;
     transition: all 0.2s ease;
+    display: block;
+    margin: 0 auto 4px;
 }
 
-.circle-item:hover .circle-img {
-    border-color: var(--primary);
-}
+.circle-item:hover .circle-img { border-color: var(--primary); }
 
-/* BANNER DE PROMO - CENTRADO Y RESPONSIVE */
+/* ============================================================
+   BANNER PROMO
+   ============================================================ */
 .promo-banner {
     display: flex;
     justify-content: center;
@@ -260,18 +310,20 @@ html, body {
     height: auto;
     max-width: 900px;
     border-radius: 20px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
     object-fit: contain;
 }
 
-/* POPUPS */
+/* ============================================================
+   POPUPS — BASE
+   ============================================================ */
 .popup-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0,0,0,0.6);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -282,7 +334,7 @@ html, body {
 .popup-content {
     background: white;
     border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
     position: relative;
     max-width: 600px;
     width: 90%;
@@ -292,14 +344,8 @@ html, body {
 }
 
 @keyframes slideUp {
-    from {
-        transform: translateY(50px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
+    from { transform: translateY(50px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
 }
 
 .popup-close {
@@ -325,10 +371,135 @@ html, body {
     transform: scale(1.1);
 }
 
-/* Estilos específicos para popups de formularios */
-.form-popup {
-    padding: 40px 25px;
+/* ============================================================
+   POPUP — IFRAME (Tally / Google Forms)
+   ============================================================ */
+.popup-iframe {
+    padding: 0;
+    width: 92%;
+    max-width: 680px;
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
+
+.popup-iframe .popup-close {
+    top: 10px;
+    right: 10px;
+    background: rgba(255,255,255,0.9);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    z-index: 2;
+}
+
+.popup-iframe iframe {
+    flex: 1;
+    border: none;
+    border-radius: 20px;
+    width: 100%;
+    height: 100%;
+}
+
+@media (max-width: 768px) {
+    .popup-iframe {
+        width: 98%;
+        height: 92vh;
+    }
+}
+
+
+.popup-img-wrap {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 20px 20px 0 0;
+}
+
+.popup-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.popup-info {
+    padding: 20px;
+    text-align: center;
+}
+
+.popup-info h2 {
+    margin: 0 0 8px 0;
+    font-size: 1.4rem;
+}
+
+.popup-meta {
+    color: #666;
+    margin: 4px 0;
+    font-size: 0.9rem;
+}
+
+.popup-descripcion {
+    color: #555;
+    font-size: 0.9rem;
+    margin: 10px 0;
+    line-height: 1.5;
+}
+
+.popup-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+.popup-tag {
+    background: #FFE4CC;
+    color: var(--primary);
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.popup-precio {
+    color: var(--primary);
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 12px 0;
+}
+
+.btn-whatsapp {
+    display: block;
+    background: #25D366;
+    color: white;
+    padding: 12px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 10px 0;
+    transition: opacity 0.2s;
+}
+
+.btn-whatsapp:hover { opacity: 0.9; }
+
+.btn-volver {
+    background: #eee;
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.btn-volver:hover { background: #ddd; }
+
+/* ============================================================
+   POPUP — FORMULARIOS
+   ============================================================ */
+.form-popup { padding: 40px 25px; }
 
 .form-popup h2 {
     font-size: 1.6rem;
@@ -364,7 +535,7 @@ html, body {
 .form-group textarea:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(255, 69, 0, 0.1);
+    box-shadow: 0 0 0 3px rgba(255,69,0,0.1);
 }
 
 .form-group textarea {
@@ -383,18 +554,47 @@ html, body {
     cursor: pointer;
     transition: all 0.2s ease;
     margin-top: 10px;
+    font-family: 'Poppins', sans-serif;
+    width: 100%;
 }
 
-.btn-submit:hover {
-    opacity: 0.9;
-    transform: translateY(-2px);
+.btn-submit:hover  { opacity: 0.9; transform: translateY(-2px); }
+.btn-submit:active { transform: translateY(0); }
+.btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
 }
 
-.btn-submit:active {
-    transform: translateY(0);
+/* ============================================================
+   TOAST DE ÉXITO
+   ============================================================ */
+.toast-exito {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #222;
+    color: white;
+    padding: 14px 24px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    z-index: 99999;
+    opacity: 0;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
 
-/* FOOTER */
+.toast-exito.toast-visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
 .main-footer { 
     background: #111; 
     color: white; 
@@ -408,9 +608,7 @@ html, body {
     margin: 0 auto;
 }
 
-.footer-content p {
-    margin: 8px 0;
-}
+.footer-content p { margin: 8px 0; }
 
 .footer-links {
     display: flex;
@@ -429,32 +627,24 @@ html, body {
     transition: all 0.2s ease;
 }
 
-.footer-link:hover {
-    opacity: 0.8;
-    text-decoration: underline;
-}
+.footer-link:hover { opacity: 0.8; text-decoration: underline; }
 
-.footer-divider {
-    color: #666;
-    opacity: 0.5;
-}
+.footer-divider { color: #666; opacity: 0.5; }
 
-/* 📱 BOTONES FLOTANTES - SOLO MÓVIL */
+/* ============================================================
+   BOTONES FLOTANTES MÓVIL
+   ============================================================ */
 .mobile-float-bar {
     position: fixed;
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    
     display: none;
     gap: 10px;
-
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255,255,255,0.15);
     backdrop-filter: blur(12px);
-
     padding: 8px;
     border-radius: 40px;
-
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
     z-index: 9999;
 }
@@ -468,72 +658,50 @@ html, body {
     font-size: 0.85rem;
     color: white;
     cursor: pointer;
-
     backdrop-filter: blur(6px);
     transition: all 0.2s ease;
+    font-family: 'Poppins', sans-serif;
 }
 
-.btn-mob-trans-orange {
-    background: rgba(255, 69, 0, 0.75);
-}
-
-.btn-mob-trans-blue {
-    background: rgba(0, 123, 255, 0.75);
-}
+.btn-mob-trans-orange { background: rgba(255,69,0,0.75); }
+.btn-mob-trans-blue   { background: rgba(0,123,255,0.75); }
 
 .btn-mob-trans-orange:active,
-.btn-mob-trans-blue:active {
-    transform: scale(0.95);
-}
+.btn-mob-trans-blue:active { transform: scale(0.95); }
 
 .btn-mob-trans-orange:hover,
-.btn-mob-trans-blue:hover {
-    opacity: 0.9;
-}
+.btn-mob-trans-blue:hover { opacity: 0.9; }
 
-/* 📱 RESPONSIVE MOBILE */
+/* ============================================================
+   RESPONSIVE MÓVIL
+   ============================================================ */
 @media (max-width: 768px) {
     .desktop-only { display: none !important; }
-    .mobile-only { display: flex !important; }
-    
-    /* MOSTRAR BOTONES FLOTANTES EN MÓVIL */
-    .mobile-float-bar {
-        display: flex !important;
-    }
+    .mobile-only  { display: flex !important; }
+
+    .mobile-float-bar { display: flex !important; }
 
     .nav-container { flex-direction: column; }
     .header-controls-group { width: 100%; }
-    .location-wrapper { width: 35%; }
+    .location-wrapper  { width: 35%; }
     .search-bar-wrapper { width: 65%; }
     .results-grid { grid-template-columns: 1fr; }
     
     .hero-title { font-size: 1.5rem; }
-    
+
     .popup-content {
         width: 95%;
-        padding: 30px 20px;
-    }
-    
-    .form-popup {
-        padding: 30px 20px;
-    }
-    
-    .promo-banner {
-        padding: 20px 0;
-        margin: 30px 0;
-    }
-    
-    .full-promo-img {
-        border-radius: 15px;
+        max-height: 95vh;
     }
 
-    .main-footer {
-        padding: 30px 15px;
-        margin-top: 40px;
-    }
-    
-    .footer-links {
-        gap: 10px;
-        font-size: 0.85rem;
-    }
+    .form-popup { padding: 30px 20px; }
+
+    .promo-banner { padding: 20px 0; margin: 30px 0; }
+    .full-promo-img { border-radius: 15px; }
+
+    .main-footer { padding: 30px 15px; margin-top: 40px; }
+    .footer-links { gap: 10px; font-size: 0.85rem; }
+
+    /* El toast sube un poco más para no chocar con los botones flotantes */
+    .toast-exito { bottom: 100px; }
 }

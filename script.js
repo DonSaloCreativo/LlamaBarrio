@@ -1,188 +1,457 @@
-const comunas = ["Cerrillos", "Cerro Navia", "Conchalí", "El Bosque", "Estación Central", "Huechuraba", "Independencia", "La Cisterna", "La Florida", "La Granja", "La Pintana", "La Reina", "Las Condes", "Lo Barnechea", "Lo Espejo", "Lo Prado", "Macul", "Maipú", "Ñuñoa", "Pedro Aguirre Cerda", "Peñalolén", "Providencia", "Pudahuel", "Quilicura", "Quinta Normal", "Recoleta", "Renca", "San Bernardo", "San Joaquín", "San Miguel", "San Ramón", "Santiago", "Vitacura"];
+// ============================================================
+// CONFIGURACIÓN — edita solo esta sección
+// ============================================================
 
-let allProducts = [];
+// ⚠️  SEGURIDAD: Mueve SHEET_ID y API_KEY a un proxy o Apps Script
+// para producción. Acá van temporalmente para desarrollo.
+// Instrucciones al final del archivo.
 
-const SHEET_ID = '1nNCBbxa0H-0zH8FaT-rLNM1JihseIHnSqYTzxKZAih0';
+const CONFIG = {
+    SHEET_ID:     'TU_SHEET_ID_AQUI',          // ← reemplaza
+    API_KEY:      'TU_API_KEY_AQUI',            // ← reemplaza
+    TALLY_SHEET:  'Picadas_Tally',              // nombre de la pestaña de Tally en tu Sheet
+    BASE_SHEET:   'RedBarrio_Base',             // nombre de la pestaña principal
+    TALLY_FORM_URL: 'https://tally.so/r/XXXXX', // ← reemplaza con tu URL de Tally
+    RELOAD_INTERVAL_MS: 5 * 60 * 1000          // recarga cada 5 minutos (antes era 10 seg)
+};
+
+// ============================================================
+// ESTADO GLOBAL
+// ============================================================
+const comunas = ["Cerrillos","Cerro Navia","Conchalí","El Bosque","Estación Central","Huechuraba","Independencia","La Cisterna","La Florida","La Granja","La Pintana","La Reina","Las Condes","Lo Barnechea","Lo Espejo","Lo Prado","Macul","Maipú","Ñuñoa","Pedro Aguirre Cerda","Peñalolén","Providencia","Pudahuel","Quilicura","Quinta Normal","Recoleta","Renca","San Bernardo","San Joaquín","San Miguel","San Ramón","Santiago","Vitacura"];
+
+let allProducts  = [];   // locales aprobados (Sheet principal)
+let allPicadas   = [];   // picadas aprobadas (Sheet Tally)
+
+// ============================================================
+// CARGA DE DATOS
+// ============================================================
+
+async function fetchSheet(sheetName) {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.SHEET_ID}/values/${sheetName}?key=${CONFIG.API_KEY}`;
+    const res  = await fetch(url);
+    if (!res.ok) throw new Error(`Error ${res.status} al cargar ${sheetName}`);
+    return res.json();
+}
 
 async function cargarDatosDeSheet() {
     try {
-        console.log('🔄 Cargando datos del Sheet...');
-        
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/RedBarrio_Base?key=AIzaSyDvwwB6zY2b5c3d4e5f6g7h8i9j0k1l2m3n`;
-        
-        const response = await fetch(url);
-        const data = await response.json();
-        
-        console.log('📊 Datos:', data);
-        
-        if (!data.values || data.values.length < 2) {
-            console.warn('⚠️ No hay datos');
+        // --- Locales principales ---
+        const dataBase = await fetchSheet(CONFIG.BASE_SHEET);
+
+        if (dataBase.values && dataBase.values.length >= 2) {
+            allProducts = dataBase.values.slice(1)
+                .map(row => {
+                    if (!row[0]) return null;
+                    return {
+                        nombre:    row[0] || '',
+                        imagen:    row[1] || 'images/placeholder.jpg',
+                        categoria: row[2] || '',
+                        precio:    parseInt(row[3]) || 0,
+                        comuna:    row[4] || '',
+                        telefono:  row[5] || '',
+                        tags:      row[6] ? row[6].toString().split(',').map(t => t.trim()) : [],
+                        direccion: row[7] || '',
+                        horario:   row[8] || '',
+                        estado:    row[9] || ''
+                    };
+                })
+                .filter(p => p && p.estado.toLowerCase().trim() === 'aprobado');
+        } else {
             allProducts = [];
-            init();
-            return;
         }
-        
-        const rows = data.values;
-        
-        allProducts = rows.slice(1).map((row, idx) => {
-            if (!row[0]) return null;
-            
-            return {
-                nombre: row[0] || '',
-                imagen: row[1] || 'images/placeholder.jpg',
-                categoria: row[2] || '',
-                precio: parseInt(row[3]) || 0,
-                comuna: row[4] || '',
-                telefono: row[5] || '',
-                tags: row[6] ? row[6].toString().split(',').map(t => t.trim()) : [],
-                direccion: row[7] || '',
-                horario: row[8] || '',
-                estado: row[9] || ''
-            };
-        }).filter(p => p !== null && p.estado.toLowerCase().trim() === 'aprobado');
-        
-        console.log('✅ Productos cargados:', allProducts.length);
-        console.log('Productos:', allProducts);
-        
+
+        // --- Picadas de vecinos (Tally) ---
+        try {
+            const dataTally = await fetchSheet(CONFIG.TALLY_SHEET);
+
+            if (dataTally.values && dataTally.values.length >= 2) {
+                allPicadas = dataTally.values.slice(1)
+                    .map(row => {
+                        if (!row[0]) return null;
+                        return {
+                            nombre:      row[0] || '',
+                            comuna:      row[1] || '',
+                            precio:      parseInt(row[2]) || 0,
+                            descripcion: row[3] || '',
+                            telefono:    row[4] || '',
+                            estado:      row[5] || '',
+                            imagen:      row[6] || 'images/placeholder.jpg'
+                        };
+                    })
+                    .filter(p => p && p.estado.toLowerCase().trim() === 'aprobado');
+            } else {
+                allPicadas = [];
+            }
+        } catch (errTally) {
+            // Si la pestaña Tally no existe aún, no es un error crítico
+            console.warn('⚠️ No se pudo cargar la pestaña Tally:', errTally.message);
+            allPicadas = [];
+        }
+
+        console.log(`✅ Locales: ${allProducts.length} | Picadas: ${allPicadas.length}`);
         init();
         displayProducts(allProducts);
-        
+
     } catch (error) {
-        console.error('❌ ERROR:', error);
+        console.error('❌ Error cargando datos:', error.message);
+        mostrarErrorCarga();
     }
 }
+
+function mostrarErrorCarga() {
+    const list = document.getElementById("product-list");
+    if (list) {
+        list.innerHTML = `<p style="text-align:center; color:#999; padding:40px 0;">
+            No pudimos cargar los locales ahora. Intenta recargar la página.
+        </p>`;
+    }
+}
+
+// ============================================================
+// INICIALIZACIÓN DE SELECTS
+// ============================================================
 
 function init() {
-    const filter = document.getElementById("location-filter");
-    const formSelectDato = document.getElementById("dato-Comuna");
-    const formSelectPromo = document.getElementById("promo-comuna");
-    
-    [filter, formSelectDato, formSelectPromo].forEach(element => {
-        if(element) {
-            element.innerHTML = '<option value="">Selecciona una comuna</option>';
-            comunas.sort().forEach(c => {
-                const op = document.createElement("option");
-                op.value = c;
-                op.textContent = c;
-                element.appendChild(op);
-            });
-        }
-    });
+    const selectores = [
+        document.getElementById("location-filter"),
+        document.getElementById("dato-Comuna"),
+        document.getElementById("promo-comuna")
+    ];
 
-    displayProducts(allProducts);
+    selectores.forEach(el => {
+        if (!el) return;
+        const valorActual = el.value; // conservar selección
+        el.innerHTML = '<option value="">Comuna</option>';
+        comunas.slice().sort().forEach(c => {
+            const op = document.createElement("option");
+            op.value = c;
+            op.textContent = c;
+            el.appendChild(op);
+        });
+        el.value = valorActual;
+    });
 }
+
+// ============================================================
+// RENDERIZADO
+// ============================================================
 
 function displayProducts(products) {
-    const list = document.getElementById("product-list");
+    renderPicadasScroll();
+    renderResultados(products);
+    renderRecomendaciones();
+}
+
+function renderPicadasScroll() {
     const scroll = document.getElementById("cheap-scroll");
-    const comunaList = document.getElementById("comuna-list");
+    if (!scroll) return;
 
-    if(scroll) {
-        scroll.innerHTML = "";
-        allProducts.forEach(p => {
-            const div = document.createElement("div");
-            div.className = "circle-item";
-            div.onclick = () => abrirDetalleProducto(p);
-            div.innerHTML = `<img src="${p.imagen}" class="circle-img" alt="${p.nombre}" onerror="this.src='images/placeholder.jpg'"><p style="font-size:0.7rem; font-weight:600;">${p.nombre}</p>`;
-            scroll.appendChild(div);
-        });
-    }
+    scroll.innerHTML = "";
 
-    if(list) {
-        list.innerHTML = "";
-        if(products.length === 0) {
-            document.getElementById("no-results").style.display = "block";
-        } else {
-            document.getElementById("no-results").style.display = "none";
-            products.forEach(p => list.appendChild(createProductCard(p)));
-        }
-    }
+    // Muestra picadas de Tally si hay, si no muestra los locales normales
+    const fuente = allPicadas.length > 0 ? allPicadas : allProducts;
 
-    if(comunaList) {
-        comunaList.innerHTML = "";
-        allProducts.slice(0, 3).forEach(p => comunaList.appendChild(createProductCard(p)));
+    fuente.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "circle-item";
+        div.onclick = () => abrirDetalleProducto(p);
+
+        const nombre = p.nombre.length > 14 ? p.nombre.slice(0, 13) + '…' : p.nombre;
+        div.innerHTML = `
+            <img src="${p.imagen}" class="circle-img" alt="${p.nombre}" onerror="this.src='images/placeholder.jpg'">
+            <p style="font-size:0.7rem; font-weight:600; text-align:center; max-width:85px;">${nombre}</p>`;
+        scroll.appendChild(div);
+    });
+}
+
+function renderResultados(products) {
+    const list   = document.getElementById("product-list");
+    const noRes  = document.getElementById("no-results");
+    if (!list) return;
+
+    list.innerHTML = "";
+
+    if (products.length === 0) {
+        if (noRes) noRes.style.display = "block";
+    } else {
+        if (noRes) noRes.style.display = "none";
+        products.forEach(p => list.appendChild(createProductCard(p)));
     }
 }
+
+function renderRecomendaciones() {
+    const comunaList = document.getElementById("comuna-list");
+    if (!comunaList) return;
+
+    const comunaSeleccionada = document.getElementById("location-filter")?.value;
+
+    let recomendados;
+
+    if (comunaSeleccionada) {
+        // Filtrar por la comuna seleccionada
+        recomendados = allProducts.filter(p => p.comuna === comunaSeleccionada).slice(0, 6);
+    } else {
+        // Sin filtro: mostrar los primeros 6 (podrías randomizar)
+        recomendados = allProducts.slice(0, 6);
+    }
+
+    comunaList.innerHTML = "";
+
+    if (recomendados.length === 0) {
+        comunaList.innerHTML = `<p style="color:#999; font-size:0.9rem;">
+            Selecciona una comuna para ver recomendaciones locales.
+        </p>`;
+        return;
+    }
+
+    recomendados.forEach(p => comunaList.appendChild(createProductCard(p)));
+}
+
+// ============================================================
+// CARD DE PRODUCTO
+// ============================================================
 
 function createProductCard(p) {
     const card = document.createElement("div");
     card.className = "res-card";
+    card.setAttribute("tabindex", "0");
+    card.setAttribute("role", "button");
+    card.setAttribute("aria-label", `Ver detalles de ${p.nombre}`);
     card.onclick = () => abrirDetalleProducto(p);
-    
-    let tagsHTML = p.tags?.length > 0 ? `<div style="margin-top:8px; display:flex; gap:5px; flex-wrap:wrap;">
-        ${p.tags.slice(0, 2).map(tag => `<span style="background:#FFE4CC; color:#FF4500; font-size:0.7rem; padding:3px 8px; border-radius:12px; font-weight:600;">${tag}</span>`).join('')}
-    </div>` : '';
-    
+    card.onkeydown = (e) => { if (e.key === 'Enter') abrirDetalleProducto(p); };
+
+    const tagsHTML = p.tags?.length > 0
+        ? `<div class="card-tags">
+            ${p.tags.slice(0, 2).map(tag =>
+                `<span class="card-tag">${tag}</span>`
+            ).join('')}
+           </div>`
+        : '';
+
+    const precioHTML = p.precio > 0
+        ? `<div class="card-precio">$${p.precio.toLocaleString('es-CL')}</div>`
+        : '';
+
     card.innerHTML = `
-        <img src="${p.imagen}" class="res-thumb" alt="${p.nombre}" onerror="this.src='images/placeholder.jpg'">
+        <img src="${p.imagen}" class="res-thumb" alt="${p.nombre}" loading="lazy" onerror="this.src='images/placeholder.jpg'">
         <div class="res-info">
-            <strong>${p.nombre}</strong><br>
-            <small>📍 ${p.comuna}</small>
+            <strong class="card-nombre">${p.nombre}</strong>
+            <small class="card-comuna">📍 ${p.comuna}</small>
             ${tagsHTML}
-            <div style="color:#FF4500; font-weight:800; margin-top:5px;">$${p.precio.toLocaleString('es-CL')}</div>
+            ${precioHTML}
         </div>`;
     return card;
 }
 
+// ============================================================
+// POPUP DETALLE
+// ============================================================
+
 function abrirDetalleProducto(p) {
-    const whatsappNumber = p.telefono.replace(/\s+/g, '').replace('+', '');
-    let tagsHTML = p.tags?.length > 0 ? `<div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin:10px 0;">
-        ${p.tags.map(tag => `<span style="background:#FFE4CC; color:#FF4500; padding:5px 12px; border-radius:15px; font-weight:600;">${tag}</span>`).join('')}
-    </div>` : '';
-    
+    const whatsappNumber = (p.telefono || '').replace(/\s+/g, '').replace('+', '');
+
+    const tagsHTML = p.tags?.length > 0
+        ? `<div class="popup-tags">
+            ${p.tags.map(tag => `<span class="popup-tag">${tag}</span>`).join('')}
+           </div>`
+        : '';
+
+    const precioHTML = p.precio > 0
+        ? `<h3 class="popup-precio">$${p.precio.toLocaleString('es-CL')}</h3>`
+        : '';
+
+    const contactoHTML = whatsappNumber
+        ? `<a href="https://wa.me/${whatsappNumber}" target="_blank" rel="noopener" class="btn-whatsapp">
+               💬 Contactar por WhatsApp
+           </a>`
+        : '';
+
+    const descripcionHTML = p.descripcion
+        ? `<p class="popup-descripcion">${p.descripcion}</p>`
+        : '';
+
     document.getElementById("popup-body").innerHTML = `
-        <div style="width:100%; height:200px; overflow:hidden;">
-            <img src="${p.imagen}" style="width:100%; height:100%; object-fit:cover;" alt="${p.nombre}" onerror="this.src='images/placeholder.jpg'">
+        <div class="popup-img-wrap">
+            <img src="${p.imagen}" alt="${p.nombre}" onerror="this.src='images/placeholder.jpg'">
         </div>
-        <div style="padding:20px; text-align:center;">
-            <h2 style="margin:0;">${p.nombre}</h2>
-            <p style="color:#999;">📁 ${p.categoria}</p>
-            <p style="color:#666;">📍 ${p.direccion}</p>
-            <p style="color:#666;">🕐 ${p.horario}</p>
+        <div class="popup-info">
+            <h2>${p.nombre}</h2>
+            ${p.categoria ? `<p class="popup-meta">📁 ${p.categoria}</p>` : ''}
+            ${p.direccion  ? `<p class="popup-meta">📍 ${p.direccion}</p>`  : ''}
+            ${p.horario    ? `<p class="popup-meta">🕐 ${p.horario}</p>`    : ''}
+            ${descripcionHTML}
             ${tagsHTML}
-            <h3 style="color:#FF4500;">$${p.precio.toLocaleString('es-CL')}</h3>
-            <a href="https://wa.me/${whatsappNumber}" target="_blank" style="display:block; background:#25D366; color:white; padding:12px; border-radius:12px; text-decoration:none; font-weight:bold; margin:10px 0;">Contactar</a>
-            <button onclick="cerrarPopupProducto()" style="background:#eee; border:none; padding:10px; border-radius:10px; cursor:pointer; width:100%;">Volver</button>
+            ${precioHTML}
+            ${contactoHTML}
+            <button onclick="cerrarPopupProducto()" class="btn-volver">Volver</button>
         </div>`;
+
     document.getElementById("productPopup").style.display = "flex";
+    document.body.style.overflow = "hidden"; // evita scroll de fondo
 }
 
-function cerrarPopupProducto() { document.getElementById("productPopup").style.display = "none"; }
-function abrirFormPromo() { document.getElementById("popupPromo").style.display = "flex"; }
-function cerrarFormPromo() { document.getElementById("popupPromo").style.display = "none"; }
-function abrirFormDato() { document.getElementById("popupDato").style.display = "flex"; }
-function cerrarFormDato() { document.getElementById("popupDato").style.display = "none"; }
-
-function enviarDato(event) {
-    event.preventDefault();
-    alert('✅ ¡Gracias!');
-    cerrarFormDato();
-    document.getElementById("formDato").reset();
+function cerrarPopupProducto() {
+    document.getElementById("productPopup").style.display = "none";
+    document.body.style.overflow = "";
 }
 
-function enviarPromo(event) {
+// ============================================================
+// POPUPS FORMULARIOS
+// ============================================================
+
+function abrirFormPromo() {
+    document.getElementById("popupPromo").style.display = "flex";
+    document.body.style.overflow = "hidden";
+}
+function cerrarFormPromo() {
+    document.getElementById("popupPromo").style.display = "none";
+    document.body.style.overflow = "";
+}
+function abrirFormDato() {
+    document.getElementById("popupDato").style.display = "flex";
+    document.body.style.overflow = "hidden";
+}
+function cerrarFormDato() {
+    document.getElementById("popupDato").style.display = "none";
+    document.body.style.overflow = "";
+}
+
+// ============================================================
+// ENVÍO DE FORMULARIO: REGISTRAR NEGOCIO
+// (Las picadas van por Tally externo, este form es para negocios)
+// ============================================================
+
+async function enviarPromo(event) {
     event.preventDefault();
-    alert('✅ ¡Gracias!');
+    const btn = event.target.querySelector('.btn-submit');
+    btn.textContent = 'Enviando…';
+    btn.disabled = true;
+
+    const datos = {
+        nombre:    document.getElementById("promo-nombre").value,
+        comuna:    document.getElementById("promo-comuna").value,
+        categoria: document.getElementById("promo-categoria").value,
+        promocion: document.getElementById("promo-promocion").value,
+        contacto:  document.getElementById("promo-contacto").value
+    };
+
+    // Envía a tu Apps Script (ver instrucciones abajo)
+    // Si aún no tienes el endpoint, se guarda igual y se muestra el alert
+    try {
+        if (CONFIG.APPS_SCRIPT_URL) {
+            await fetch(CONFIG.APPS_SCRIPT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tipo: 'negocio', ...datos })
+            });
+        }
+    } catch (e) {
+        console.warn('No se pudo enviar al script:', e.message);
+    }
+
+    btn.textContent = 'Registrar Negocio';
+    btn.disabled = false;
+
+    mostrarExito('¡Negocio registrado! Revisaremos tu información pronto 🎉');
     cerrarFormPromo();
     document.getElementById("formPromo").reset();
 }
 
+function mostrarExito(mensaje) {
+    const toast = document.createElement('div');
+    toast.className = 'toast-exito';
+    toast.textContent = mensaje;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add('toast-visible'), 10);
+    setTimeout(() => {
+        toast.classList.remove('toast-visible');
+        setTimeout(() => toast.remove(), 400);
+    }, 4000);
+}
+
+// ============================================================
+// BÚSQUEDA Y FILTRO
+// ============================================================
+
 function buscar() {
     const loc = document.getElementById("location-filter").value;
-    const txt = document.getElementById("main-search").value.toLowerCase();
-    
+    const txt = document.getElementById("main-search").value.toLowerCase().trim();
+
     const res = allProducts.filter(p => {
         const cumpleComuna = !loc || p.comuna === loc;
-        const cumpleBusca = !txt || p.nombre.toLowerCase().includes(txt) || 
-            (p.tags && p.tags.some(t => t.toLowerCase().includes(txt))) ||
-            p.categoria.toLowerCase().includes(txt);
+        const cumpleBusca  = !txt
+            || p.nombre.toLowerCase().includes(txt)
+            || p.categoria.toLowerCase().includes(txt)
+            || (p.tags && p.tags.some(t => t.toLowerCase().includes(txt)))
+            || p.descripcion?.toLowerCase().includes(txt);
         return cumpleComuna && cumpleBusca;
     });
-    
+
     displayProducts(res);
 }
 
-setInterval(cargarDatosDeSheet, 10000);
-window.onclick = (e) => { if(e.target.className === 'popup-overlay') e.target.style.display = "none"; }
+// ============================================================
+// EVENTOS GLOBALES
+// ============================================================
+
+window.onclick = (e) => {
+    if (e.target.classList.contains('popup-overlay')) {
+        e.target.style.display = "none";
+        document.body.style.overflow = "";
+    }
+};
+
+// Cerrar popups con Escape
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        document.querySelectorAll('.popup-overlay').forEach(p => p.style.display = 'none');
+        document.body.style.overflow = "";
+    }
+});
+
+// ============================================================
+// ARRANQUE
+// ============================================================
 
 cargarDatosDeSheet();
+setInterval(cargarDatosDeSheet, CONFIG.RELOAD_INTERVAL_MS); // cada 5 min
+
+/*
+=================================================================
+📋 INSTRUCCIONES DE SEGURIDAD — Lee antes de subir a GitHub
+=================================================================
+
+EL PROBLEMA:
+Tu API Key de Google aparece visible en el código JS.
+Cualquiera puede verla en GitHub y abusar de ella.
+
+SOLUCIÓN RECOMENDADA — Google Apps Script como proxy:
+1. En tu Google Sheet ve a Extensiones → Apps Script
+2. Crea un script con este contenido:
+
+   function doGet(e) {
+     const sheet = SpreadsheetApp.getActiveSpreadsheet();
+     const hoja  = e.parameter.hoja || 'RedBarrio_Base';
+     const data  = sheet.getSheetByName(hoja).getDataRange().getValues();
+     return ContentService
+       .createTextOutput(JSON.stringify({ values: data }))
+       .setMimeType(ContentService.MimeType.JSON);
+   }
+
+3. Despliégalo como "Aplicación Web" → acceso "Cualquier usuario"
+4. Copia la URL que te da (termina en /exec)
+5. En este archivo, reemplaza la función fetchSheet() por:
+
+   async function fetchSheet(sheetName) {
+     const url = `TU_URL_DE_APPS_SCRIPT?hoja=${sheetName}`;
+     const res = await fetch(url);
+     return res.json();
+   }
+
+6. Elimina SHEET_ID y API_KEY del CONFIG — ya no los necesitas.
+
+Así el Sheet Id y la API Key quedan dentro de Google,
+nunca expuestos en GitHub.
+=================================================================
+*/

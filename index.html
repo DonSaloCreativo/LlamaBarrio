@@ -39,17 +39,22 @@
         <h1 class="hero-title">Encuentra los mejores datos y promociones de tu barrio en un solo lugar.</h1>
     </section>
 
+    <!-- PICADAS DE VECINOS — viene del Sheet de Tally (aprobadas) -->
     <section class="suggestions highlighted-border">
         <h2 class="tag-picadas-morado">🔥 Las picadas de los vecinos</h2>
         <div id="cheap-scroll" class="circle-scroll" role="region" aria-label="Scroll de picadas destacadas"></div>
     </section>
 
+    <!-- RESULTADOS DE BÚSQUEDA -->
     <section class="results section-resultados">
         <h3 class="section-tag-bg tag-resultados">🍔 Resultados</h3>
         <div id="product-list" class="results-grid" role="region" aria-label="Lista de resultados"></div>
-        <div id="no-results" style="display:none; text-align:center; padding:40px;" role="alert">❌ No encontramos resultados.</div>
+        <div id="no-results" style="display:none; text-align:center; padding:40px;" role="alert">
+            ❌ No encontramos resultados para tu búsqueda.
+        </div>
     </section>
 
+    <!-- RECOMENDACIONES FILTRADAS POR COMUNA SELECCIONADA -->
     <section class="results section-recomendaciones">
         <h3 class="section-tag-bg tag-comuna">🌟 Recomendaciones en tu comuna</h3>
         <div id="comuna-list" class="results-grid" role="region" aria-label="Recomendaciones locales"></div>
@@ -62,7 +67,7 @@
     </section>
 </main>
 
-<!-- 📱 BOTONES FLOTANTES -->
+<!-- BOTONES FLOTANTES MÓVIL -->
 <div class="mobile-float-bar mobile-only">
     <button class="btn-mob-trans-orange" onclick="abrirFormDato()" aria-label="Compartir picada">Compartir picada</button>
     <button class="btn-mob-trans-blue" onclick="abrirFormPromo()" aria-label="Registrar negocio">Soy negocio</button>
@@ -71,8 +76,7 @@
 <footer class="main-footer" role="contentinfo">
     <div class="footer-content">
         <p><strong>LlamaBarrio © 2026</strong></p>
-        <p style="opacity: 0.8; font-size: 0.9rem; margin: 10px 0;">Tu comunidad conectada en un solo lugar.</p>
-        
+        <p style="opacity:0.8; font-size:0.9rem; margin:10px 0;">Tu comunidad conectada en un solo lugar.</p>
         <div class="footer-links">
             <a href="#terminos" class="footer-link">Términos de Servicio</a>
             <span class="footer-divider">•</span>
@@ -80,84 +84,52 @@
             <span class="footer-divider">•</span>
             <a href="#contacto" class="footer-link">Contacto</a>
         </div>
-        
-        <p style="opacity: 0.5; font-size: 0.75rem; margin-top: 15px;">
+        <p style="opacity:0.5; font-size:0.75rem; margin-top:15px;">
             Todos los derechos reservados. LlamaBarrio © 2026
         </p>
     </div>
 </footer>
 
 <!-- POPUP: VER DETALLE PRODUCTO -->
-<div id="productPopup" class="popup-overlay" style="display:none;" role="dialog" aria-label="Detalle del producto">
+<div id="productPopup" class="popup-overlay" style="display:none;" role="dialog" aria-modal="true" aria-label="Detalle del producto">
     <div class="popup-content product-view compact">
         <button class="popup-close" onclick="cerrarPopupProducto()" aria-label="Cerrar detalles">✕</button>
         <div id="popup-body"></div>
     </div>
 </div>
 
-<!-- POPUP: COMPARTIR PICADA -->
-<div id="popupDato" class="popup-overlay" style="display:none;" role="dialog" aria-label="Formulario para compartir picada">
-    <div class="popup-content form-popup">
+<!-- POPUP: COMPARTIR PICADA — Tally embebido -->
+<div id="popupDato" class="popup-overlay" style="display:none;" role="dialog" aria-modal="true" aria-label="Compartir picada">
+    <div class="popup-content popup-iframe">
         <button class="popup-close" onclick="cerrarFormDato()">✕</button>
-        <h2>Comparte tu Picada 🍔</h2>
-        <form id="formDato" onsubmit="enviarDato(event)">
-            <div class="form-group">
-                <label for="dato-nombre">Nombre del negocio:</label>
-                <input type="text" id="dato-nombre" name="nombre" required placeholder="Ej: La picada de Don Salo">
-            </div>
-            <div class="form-group">
-                <label for="dato-Comuna">Comuna:</label>
-                <select id="dato-Comuna" name="comuna" required>
-                    <option value="">Selecciona una comuna</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="dato-precio">Precio aproximado:</label>
-                <input type="number" id="dato-precio" name="precio" required placeholder="Ej: 5500" min="0">
-            </div>
-            <div class="form-group">
-                <label for="dato-descripcion">Descripción:</label>
-                <textarea id="dato-descripcion" name="descripcion" rows="3" placeholder="Cuéntanos qué hace especial tu picada" required></textarea>
-            </div>
-            <div class="form-group">
-                <label for="dato-contacto">WhatsApp:</label>
-                <input type="tel" id="dato-contacto" name="contacto" required placeholder="+569 XXXX XXXX" pattern="[0-9+ ]{9,}">
-            </div>
-            <button type="submit" class="btn-submit">Compartir Picada</button>
-        </form>
+        <iframe
+            src="https://tally.so/embed/ja7DOQ?alignLeft=1&hideTitle=0&transparentBackground=1&dynamicHeight=1"
+            loading="lazy"
+            width="100%"
+            height="100%"
+            frameborder="0"
+            marginheight="0"
+            marginwidth="0"
+            title="Compartir picada">
+        </iframe>
     </div>
 </div>
 
-<!-- POPUP: REGISTRAR NEGOCIO -->
-<div id="popupPromo" class="popup-overlay" style="display:none;" role="dialog" aria-label="Formulario para registrar negocio">
-    <div class="popup-content form-popup">
+<!-- POPUP: REGISTRAR NEGOCIO — Google Form embebido -->
+<div id="popupPromo" class="popup-overlay" style="display:none;" role="dialog" aria-modal="true" aria-label="Registrar negocio">
+    <div class="popup-content popup-iframe">
         <button class="popup-close" onclick="cerrarFormPromo()">✕</button>
-        <h2>Registra tu Negocio 🏪</h2>
-        <form id="formPromo" onsubmit="enviarPromo(event)">
-            <div class="form-group">
-                <label for="promo-nombre">Nombre del negocio:</label>
-                <input type="text" id="promo-nombre" name="nombre" required placeholder="Ej: Pizzería Italia">
-            </div>
-            <div class="form-group">
-                <label for="promo-comuna">Comuna:</label>
-                <select id="promo-comuna" name="comuna" required>
-                    <option value="">Selecciona una comuna</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="promo-categoria">Categoría:</label>
-                <input type="text" id="promo-categoria" name="categoria" required placeholder="Ej: Comida rápida, Pizzería, etc.">
-            </div>
-            <div class="form-group">
-                <label for="promo-promocion">Tu promoción:</label>
-                <textarea id="promo-promocion" name="promocion" rows="3" placeholder="Describe la promoción o descuento" required></textarea>
-            </div>
-            <div class="form-group">
-                <label for="promo-contacto">WhatsApp:</label>
-                <input type="tel" id="promo-contacto" name="contacto" required placeholder="+569 XXXX XXXX" pattern="[0-9+ ]{9,}">
-            </div>
-            <button type="submit" class="btn-submit">Registrar Negocio</button>
-        </form>
+        <iframe
+            src="https://docs.google.com/forms/d/e/1FAIpQLSe-NoZ-wev8KO0U6LT2ko9Ly0NyZcCjkZ4A0eBF-1TbH2qZxA/viewform?embedded=true"
+            loading="lazy"
+            width="100%"
+            height="100%"
+            frameborder="0"
+            marginheight="0"
+            marginwidth="0"
+            title="Registrar negocio">
+            Cargando…
+        </iframe>
     </div>
 </div>
 
