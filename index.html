@@ -1,39 +1,3 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LlamaBarrio - Tu comunidad conectada</title>
-    <link rel="stylesheet" href="style.css?v=53">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
-</head>
-<body>
-
-<nav class="navbar">
-    <div class="nav-container">
-        <div class="brand">
-            <img src="images/logo.png" alt="LlamaBarrio" class="logo-img">
-        </div>
-        
-        <div class="header-controls-group">
-            <div class="oval-control location-wrapper">
-                <select id="location-filter" class="nav-select" onchange="buscar()">
-                    <option value="">Comuna</option>
-                </select>
-            </div>
-            <div class="oval-control search-bar-wrapper">
-                <input type="text" placeholder="Buscar..." id="main-search" onkeyup="buscar()">
-                <button class="search-icon-btn minimal" onclick="buscar()">🔍</button>
-            </div>
-        </div>
-
-        <div class="nav-actions desktop-only">
-            <button class="btn-picada-destacado" onclick="abrirFormDato()">Compartir picada</button>
-            <button class="btn-negocio-small" onclick="abrirFormPromo()">Soy negocio</button>
-        </div>
-    </div>
-</nav>
-
 <main class="content-wrapper">
     <section class="hero-section">
         <h1 class="hero-title">Encuentra los mejores datos y promociones de tu barrio en un solo lugar.</h1>
@@ -44,13 +8,13 @@
         <div id="cheap-scroll" class="circle-scroll"></div>
     </section>
 
-    <section class="results">
+    <section class="results section-resultados">
         <h3 class="section-tag-bg tag-resultados">🍔 Resultados</h3>
         <div id="product-list" class="results-grid"></div>
         <div id="no-results" style="display:none; text-align:center; padding:40px;">❌ No encontramos resultados.</div>
     </section>
 
-    <section class="results">
+    <section class="results section-recomendaciones">
         <h3 class="section-tag-bg tag-comuna">🌟 Recomendaciones en tu comuna</h3>
         <div id="comuna-list" class="results-grid"></div>
     </section>
@@ -62,39 +26,10 @@
     </section>
 </main>
 
-<div class="mobile-float-bar mobile-only">
-    <button class="btn-mob-trans-orange" onclick="abrirFormDato()">Compartir picada</button>
-    <button class="btn-mob-trans-blue" onclick="abrirFormPromo()">Soy negocio</button>
-</div>
-
 <footer class="main-footer">
     <div class="footer-content">
+        <img src="images/logo.png" alt="LlamaBarrio" style="height: 50px; filter: brightness(0) invert(1); margin-bottom: 15px;">
         <p><strong>LlamaBarrio © 2026</strong></p>
-        <p style="opacity: 0.6; font-size: 0.7rem; margin-top: 5px;">Hecho con ❤️ para los vecinos de tu barrio</p>
+        <p style="opacity: 0.6; font-size: 0.75rem; margin-top: 5px;">Tu comunidad conectada en un solo lugar.</p>
     </div>
 </footer>
-
-<div id="productPopup" class="popup-overlay" style="display:none;">
-    <div class="popup-content product-view compact">
-        <button class="popup-close" onclick="cerrarPopupProducto()">✕</button>
-        <div id="popup-body"></div>
-    </div>
-</div>
-
-<div id="popupPromo" class="popup-overlay" style="display:none;">
-    <div class="popup-content form-view large-form">
-        <button class="popup-close" onclick="cerrarFormPromo()">✕</button>
-        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe-NoZ-wev8KO0U6LT2ko9Ly0NyZcCjkZ4A0eBF-1TbH2qZxA/viewform?embedded=true" width="100%" height="100%" frameborder="0"></iframe>
-    </div>
-</div>
-
-<div id="popupDato" class="popup-overlay" style="display:none;">
-    <div class="popup-content form-view large-form">
-        <button class="popup-close" onclick="cerrarFormDato()">✕</button>
-        <iframe src="https://tally.so/r/ja7DOQ" width="100%" height="100%" frameborder="0"></iframe>
-    </div>
-</div>
-
-<script src="script.js"></script>
-</body>
-</html>
