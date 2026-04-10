@@ -20,7 +20,7 @@ function init() {
     cargarPicadasVecinos();
 }
 
-// 1. CARGAR NEGOCIOS (API)
+// 1. CARGAR NEGOCIOS (GRILLA INFERIOR)
 function cargarProductosNegocios() {
     fetch(API_URL)
         .then(res => res.json())
@@ -30,43 +30,45 @@ function cargarProductosNegocios() {
         });
 }
 
-// 2. CARGAR VECINOS (CSV) - CÍRCULOS PEQUEÑOS FORZADOS
+// 2. CARGAR VECINOS (CÍRCULOS SUPERIORES)
 async function cargarPicadasVecinos() {
     try {
         const res = await fetch(CSV_VECINOS_URL);
         const csvText = await res.text();
-        const filas = csvText.split("\n").slice(1);
+        // Separamos por filas y limpiamos espacios vacíos
+        const filas = csvText.split(/\r?\n/).filter(f => f.trim() !== "").slice(1);
         const scroll = document.getElementById("cheap-scroll");
         
         if (filas.length > 0) scroll.innerHTML = "";
 
         filas.forEach(fila => {
+            // Regex mejorada para manejar comas dentro de comillas (direcciones)
             const cols = fila.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+            
             if (cols && cols.length >= 2) {
-                const img = cols[0].replace(/"/g, "").trim();
-                const nombre = cols[1].replace(/"/g, "").trim();
-                const desc = cols[2] ? cols[2].replace(/"/g, "").trim() : "";
-                const precio = cols[3] ? cols[3].replace(/"/g, "").trim() : "Dato gratuito";
-                const autor = cols[4] ? cols[4].replace(/"/g, "").trim() : "Vecino";
+                const img = cols[3] ? cols[3].replace(/"/g, "").trim() : ""; // Ajustado a tu captura (Col D)
+                const nombre = cols[4] ? cols[4].replace(/"/g, "").trim() : "Dato"; // Ajustado a tu captura (Col E)
+                const desc = cols[5] ? cols[5].replace(/"/g, "").trim() : ""; 
+                const precio = cols[6] ? cols[6].replace(/"/g, "").trim() : "Dato gratuito";
+                const autor = cols[8] ? cols[8].replace(/"/g, "").trim() : "Vecino";
 
                 const div = document.createElement("div");
-                // Estilos forzados para el contenedor del círculo
-                div.style.cssText = "text-align:center !important; flex:0 0 100px !important; width:100px !important; cursor:pointer !important; margin:5px !important; display:inline-block !important;";
+                div.style.cssText = "text-align:center !important; flex:0 0 110px !important; width:110px !important; cursor:pointer !important; margin:5px !important;";
                 
                 div.onclick = () => abrirDetalleVecino(img, nombre, desc, precio, autor);
                 
                 div.innerHTML = `
-                    <div style="width: 80px !important; height: 80px !important; margin: 0 auto !important; border-radius: 50% !important; overflow: hidden !important; border: 3px solid #00FF00 !important; box-shadow: 0 0 10px rgba(0,255,0,0.3) !important;">
-                        <img src="${img}" style="width: 100% !important; height: 100% !important; object-fit: cover !important; display: block !important;" onerror="this.src='images/logo.png'">
+                    <div style="width: 85px !important; height: 85px !important; margin: 0 auto !important; border-radius: 50% !important; overflow: hidden !important; border: 3px solid #00FF00 !important; box-shadow: 0 0 12px rgba(0,255,0,0.5) !important; background: #eee;">
+                        <img src="${img}" style="width: 100% !important; height: 100% !important; object-fit: cover !important;" onerror="this.src='images/logo.png'">
                     </div>
-                    <span style="display: block !important; font-size: 11px !important; font-weight: bold !important; margin-top: 8px !important; color: #333 !important; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; width: 90px !important; margin-left: auto !important; margin-right: auto !important;">
+                    <span style="display: block !important; font-size: 12px !important; font-weight: 800 !important; margin-top: 10px !important; color: #6c5ce7 !important; text-transform: uppercase !important; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; width: 100% !important; padding: 0 5px;">
                         ${nombre}
                     </span>
                 `;
                 scroll.appendChild(div);
             }
         });
-    } catch (e) { console.error("Error vecinos:", e); }
+    } catch (e) { console.error("Error cargando picadas:", e); }
 }
 
 function displayNegocios(products) {
@@ -74,40 +76,36 @@ function displayNegocios(products) {
     const comunaList = document.getElementById("comuna-list");
     if (list) {
         list.innerHTML = "";
-        if (products.length === 0) {
-            document.getElementById("no-results").style.display = "block";
-        } else {
-            document.getElementById("no-results").style.display = "none";
-            products.forEach(p => {
-                const card = document.createElement("div");
-                card.className = "res-card";
-                card.onclick = () => abrirDetalleProducto(p);
-                card.innerHTML = `<img src="${p.imagen}" class="res-thumb"><div class="res-info"><strong>${p.nombre}</strong><br><small>📍 ${p.comuna}</small><div style="color:#FF4500; font-weight:700; margin-top:5px;">$${Number(p.precio).toLocaleString('es-CL')}</div></div>`;
-                list.appendChild(card);
-            });
-        }
-    }
-    if (comunaList) {
-        comunaList.innerHTML = "";
-        allProducts.slice(0, 3).forEach(p => {
+        products.forEach(p => {
             const card = document.createElement("div");
             card.className = "res-card";
             card.onclick = () => abrirDetalleProducto(p);
             card.innerHTML = `<img src="${p.imagen}" class="res-thumb"><div class="res-info"><strong>${p.nombre}</strong><br><small>📍 ${p.comuna}</small><div style="color:#FF4500; font-weight:700; margin-top:5px;">$${Number(p.precio).toLocaleString('es-CL')}</div></div>`;
-            comunaList.appendChild(card);
+            list.appendChild(card);
         });
     }
 }
 
 function abrirDetalleProducto(p) {
     const body = document.getElementById("popup-body");
-    body.innerHTML = `<img src="${p.imagen}" style="width:100%; height:200px; object-fit:cover;"><div style="padding:20px; text-align:center;"><h2 style="color:var(--morado);">${p.nombre}</h2><p>${p.desc || ""}</p><h3 style="color:#FF4500;">$${Number(p.precio).toLocaleString('es-CL')}</h3><p>📍 ${p.comuna}</p><button onclick="cerrarPopupProducto()" style="background:#2ecc71; color:white; border:none; padding:12px; width:100%; border-radius:10px; font-weight:bold; cursor:pointer; margin-top:10px;">Cerrar</button></div>`;
+    body.innerHTML = `<img src="${p.imagen}" style="width:100%; height:200px; object-fit:cover;"><div style="padding:20px; text-align:center;"><h2 style="color:#6c5ce7;">${p.nombre}</h2><p>${p.desc || ""}</p><h3 style="color:#FF4500;">$${Number(p.precio).toLocaleString('es-CL')}</h3><p>📍 ${p.comuna}</p><button onclick="cerrarPopupProducto()" style="background:#2ecc71; color:white; border:none; padding:12px; width:100%; border-radius:10px; font-weight:bold; cursor:pointer; margin-top:10px;">Cerrar</button></div>`;
     document.getElementById("productPopup").style.display = "flex";
 }
 
 function abrirDetalleVecino(img, titulo, desc, precio, autor) {
     const body = document.getElementById("popup-body");
-    body.innerHTML = `<img src="${img}" style="width:100%; height:200px; object-fit:cover;"><div style="padding:20px; text-align:center;"><h2 style="color:var(--morado); text-transform:uppercase;">${titulo}</h2><p style="margin:10px 0;">${desc}</p><div style="background:var(--bg-light); padding:10px; border-radius:10px; margin-top:10px; text-align:left;"><p><strong>💰 Precio:</strong> ${precio}</p><p><strong>👤 Por:</strong> ${autor}</p></div><button onclick="cerrarPopupProducto()" style="background:var(--morado); color:white; border:none; padding:12px; width:100%; border-radius:10px; font-weight:bold; cursor:pointer; margin-top:15px;">Genial!</button></div>`;
+    body.innerHTML = `
+        <img src="${img}" style="width:100%; height:220px; object-fit:cover;">
+        <div style="padding:20px; text-align:center;">
+            <h2 style="color:#6c5ce7; text-transform:uppercase; margin-bottom:10px;">${titulo}</h2>
+            <p style="font-size: 0.95rem; line-height: 1.4; color: #444;">${desc}</p>
+            <div style="background:#f9f9f9; padding:15px; border-radius:12px; margin:15px 0; text-align:left; border: 1px solid #eee;">
+                <p style="margin: 5px 0;"><strong>💰 Precio sugerido:</strong> ${precio}</p>
+                <p style="margin: 5px 0;"><strong>👤 Aportado por:</strong> ${autor}</p>
+            </div>
+            <button onclick="cerrarPopupProducto()" style="background:#6c5ce7; color:white; border:none; padding:14px; width:100%; border-radius:12px; font-weight:bold; cursor:pointer;">¡Excelente dato!</button>
+        </div>
+    `;
     document.getElementById("productPopup").style.display = "flex";
 }
 
