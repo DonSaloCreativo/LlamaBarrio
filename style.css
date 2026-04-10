@@ -1,119 +1,125 @@
 :root {
     --primary: #6c5ce7;
-    --secondary: #00ff00; /* Verde Neón */
+    --accent: #00ff00;
     --dark: #2d3436;
-    --bg: #f4f7f6;
+    --gray: #636e72;
+    --bg: #f9f9fb;
 }
+
+* { box-sizing: border-box; }
 
 body {
     font-family: 'Poppins', sans-serif;
     background-color: var(--bg);
     margin: 0;
+    color: var(--dark);
 }
 
 header {
     background: white;
     padding: 20px;
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     position: sticky;
     top: 0;
     z-index: 100;
 }
 
-.logo-container h1 {
-    margin: 0 0 15px 0;
-    color: var(--dark);
-}
+.logo-container { text-align: center; margin-bottom: 15px; }
+.logo-container h1 { margin: 0; font-size: 24px; }
+.logo-container span { color: var(--primary); }
 
-.logo-container span {
-    color: var(--primary);
-}
-
-.search-container {
+.search-area {
     display: flex;
     gap: 10px;
-    max-width: 800px;
+    max-width: 600px;
     margin: 0 auto;
 }
 
 input, select {
     padding: 12px;
-    border: 2px solid #eee;
-    border-radius: 10px;
-    outline: none;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
 }
 
 #main-search { flex: 2; }
 #location-filter { flex: 1; }
 
-.grid {
+.status-msg { text-align: center; padding: 50px; color: var(--gray); }
+
+.grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
     padding: 20px;
     max-width: 1200px;
     margin: 0 auto;
 }
 
+/* Tarjetas Rectangulares */
 .card {
     background: white;
-    border-radius: 15px;
+    border-radius: 12px;
     overflow: hidden;
-    transition: transform 0.3s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: 0.3s;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-.card:hover { transform: translateY(-5px); }
+.card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
 
 .card img {
     width: 100%;
-    height: 180px;
+    height: 160px;
     object-fit: cover;
 }
 
-.card-info { padding: 15px; }
+.card-content { padding: 15px; }
 
-.card-tag {
-    background: var(--primary);
-    color: white;
+.category-badge {
+    background: #f0edff;
+    color: var(--primary);
     font-size: 10px;
-    padding: 3px 8px;
-    border-radius: 5px;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 4px;
     text-transform: uppercase;
 }
 
-.price-tag {
-    color: #e67e22;
-    font-weight: bold;
-    display: block;
-    margin-top: 5px;
+.card h3 { margin: 10px 0 5px 0; font-size: 18px; }
+.card p { margin: 0; color: var(--gray); font-size: 13px; }
+.card .info-resaltada { 
+    display: block; 
+    margin-top: 10px; 
+    color: #e67e22; 
+    font-weight: bold; 
 }
 
-/* Popups */
-.popup-overlay {
+/* Modal / Popup */
+.modal-overlay {
     display: none;
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.7);
+    z-index: 1000;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
 }
 
-.popup-content {
+.modal-content {
     background: white;
     width: 90%;
-    max-width: 500px;
-    border-radius: 20px;
-    position: relative;
+    max-width: 450px;
+    border-radius: 15px;
     overflow: hidden;
+    position: relative;
 }
 
-.close-btn {
+.close-modal {
     position: absolute;
-    top: 15px; right: 20px;
-    font-size: 30px; color: white;
-    cursor: pointer; z-index: 10;
+    top: 10px; right: 15px;
+    font-size: 28px;
+    color: white;
+    cursor: pointer;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }

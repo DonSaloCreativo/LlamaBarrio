@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LlamaBarrio - Tu Guía Local</title>
+    <title>LlamaBarrio | Tu Guía de Barrio</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
@@ -13,7 +13,7 @@
         <div class="logo-container">
             <h1>Llama<span>Barrio</span></h1>
         </div>
-        <div class="search-container">
+        <div class="search-area">
             <select id="location-filter" onchange="buscar()">
                 <option value="">Todas las comunas</option>
                 <option value="San Bernardo">San Bernardo</option>
@@ -21,18 +21,18 @@
                 <option value="Puente Alto">Puente Alto</option>
                 <option value="Santiago">Santiago</option>
             </select>
-            <input type="text" id="main-search" placeholder="¿Qué buscas hoy? (ej: pan, pizza, sushi...)" onkeyup="buscar()">
+            <input type="text" id="main-search" placeholder="Buscar pan, sushi, botillería..." onkeyup="buscar()">
         </div>
     </header>
 
-    <main id="app-container">
-        <div id="loading">Cargando locales...</div>
-        <div id="grid-negocios" class="grid"></div>
+    <main>
+        <div id="loading" class="status-msg">Cargando locales...</div>
+        <div id="grid-negocios" class="grid-container"></div>
     </main>
 
-    <div id="productPopup" class="popup-overlay" onclick="cerrarPopup(event)">
-        <div class="popup-content">
-            <span class="close-btn" onclick="document.getElementById('productPopup').style.display='none'">&times;</span>
+    <div id="productPopup" class="modal-overlay" onclick="cerrarModal(event)">
+        <div class="modal-content">
+            <span class="close-modal" onclick="cerrarPopupBtn()">&times;</span>
             <div id="popup-body"></div>
         </div>
     </div>
