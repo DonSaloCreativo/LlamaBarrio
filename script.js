@@ -16,11 +16,11 @@ function init() {
             filter.appendChild(op);
         });
     }
-    cargarProductosNegocios(); // Carga la grilla de abajo
-    cargarPicadasVecinos();   // Carga solo los círculos de arriba
+    cargarProductosNegocios(); // Carga la grilla de abajo (API)
+    cargarPicadasVecinos();   // Carga los círculos de arriba (CSV)
 }
 
-// 1. CARGAR NEGOCIOS (API SHEETBEST) -> Van a la grilla de resultados
+// 1. CARGAR NEGOCIOS (API SHEETBEST) -> Grilla de resultados
 function cargarProductosNegocios() {
     fetch(API_URL)
         .then(res => res.json())
@@ -30,7 +30,7 @@ function cargarProductosNegocios() {
         });
 }
 
-// 2. CARGAR VECINOS (CSV TALLY) -> Van SOLO a los círculos
+// 2. CARGAR VECINOS (CSV TALLY) -> Círculos pequeños forzados
 async function cargarPicadasVecinos() {
     try {
         const res = await fetch(CSV_VECINOS_URL);
@@ -50,11 +50,21 @@ async function cargarPicadasVecinos() {
                 const autor = cols[4] ? cols[4].replace(/"/g, "").trim() : "Vecino";
 
                 const div = document.createElement("div");
-                div.className = "picada-card-dinamica";
+                // Estilos para mantener el tamaño pequeño y evitar que crezcan
+                div.style.textAlign = "center";
+                div.style.flex = "0 0 auto";
+                div.style.width = "100px"; 
+                div.style.cursor = "pointer";
+                
                 div.onclick = () => abrirDetalleVecino(img, nombre, desc, precio, autor);
+                
                 div.innerHTML = `
-                    <img src="${img}" class="picada-img-dinamica" onerror="this.src='images/logo.png'">
-                    <span class="picada-info-txt">${nombre}</span>
+                    <div style="width: 80px; height: 80px; margin: 0 auto; border-radius: 50%; overflow: hidden; border: 3px solid #00FF00; box-shadow: 0 0 10px rgba(0,255,0,0.3);">
+                        <img src="${img}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='images/logo.png'">
+                    </div>
+                    <span style="display: block; font-size: 11px; font-weight: bold; margin-top: 8px; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        ${nombre}
+                    </span>
                 `;
                 scroll.appendChild(div);
             }
