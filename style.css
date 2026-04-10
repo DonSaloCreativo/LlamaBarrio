@@ -1,71 +1,94 @@
-/* --- AJUSTES DE COLOR POR SECCIÓN --- */
-.section-resultados {
-    background-color: #f0f4f8; /* Azul muy pálido para diferenciar */
-    padding: 20px;
-    border-radius: 20px;
-    margin-bottom: 30px;
+:root {
+    --primary: #FF4500;
+    --secondary: #007bff;
+    --morado: #6c5ce7;
+    --bg-light: #fdf2e3;
+    --white: #ffffff;
 }
 
-.section-recomendaciones {
-    background-color: #fff9db; /* Amarillo pálido para diferenciar */
-    padding: 20px;
-    border-radius: 20px;
-    margin-bottom: 30px;
-}
-
-/* --- BOTONES Y LUPA ESTILIZADA --- */
-.search-icon-btn.minimal {
-    border: none;
-    background: var(--primary);
-    color: white;
-    padding: 5px 12px;
-    border-radius: 15px;
-    cursor: pointer;
-    font-size: 0.8rem;
-    margin-left: 5px;
-    transition: 0.3s;
-}
-
-.search-icon-btn.minimal:hover {
-    background: #e63e00;
-}
-
-.btn-picada-destacado { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 25px; font-weight: 700; cursor: pointer; transition: 0.3s; }
-.btn-negocio-small { background: var(--secondary); color: white; border: none; padding: 12px 20px; border-radius: 25px; font-weight: 700; cursor: pointer; transition: 0.3s; }
-.btn-picada-destacado:hover, .btn-negocio-small:hover { transform: scale(1.05); }
-
-/* --- AJUSTE CELULAR (SIN MOVIMIENTO LATERAL) --- */
-html, body {
-    overflow-x: hidden; /* Evita que la pantalla se mueva de lado a lado */
+/* Bloqueo de movimiento lateral en toda la web */
+html, body { 
+    font-family: 'Poppins', sans-serif; 
+    background-color: var(--bg-light); 
+    margin: 0; 
+    padding: 0;
+    overflow-x: hidden;
     width: 100%;
-    position: relative;
 }
+
+.mobile-only { display: none !important; }
+
+/* SECCIONES CON COLORES DIFERENCIADOS */
+.results.section-resultados {
+    background-color: #ffffff; /* Blanco limpio para resultados */
+    padding: 25px 15px;
+    border-radius: 20px;
+    margin: 20px 0;
+    border-left: 6px solid var(--primary);
+}
+
+.results.section-recomendaciones {
+    background-color: #fff9db; /* Amarillo suave para recomendaciones */
+    padding: 25px 15px;
+    border-radius: 20px;
+    margin: 20px 0;
+}
+
+.navbar { background: var(--white); padding: 12px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+.nav-container { max-width: 1300px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+.logo-img { height: 80px; width: auto; }
+
+.header-controls-group { display: flex; align-items: center; gap: 10px; flex-grow: 1; justify-content: center; }
+.oval-control { background: #f1f1f1; border-radius: 25px; border: 1px solid #ddd; padding: 5px 15px; display: flex; align-items: center; }
+.location-wrapper { width: 160px; }
+.search-bar-wrapper { width: 350px; }
+
+.nav-select, .search-bar-wrapper input { border: none; background: transparent; width: 100%; outline: none; font-weight: 600; font-family: 'Poppins'; font-size: 0.9rem; }
+
+/* LUPA ESTILIZADA */
+.search-icon-btn.minimal { 
+    border: none; 
+    background: var(--primary); 
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    cursor: pointer; 
+    margin-left: 5px;
+}
+
+.nav-actions { display: flex; gap: 12px; }
+.btn-picada-destacado { background: var(--primary); color: white; border: none; padding: 10px 18px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+.btn-negocio-small { background: var(--secondary); color: white; border: none; padding: 10px 18px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+
+.content-wrapper { max-width: 1150px; margin: 0 auto; padding: 0 15px; min-height: 80vh; }
+.hero-title { font-size: 2rem; font-weight: 800; text-align: center; margin: 40px 0; line-height: 1.2; }
+
+.section-tag-bg { display: inline-block; padding: 8px 18px; border-radius: 8px; margin-bottom: 15px; font-weight: 700; }
+.tag-resultados { background-color: #333; color: white; }
+.tag-comuna { background-color: #FFD700; color: #333; }
+
+.results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.res-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); cursor: pointer; }
+.res-thumb { width: 100%; height: 180px; object-fit: cover; }
+.res-info { padding: 15px; }
+
+.circle-scroll { display: flex; gap: 15px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
+.circle-img { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; border: 3px solid white; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+
+/* FOOTER */
+.main-footer { background: #111; color: white; padding: 40px 20px; text-align: center; border-top: 4px solid var(--primary); }
 
 @media (max-width: 768px) {
-    .content-wrapper { padding: 0 10px; }
-    
-    .results-grid { 
-        grid-template-columns: 1fr; /* Una columna en móvil para que no se pierdan las imágenes */
-        gap: 15px;
-    }
-
-    .logo-img { height: 45px; }
-
-    .header-controls-group {
-        flex-direction: row;
-        width: 100%;
-    }
-
+    .desktop-only { display: none !important; }
+    .mobile-only { display: flex !important; }
+    .nav-container { flex-direction: column; padding: 10px; }
+    .header-controls-group { width: 100%; }
     .location-wrapper { width: 35%; }
     .search-bar-wrapper { width: 65%; }
+    .results-grid { grid-template-columns: 1fr; } /* Evita que se muevan las imágenes */
 }
 
-/* Footer oscuro profesional */
-.main-footer { 
-    background: #1a1a1a; 
-    color: white; 
-    padding: 40px 20px; 
-    text-align: center; 
-    margin-top: 50px; 
-    border-top: 4px solid var(--primary);
-}
+/* POPUPS UNIFORMES */
+.popup-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:flex; justify-content:center; align-items:center; z-index:3000; backdrop-filter: blur(5px); }
+.product-view.compact { width:90%; max-width:360px; height: auto; background:white; border-radius:20px; overflow:hidden; position:relative; }
+.popup-close { position:absolute; top:12px; right:12px; background:white; color:#333; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; font-weight: bold; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }

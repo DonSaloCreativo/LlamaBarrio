@@ -1,3 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LlamaBarrio - Tu comunidad conectada</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="brand">
+            <img src="images/logo.png" alt="LlamaBarrio" class="logo-img">
+        </div>
+        
+        <div class="header-controls-group">
+            <div class="oval-control location-wrapper">
+                <select id="location-filter" class="nav-select" onchange="buscar()">
+                    <option value="">Comuna</option>
+                </select>
+            </div>
+            <div class="oval-control search-bar-wrapper">
+                <input type="text" placeholder="Buscar..." id="main-search" onkeyup="buscar()">
+                <button class="search-icon-btn minimal" onclick="buscar()">🔍</button>
+            </div>
+        </div>
+
+        <div class="nav-actions desktop-only">
+            <button class="btn-picada-destacado" onclick="abrirFormDato()">Compartir picada</button>
+            <button class="btn-negocio-small" onclick="abrirFormPromo()">Soy negocio</button>
+        </div>
+    </div>
+</nav>
+
 <main class="content-wrapper">
     <section class="hero-section">
         <h1 class="hero-title">Encuentra los mejores datos y promociones de tu barrio en un solo lugar.</h1>
@@ -26,6 +62,11 @@
     </section>
 </main>
 
+<div class="mobile-float-bar mobile-only">
+    <button class="btn-mob-trans-orange" onclick="abrirFormDato()">Compartir picada</button>
+    <button class="btn-mob-trans-blue" onclick="abrirFormPromo()">Soy negocio</button>
+</div>
+
 <footer class="main-footer">
     <div class="footer-content">
         <img src="images/logo.png" alt="LlamaBarrio" style="height: 50px; filter: brightness(0) invert(1); margin-bottom: 15px;">
@@ -33,3 +74,14 @@
         <p style="opacity: 0.6; font-size: 0.75rem; margin-top: 5px;">Tu comunidad conectada en un solo lugar.</p>
     </div>
 </footer>
+
+<div id="productPopup" class="popup-overlay" style="display:none;">
+    <div class="popup-content product-view compact">
+        <button class="popup-close" onclick="cerrarPopupProducto()">✕</button>
+        <div id="popup-body"></div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
