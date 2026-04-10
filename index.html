@@ -2,10 +2,10 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>LlamaBarrio - Tu comunidad conectada</title>
-    <link rel="stylesheet" href="style.css?v=17">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=200">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -15,72 +15,46 @@
             <img src="images/logo.png" alt="LlamaBarrio" class="logo-img">
         </div>
         
-        <div class="location-selector">
-            <select id="location-filter" class="nav-select" onchange="buscar()">
+        <div class="header-controls-group">
+            <div class="oval-control location-wrapper">
+                <select id="location-filter" class="nav-select" onchange="buscar()">
+                    <option value="">Comuna</option>
                 </select>
+            </div>
+            <div class="oval-control search-bar-wrapper">
+                <input type="text" placeholder="Buscar..." id="main-search" onkeyup="buscar()">
+                <button class="search-icon-btn minimal" onclick="buscar()">🔍</button>
+            </div>
         </div>
 
-        <div class="search-bar">
-            <input type="text" placeholder="¿Que quieres buscar hoy?" id="main-search">
-            <button class="search-icon-btn" onclick="buscar()">🔍</button>
-        </div>
-
-        <div class="nav-actions">
-            <button class="btn-picada" onclick="abrirFormDato()">Compartir picada</button>
-            <button class="btn-negocio" onclick="abrirFormPromo()">Soy negocio</button>
+        <div class="nav-actions desktop-only">
+            <button class="btn-picada-destacado" onclick="abrirFormDato()">Compartir picada</button>
+            <button class="btn-negocio-small" onclick="abrirFormPromo()">Soy negocio</button>
         </div>
     </div>
 </nav>
 
 <main class="content-wrapper">
-    <section class="suggestions">
-        <h3 class="section-tag">🔥 El barrio recomienda</h3>
+    <section class="hero-section">
+        <h1 class="hero-title">Encuentra los mejores datos y promociones de tu barrio en un solo lugar.</h1>
+    </section>
+
+    <section class="suggestions highlighted-border">
+        <h2 class="tag-picadas-morado">🔥 Las picadas de los vecinos</h2>
         <div id="cheap-scroll" class="circle-scroll"></div>
     </section>
 
     <section class="results">
-        <h3 class="section-tag-bg">🍔 Resultados</h3>
+        <h3 class="section-tag-bg tag-resultados">🍔 Resultados</h3>
         <div id="product-list" class="results-grid"></div>
-    </section>
-
-    <section id="featured-section" class="results" style="display:none;">
-        <h3 class="section-tag-bg" style="background-color: #ffda79;">🌟 Destacados de tu comuna</h3>
-        <div id="featured-list" class="results-grid"></div>
-    </section>
-
-    <section class="promo-banner">
-        <div class="promo-card">
-            <img src="https://via.placeholder.com/1200x400/00d2ff/ffffff?text=Tu+Llama+Comiendo+Aquí+-+Publicidad" alt="Publicidad LlamaBarrio" class="full-promo-img">
-        </div>
+        <div id="no-results" style="display:none; text-align:center; padding:40px;">❌ No encontramos resultados.</div>
     </section>
 </main>
 
-<footer class="main-footer">
-    <div class="footer-content">
-        <p><strong>LlamaBarrio © 2026</strong></p>
-        <p>Términos y Condiciones | Políticas de Privacidad | Contacto: hola@llamabarrio.cl</p>
-        <small>Plataforma informativa de promociones locales.</small>
-    </div>
-</footer>
-
-<div id="productPopup" class="popup-overlay" style="display:none;">
-    <div class="popup-content product-view">
+<div id="productPopup" class="popup-overlay" onclick="cerrarModalExterno(event)">
+    <div class="popup-content product-view compact">
         <button class="popup-close" onclick="cerrarPopupProducto()">X</button>
         <div id="popup-body"></div>
-    </div>
-</div>
-
-<div id="popupPromo" class="popup-overlay" style="display:none;">
-    <div class="popup-content">
-        <button class="popup-close" onclick="cerrarFormPromo()">X</button>
-        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe-NoZ-wev8KO0U6LT2ko9Ly0NyZcCjkZ4A0eBF-1TbH2qZxA/viewform?embedded=true" width="100%" height="500"></iframe>
-    </div>
-</div>
-
-<div id="popupDato" class="popup-overlay" style="display:none;">
-    <div class="popup-content">
-        <button class="popup-close" onclick="cerrarFormDato()">X</button>
-        <iframe src="https://tally.so/r/ja7DOQ" width="100%" height="500"></iframe>
     </div>
 </div>
 
