@@ -376,9 +376,10 @@ html, body {
    ============================================================ */
 .popup-iframe {
     padding: 0;
-    width: 92%;
-    max-width: 680px;
-    height: 85vh;
+    width: 60%;
+    max-width: 720px;
+    min-width: 420px;
+    height: 82vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -387,7 +388,7 @@ html, body {
 .popup-iframe .popup-close {
     top: 10px;
     right: 10px;
-    background: rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.95);
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     z-index: 2;
 }
@@ -400,10 +401,17 @@ html, body {
     height: 100%;
 }
 
+@media (max-width: 1024px) {
+    .popup-iframe {
+        width: 75%;
+    }
+}
+
 @media (max-width: 768px) {
     .popup-iframe {
-        width: 98%;
-        height: 92vh;
+        width: 88%;
+        min-width: unset;
+        height: 80vh;
     }
 }
 
@@ -595,41 +603,53 @@ html, body {
 /* ============================================================
    FOOTER
    ============================================================ */
-.main-footer { 
-    background: #111; 
-    color: white; 
-    padding: 40px 20px; 
-    text-align: center;
+.main-footer {
+    background: #111;
+    color: white;
+    padding: 18px 30px;
     margin-top: 60px;
 }
 
 .footer-content {
     max-width: 1150px;
     margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px;
 }
 
-.footer-content p { margin: 8px 0; }
+.footer-text {
+    font-size: 0.82rem;
+    opacity: 0.55;
+    white-space: nowrap;
+}
 
 .footer-links {
     display: flex;
-    justify-content: center;
     align-items: center;
-    gap: 15px;
-    margin: 20px 0;
-    flex-wrap: wrap;
+    gap: 12px;
 }
 
 .footer-link {
     color: #FF4500;
     text-decoration: none;
-    font-size: 0.9rem;
+    font-size: 0.82rem;
     font-weight: 600;
-    transition: all 0.2s ease;
+    transition: opacity 0.2s;
+    white-space: nowrap;
 }
 
-.footer-link:hover { opacity: 0.8; text-decoration: underline; }
+.footer-link:hover { opacity: 0.7; }
 
-.footer-divider { color: #666; opacity: 0.5; }
+.footer-divider { color: #444; }
+
+.footer-copy {
+    font-size: 0.75rem;
+    opacity: 0.35;
+    white-space: nowrap;
+}
 
 /* ============================================================
    BOTONES FLOTANTES MÓVIL
@@ -699,8 +719,9 @@ html, body {
     .promo-banner { padding: 20px 0; margin: 30px 0; }
     .full-promo-img { border-radius: 15px; }
 
-    .main-footer { padding: 30px 15px; margin-top: 40px; }
-    .footer-links { gap: 10px; font-size: 0.85rem; }
+    .main-footer { padding: 16px 20px; margin-top: 40px; }
+    .footer-content { justify-content: center; text-align: center; }
+    .footer-copy { display: none; }
 
     /* El toast sube un poco más para no chocar con los botones flotantes */
     .toast-exito { bottom: 100px; }

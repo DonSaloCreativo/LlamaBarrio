@@ -7,12 +7,13 @@
 // Instrucciones al final del archivo.
 
 const CONFIG = {
-    SHEET_ID:     'TU_SHEET_ID_AQUI',          // ← reemplaza
-    API_KEY:      'TU_API_KEY_AQUI',            // ← reemplaza
-    TALLY_SHEET:  'Picadas_Tally',              // nombre de la pestaña de Tally en tu Sheet
-    BASE_SHEET:   'RedBarrio_Base',             // nombre de la pestaña principal
-    TALLY_FORM_URL: 'https://tally.so/r/XXXXX', // ← reemplaza con tu URL de Tally
-    RELOAD_INTERVAL_MS: 5 * 60 * 1000          // recarga cada 5 minutos (antes era 10 seg)
+    SHEET_ID:       '1nNCBbxa0H-0zH8FaT-rLNM1JihseIHnSqYTzxKZAih0', // RedBarrio_Base
+    SHEET_ID_TALLY: '1E0HLINmLOQc9BUBSar5uHTeT_7-twsDuaELCgI4-QQI',  // Comparte tu dato
+    API_KEY:        'AIzaSyATWehnk2KIKTVbWnPAg39vg0r-T8k0Wx4',
+    TALLY_SHEET:    'Picadas_Tally',             // nombre de la pestaña dentro del sheet de Tally
+    BASE_SHEET:     'Hoja 1',
+    TALLY_FORM_URL: 'https://tally.so/r/ja7DOQ',
+    RELOAD_INTERVAL_MS: 5 * 60 * 1000
 };
 
 // ============================================================
@@ -27,9 +28,10 @@ let allPicadas   = [];   // picadas aprobadas (Sheet Tally)
 // CARGA DE DATOS
 // ============================================================
 
-async function fetchSheet(sheetName) {
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.SHEET_ID}/values/${sheetName}?key=${CONFIG.API_KEY}`;
-    const res  = await fetch(url);
+async function fetchSheet(sheetName, sheetId) {
+    const id  = sheetId || CONFIG.SHEET_ID;
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${id}/values/${sheetName}?key=${CONFIG.API_KEY}`;
+    const res = await fetch(url);
     if (!res.ok) throw new Error(`Error ${res.status} al cargar ${sheetName}`);
     return res.json();
 }
@@ -63,20 +65,24 @@ async function cargarDatosDeSheet() {
 
         // --- Picadas de vecinos (Tally) ---
         try {
-            const dataTally = await fetchSheet(CONFIG.TALLY_SHEET);
+            // El sheet de Tally tiene estas columnas:
+            // A: Submission ID, B: Respondent ID, C: Submitted at,
+            // D: Foto (upload), E: ¿Dónde lo encontraste?, F: Cuéntanos el dato,
+            // G: ¿Precio?, H: ¿Quieres que aparezca tu nombre?, I: Estado
+            const dataTally = await fetchSheet('Tally', CONFIG.SHEET_ID_TALLY);
 
             if (dataTally.values && dataTally.values.length >= 2) {
                 allPicadas = dataTally.values.slice(1)
                     .map(row => {
                         if (!row[0]) return null;
                         return {
-                            nombre:      row[0] || '',
-                            comuna:      row[1] || '',
-                            precio:      parseInt(row[2]) || 0,
-                            descripcion: row[3] || '',
-                            telefono:    row[4] || '',
-                            estado:      row[5] || '',
-                            imagen:      row[6] || 'images/placeholder.jpg'
+                            nombre:      row[7] || 'Picada vecinal',  // H: ¿Quieres que aparezca tu nombre?
+                            comuna:      row[4] || '',                 // E: ¿Dónde lo encontraste?
+                            precio:      parseInt((row[6] || '0').toString().replace(/\D/g,'')) || 0, // G: Precio
+                            descripcion: row[5] || '',                 // F: Cuéntanos el dato
+                            telefono:    '',
+                            estado:      row[8] || '',                 // I: Estado
+                            imagen:      row[3] || 'images/placeholder.jpg'  // D: Foto
                         };
                     })
                     .filter(p => p && p.estado.toLowerCase().trim() === 'aprobado');
@@ -149,20 +155,51 @@ function renderPicadasScroll() {
 
     scroll.innerHTML = "";
 
-    // Muestra picadas de Tally si hay, si no muestra los locales normales
     const fuente = allPicadas.length > 0 ? allPicadas : allProducts;
 
-    fuente.forEach(p => {
-        const div = document.createElement("div");
-        div.className = "circle-item";
-        div.onclick = () => abrirDetalleProducto(p);
+    if (fuente.length === 0) {
+        // Mostrar 6 tarjetas placeholder con shimmer
+        for (let i = 0; i < 6; i++) {
+            scroll.appendChild(crearPlaceholderCard());
+        }
+        return;
+    }
 
-        const nombre = p.nombre.length > 14 ? p.nombre.slice(0, 13) + '…' : p.nombre;
-        div.innerHTML = `
-            <img src="${p.imagen}" class="circle-img" alt="${p.nombre}" onerror="this.src='images/placeholder.jpg'">
-            <p style="font-size:0.7rem; font-weight:600; text-align:center; max-width:85px;">${nombre}</p>`;
-        scroll.appendChild(div);
-    });
+    fuente.forEach(p => scroll.appendChild(crearPicadaCard(p)));
+}
+
+function crearPlaceholderCard() {
+    const card = document.createElement("div");
+    card.className = "picada-card placeholder";
+    card.innerHTML = `
+        <img class="picada-card-img" src="" alt="">
+        <div class="picada-card-body">
+            <p class="picada-card-nombre">Cargando nombre...</p>
+            <p class="picada-card-comuna">📍 Comuna</p>
+            <p class="picada-card-desc">Descripción del local y su picada especial</p>
+            <p class="picada-card-precio">$0.000</p>
+        </div>`;
+    return card;
+}
+
+function crearPicadaCard(p) {
+    const card = document.createElement("div");
+    card.className = "picada-card";
+    card.onclick = () => abrirDetalleProducto(p);
+
+    const precio = p.precio > 0 ? `<p class="picada-card-precio">$${p.precio.toLocaleString('es-CL')}</p>` : '';
+    const desc   = p.descripcion ? `<p class="picada-card-desc">${p.descripcion}</p>` : '';
+
+    card.innerHTML = `
+        <span class="picada-badge">⭐ Picada</span>
+        <img class="picada-card-img" src="${p.imagen}" alt="${p.nombre}" loading="lazy" onerror="this.src='images/placeholder.jpg'">
+        <div class="picada-card-body">
+            <p class="picada-card-nombre">${p.nombre}</p>
+            <p class="picada-card-comuna">📍 ${p.comuna}</p>
+            ${desc}
+            ${precio}
+        </div>`;
+    return card;
 }
 
 function renderResultados(products) {
@@ -414,8 +451,18 @@ document.addEventListener('keydown', (e) => {
 // ARRANQUE
 // ============================================================
 
+// Mostrar placeholders de inmediato antes de cargar datos
+document.addEventListener('DOMContentLoaded', () => {
+    const scroll = document.getElementById("cheap-scroll");
+    if (scroll) {
+        for (let i = 0; i < 6; i++) {
+            scroll.appendChild(crearPlaceholderCard());
+        }
+    }
+});
+
 cargarDatosDeSheet();
-setInterval(cargarDatosDeSheet, CONFIG.RELOAD_INTERVAL_MS); // cada 5 min
+setInterval(cargarDatosDeSheet, CONFIG.RELOAD_INTERVAL_MS);
 
 /*
 =================================================================
