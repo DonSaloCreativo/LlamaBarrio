@@ -9,124 +9,81 @@
 </head>
 <body>
 
-<nav class="navbar" role="navigation" aria-label="Navegación principal">
+<nav class="navbar">
     <div class="nav-container">
-        <div class="brand">
-            <img src="images/logo.png" alt="LlamaBarrio - Tu comunidad conectada" class="logo-img">
-        </div>
-        
+        <div class="brand"><img src="images/logo.png" alt="LlamaBarrio" class="logo-img"></div>
         <div class="header-controls-group">
             <div class="oval-control location-wrapper">
-                <select id="location-filter" class="nav-select" onchange="buscar()" aria-label="Filtrar por comuna">
-                    <option value="">Comuna</option>
-                </select>
+                <select id="location-filter" class="nav-select" onchange="buscar()"><option value="">Comuna</option></select>
             </div>
             <div class="oval-control search-bar-wrapper">
-                <input type="text" placeholder="Buscar..." id="main-search" aria-label="Buscar picadas o promociones" onkeyup="buscar()">
-                <button class="search-icon-btn minimal" onclick="buscar()" aria-label="Ejecutar búsqueda">🔍</button>
+                <input type="text" placeholder="Buscar" id="main-search" onkeyup="buscar()">
+                <button class="search-icon-btn minimal" onclick="buscar()">🔍</button>
             </div>
         </div>
-
         <div class="nav-actions desktop-only">
-            <button class="btn-picada-destacado" onclick="abrirFormDato()" aria-label="Compartir una nueva picada">Compartir picada</button>
-            <button class="btn-negocio-small" onclick="abrirFormPromo()" aria-label="Registrar tu negocio">Soy negocio</button>
+            <button class="btn-picada-action-orange" onclick="abrirFormDato()">Compartir Picada 🔥</button>
+            <button class="btn-negocio-action-blue" onclick="abrirFormPromo()">Soy Negocio 🤝</button>
         </div>
     </div>
 </nav>
 
 <main class="content-wrapper">
     <section class="hero-section">
-        <h1 class="hero-title">Encuentra los mejores datos y promociones de tu barrio en un solo lugar.</h1>
+        <h1 class="hero-title">Encuentra los mejores datos de tu barrio.</h1>
     </section>
 
-    <!-- PICADAS DE VECINOS — viene del Sheet de Tally (aprobadas) -->
-    <section class="suggestions highlighted-border">
-        <h2 class="tag-picadas-morado">🔥 Las picadas de los vecinos</h2>
-        <div id="cheap-scroll" class="circle-scroll" role="region" aria-label="Scroll de picadas destacadas"></div>
+    <section class="section-picadas-container">
+        <h2 class="titulo-picadas-morado">🔥 Las picadas de los vecinos</h2>
+        <div id="cheap-scroll" class="circle-scroll"></div>
     </section>
 
-    <!-- RESULTADOS DE BÚSQUEDA -->
     <section class="results section-resultados">
-        <h3 class="section-tag-bg tag-resultados">🍔 Resultados</h3>
-        <div id="product-list" class="results-grid" role="region" aria-label="Lista de resultados"></div>
-        <div id="no-results" style="display:none; text-align:center; padding:40px;" role="alert">
-            ❌ No encontramos resultados para tu búsqueda.
-        </div>
+        <span class="tag-resaltado fondo-naranja">🍔 Resultados</span>
+        <div id="product-list" class="results-grid"></div>
+        <div id="no-results" style="display:none; text-align:center; padding:40px;">❌ Sin resultados.</div>
     </section>
 
-    <!-- RECOMENDACIONES FILTRADAS POR COMUNA SELECCIONADA -->
-    <section class="results section-recomendaciones">
-        <h3 class="section-tag-bg tag-comuna">🌟 Recomendaciones en tu comuna</h3>
-        <div id="comuna-list" class="results-grid" role="region" aria-label="Recomendaciones locales"></div>
+    <section class="results section-recomendados">
+        <span class="tag-resaltado fondo-azul">🌟 Recomendados para tu comuna</span>
+        <div id="comuna-list" class="results-grid"></div>
     </section>
 
     <section class="promo-banner">
-        <div class="promo-card">
-            <img src="images/promocionimagen.png" alt="Publicidad de LlamaBarrio" class="full-promo-img">
-        </div>
+        <img src="images/publicidad.png" alt="Publicidad LlamaBarrio" class="img-publicidad">
     </section>
 </main>
 
-<!-- BOTONES FLOTANTES MÓVIL -->
-<div class="mobile-float-bar mobile-only">
-    <button class="btn-mob-trans-orange" onclick="abrirFormDato()" aria-label="Compartir picada">Compartir picada</button>
-    <button class="btn-mob-trans-blue" onclick="abrirFormPromo()" aria-label="Registrar negocio">Soy negocio</button>
-</div>
-
-<footer class="main-footer" role="contentinfo">
-    <div class="footer-content">
-        <span class="footer-text">Tu comuna conectada en un solo lugar &nbsp;—&nbsp; Todos los derechos reservados. LlamaBarrio © 2026 &nbsp;—&nbsp;</span>
-        <div class="footer-links">
-            <a href="#terminos" class="footer-link">Términos de Servicio</a>
-            <span class="footer-divider"> + </span>
-            <a href="#privacidad" class="footer-link">Política de Privacidad</a>
-        </div>
-    </div>
+<footer class="main-footer">
+    <p>LlamaBarrio © 2026 — Tu comunidad conectada</p>
 </footer>
 
-<!-- POPUP: VER DETALLE PRODUCTO -->
-<div id="productPopup" class="popup-overlay" style="display:none;" role="dialog" aria-modal="true" aria-label="Detalle del producto">
-    <div class="popup-content product-view compact">
-        <button class="popup-close" onclick="cerrarPopupProducto()" aria-label="Cerrar detalles">✕</button>
+<div class="mobile-float-bar mobile-only">
+    <button class="btn-mob-float-orange" onclick="abrirFormDato()">Compartir Picada 🔥</button>
+    <button class="btn-mob-float-blue" onclick="abrirFormPromo()">Soy Negocio 🤝</button>
+</div>
+
+<div id="productPopup" class="popup-overlay" style="display:none;">
+    <div class="popup-content">
+        <button class="popup-close-red" onclick="cerrarPopupProducto()">✕</button>
         <div id="popup-body"></div>
     </div>
 </div>
 
-<!-- POPUP: COMPARTIR PICADA — Tally embebido -->
-<div id="popupDato" class="popup-overlay" style="display:none;" role="dialog" aria-modal="true" aria-label="Compartir picada">
+<div id="popupDato" class="popup-overlay" style="display:none;">
     <div class="popup-content popup-iframe">
-        <button class="popup-close" onclick="cerrarFormDato()">✕</button>
-        <iframe
-            src="https://tally.so/embed/ja7DOQ?alignLeft=1&hideTitle=0&transparentBackground=1&dynamicHeight=1"
-            loading="lazy"
-            width="100%"
-            height="100%"
-            frameborder="0"
-            marginheight="0"
-            marginwidth="0"
-            title="Compartir picada">
-        </iframe>
+        <button class="popup-close-red" onclick="cerrarFormDato()">✕</button>
+        <iframe src="https://tally.so/embed/ja7DOQ?transparentBackground=1" width="100%" height="100%" frameborder="0"></iframe>
     </div>
 </div>
 
-<!-- POPUP: REGISTRAR NEGOCIO — Google Form embebido -->
-<div id="popupPromo" class="popup-overlay" style="display:none;" role="dialog" aria-modal="true" aria-label="Registrar negocio">
+<div id="popupPromo" class="popup-overlay" style="display:none;">
     <div class="popup-content popup-iframe">
-        <button class="popup-close" onclick="cerrarFormPromo()">✕</button>
-        <iframe
-            src="https://docs.google.com/forms/d/e/1FAIpQLSe-NoZ-wev8KO0U6LT2ko9Ly0NyZcCjkZ4A0eBF-1TbH2qZxA/viewform?embedded=true"
-            loading="lazy"
-            width="100%"
-            height="100%"
-            frameborder="0"
-            marginheight="0"
-            marginwidth="0"
-            title="Registrar negocio">
-            Cargando…
-        </iframe>
+        <button class="popup-close-red" onclick="cerrarFormPromo()">✕</button>
+        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe-NoZ-wev8KO0U6LT2ko9Ly0NyZcCjkZ4A0eBF-1TbH2qZxA/viewform?embedded=true" width="100%" height="100%" frameborder="0"></iframe>
     </div>
 </div>
 
-<script src="script.js"></script>
+<script src="script.js" defer></script>
 </body>
 </html>
