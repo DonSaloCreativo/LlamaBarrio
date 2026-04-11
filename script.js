@@ -17,7 +17,7 @@ async function cargarTodo() {
         }
         if (tally.values) {
             allPicadas = tally.values.slice(1).map(r => ({
-                nombre: r[7] || 'Picada', comuna: r[4], contacto: r[6] || 'No especificado',
+                nombre: r[7] || 'Picada Vecinal', comuna: r[4], contacto: r[6] || 'No especificado',
                 descripcion: r[5], imagen: r[3], estado: r[8]
             })).filter(p => p.estado?.toLowerCase().trim() === 'aprobado');
         }
@@ -35,7 +35,7 @@ function renderBase() {
     if (scroll) scroll.innerHTML = allPicadas.map(p => `
         <div class="circle-item" onclick='abrirDetallePicada(${JSON.stringify(p)})'>
             <div class="circle-img-container"><img class="circle-img" src="${p.imagen}" onerror="this.src='images/placeholder.jpg'"></div>
-            <p style="font-size:0.75rem; font-weight:800; color:#333; margin-top:8px; line-height:1.1;">${p.nombre}</p>
+            <p class="card-nombre-small">${p.nombre}</p>
         </div>
     `).join('');
     buscar();
@@ -54,9 +54,9 @@ function createCardHTML(p) {
     return `
         <div class="res-card" onclick='abrirDetalleProducto(${JSON.stringify(p)})'>
             <img src="${p.imagen}" class="card-img" onerror="this.src='images/placeholder.jpg'">
-            <div style="padding:15px; flex-grow:1; display:flex; flex-direction:column; justify-content:space-between;">
-                <div><h4 style="margin:0;">${p.nombre}</h4><small style="color:#777;">📍 ${p.comuna}</small></div>
-                <div style="margin-top:10px; color:var(--primary); font-weight:800;">$${p.precio}</div>
+            <div class="res-info">
+                <div class="info-top"><h4>${p.nombre}</h4><small>📍 ${p.comuna}</small></div>
+                <div class="info-bottom"><p class="p-price">$${p.precio}</p><span class="tag-cat">${p.categoria}</span></div>
             </div>
         </div>
     `;
@@ -66,12 +66,9 @@ function abrirDetalleProducto(p) {
     document.getElementById("popup-body").innerHTML = `
         <img src="${p.imagen}" style="width:100%; height:230px; object-fit:cover; border-radius:15px;">
         <div style="padding:20px; text-align:center;">
-            <h2 style="margin:10px 0;">${p.nombre}</h2>
-            <p style="font-size:0.9rem;">📍 ${p.direccion} - ${p.comuna}</p>
+            <h2>${p.nombre}</h2><p>📍 ${p.direccion} - ${p.comuna}</p>
             <p style="font-size:0.9rem; color:#666;">🕒 Horario: ${p.horario || 'Abierto hoy'}</p>
-            <div style="background:#fff0eb; padding:15px; border-radius:15px; margin:20px 0;">
-                <h3 style="color:#FF4500; font-size:1.8rem; margin:0;">$${p.precio}</h3>
-            </div>
+            <div style="background:#fff0eb; padding:15px; border-radius:15px; margin:20px 0;"><h3 style="color:#FF4500; font-size:1.8rem; margin:0;">$${p.precio}</h3></div>
             <a href="https://wa.me/${p.telefono.toString().replace(/\D/g,'')}" target="_blank" style="background:#25D366; color:white; padding:12px 30px; border-radius:30px; text-decoration:none; font-weight:bold; display:inline-block;">WhatsApp</a>
         </div>
     `;
@@ -83,12 +80,8 @@ function abrirDetallePicada(p) {
         <img src="${p.imagen}" style="width:100%; height:230px; object-fit:cover; border-radius:15px;">
         <div style="padding:20px; text-align:center;">
             <span style="color:#6c5ce7; font-weight:bold; font-size:0.8rem;">🔥 DATO VECINAL</span>
-            <h2 style="margin:10px 0;">${p.nombre}</h2>
-            <p style="font-size:0.95rem; color:#555; line-height:1.4;">${p.descripcion}</p>
-            <div style="background:#f0f7ff; padding:12px; border-radius:15px; margin:15px 0; border:1px solid #cce5ff;">
-                <p style="margin:0; font-size:0.8rem; color:#555;">Contacto:</p>
-                <strong style="color:var(--secondary); font-size:1.1rem;">${p.contacto}</strong>
-            </div>
+            <h2>${p.nombre}</h2><p style="font-size:0.95rem; color:#555; line-height:1.4;">${p.descripcion}</p>
+            <div style="background:#f0f7ff; padding:12px; border-radius:15px; margin:15px 0; border:1px solid #cce5ff;"><p style="margin:0; font-size:0.8rem; color:#555;">Contacto:</p><strong style="color:var(--secondary); font-size:1.1rem;">${p.contacto}</strong></div>
             <small style="color:#aaa;">📍 Comuna: ${p.comuna}</small>
         </div>
     `;
@@ -103,7 +96,7 @@ function abrirFormPromo() { document.getElementById("popupPromo").style.display 
 
 window.onload = () => {
     const f = document.getElementById("location-filter");
-    const comunas = ["Cerrillos","Cerro Navia","Conchalí","El Bosque","Estación Central","Huechuraba","Independencia","La Cisterna","La Florida","La Granja","La Pintana","La Reina","Las Condes","Lo Barnechea","Lo Espejo","Lo Prado","Macul","Maipú","Ñuñoa","Pedro Aguirre Cerda","Peñalolén","Providencia","Pudahuel","Quilicura","Quinta Normal","Recoleta","San Bernardo","San Joaquín","San Miguel","San Ramón","Santiago","Vitacura"];
+    const comunas = ["Cerrillos","Cerro Navia","Conchalí","El Bosque","Estación Central","Huechuraba","Independencia","La Cisterna","La Florida","La Granja","La Pintana","La Reina","Las Condes","Lo Barnechea","Lo Espejo","Lo Prado","Macul","Maipú","Ñuñoa","Pedro Aguirre Cerda","Peñalolén","Providencia","Pudahuel","Quilicura","Quinta Normal","Recoleta","Renca","San Bernardo","San Joaquín","San Miguel","San Ramón","Santiago","Vitacura"];
     comunas.sort().forEach(c => f.innerHTML += `<option value="${c}">${c}</option>`);
     cargarTodo();
 };
