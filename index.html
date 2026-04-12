@@ -6,143 +6,91 @@
     <title>LlamaBarrio - Tu comunidad conectada</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-<link rel="manifest" href="/manifest.json">
-
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="apple-touch-icon" href="/icon-192.png">
-
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js');
-  }
-</script>
 </head>
 <body>
 
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <img src="images/logo.png" alt="LlamaBarrio" class="logo-img">
+                <a href="index.html"><img src="images/logo.png" alt="Logo" class="logo-img"></a>
             </div>
             <div class="nav-right desktop-only">
-                <a href="TU_LINK_DE_TALLY" target="_blank" class="btn-recomienda">+ Recomienda</a>
+                <a href="#" class="btn-recomienda">+ Recomienda picada</a>
                 <button class="btn-negocio-blue">Soy Negocio</button>
             </div>
         </div>
     </nav>
 
     <header class="hero">
-        <h1>Encuentra tu próxima <br><span class="highlight">picada favorita</span></h1>
+        <h1 style="font-size: 1.8rem; margin: 0;">Picadas reales de <br><span class="highlight">San Bernardo</span></h1>
         
         <div class="search-area">
-            <div class="filter-group">
-                <div class="oval-input">
-                    <span>📍</span>
-                    <select class="clean-select">
-                        <option value="" disabled selected>Tu Comuna</option>
-                        <option value="santiago">Santiago Centro</option>
-                        <option value="providencia">Providencia</option>
-                        <option value="las-condes">Las Condes</option>
-                    </select>
-                </div>
+            <div class="oval-input loc-select">
+                <span>📍</span>
+                <select class="clean-select"><option>San Bernardo</option></select>
             </div>
-            
-            <div class="filter-group">
-                <div class="search-box oval-input">
-                    <span class="search-icon">🔍</span>
-                    <input type="text" placeholder="¿Qué quieres comer?" id="main-search">
-                </div>
+            <div class="oval-input search-box">
+                <span>🔍</span>
+                <input type="text" id="main-search" placeholder="¿Qué quieres comer?">
             </div>
+            <button class="btn-buscar-main">Buscar</button>
         </div>
         
         <p class="subtitle">Recomendadas por la comunidad · Sin registro</p>
     </header>
 
-    <main class="content">
-        <section class="section">
-            <div class="section-header vertical-header">
-                <h2>Picadas de la comunidad</h2>
-                <p class="sub-small">Fotos enviadas por vecinos del barrio</p>
-            </div>
-            
-            <div class="community-grid centered-container">
-                <div class="comm-card orange-soft">
-                    <div class="comm-img-placeholder">Sushi</div>
-                    <div class="comm-info">
-                        <b>Camila R.</b>
-                        <p>"Joya en Recoleta." 🔥</p>
-                    </div>
-                </div>
-                <div class="comm-card orange-soft">
-                    <div class="comm-img-placeholder">Mote</div>
-                    <div class="comm-info">
-                        <b>Felipe T.</b>
-                        <p>"El mejor mote." 🥤</p>
-                    </div>
-                </div>
-                <div class="comm-card orange-soft">
-                    <div class="comm-img-placeholder">Masas</div>
-                    <div class="comm-info">
-                        <b>Rodrigo B.</b>
-                        <p>"Masa perfecta." 🥟</p>
-                    </div>
-                </div>
-                <div class="comm-card orange-soft">
-                    <div class="comm-img-placeholder">Pizzas</div>
-                    <div class="comm-info">
-                        <b>Valeria M.</b>
-                        <p>"Sabor artesanal." 🍕</p>
-                    </div>
-                </div>
+    <div class="main-wrapper">
+        <section>
+            <h2 class="section-title"><span>📷</span> Picadas de la comunidad</h2>
+            <p class="sub-small">Fotos enviadas por vecinos del barrio</p>
+            <div class="community-grid">
+                <div class="comm-card"><div class="comm-img-box">Sushi</div><div class="comm-info"><b>Camila R.</b><p>"Joya en el centro." 🔥</p></div></div>
+                <div class="comm-card"><div class="comm-img-box">Mote</div><div class="comm-info"><b>Felipe T.</b><p>"El mejor mote." 🥤</p></div></div>
+                <div class="comm-card"><div class="comm-img-box">Masas</div><div class="comm-info"><b>Rodrigo B.</b><p>"Masa perfecta." 🥟</p></div></div>
+                <div class="comm-card"><div class="comm-img-box">Pizzas</div><div class="comm-info"><b>Valeria M.</b><p>"Sabor artesanal." 🍕</p></div></div>
             </div>
         </section>
 
-<div class="cta-banner">
-  <div class="cta-content">
-    <div class="cta-text">
-      <strong>¿Tienes una picada increíble?</strong>
-      <span>Aparece gratis en la app. Miles de personas buscan lugares como el tuyo 📷</span>
+        <div class="cta-banner">
+            <div class="cta-left">
+                <span class="mega-icon">📣</span>
+                <p class="cta-desc">
+                    <strong>¿Tienes una picada increíble?</strong> 
+                    <span>Aparece gratis en la app.</span>
+                </p>
+            </div>
+            <a href="#" class="btn-contact">Contáctanos →</a>
+        </div>
+
+        <section>
+            <h2 class="section-title">📍 Locales cerca tuyo</h2>
+            <p class="sub-small">San Bernardo</p>
+            <div class="locals-grid" id="locals-grid"></div>
+        </section>
+
+        <section class="section-promo-final">
+            <img src="images/promocion1.png" alt="Promoción" class="img-promo-final">
+        </section>
     </div>
-    <a href="https://wa.me/569XXXXXXXX" class="cta-button">Contáctanos →</a>
-  </div>
-</div>
-
-        <section class="section">
-            <div class="section-header">
-                <div class="header-text">
-                    <h2>📍 Locales cerca tuyo</h2>
-                    <p class="sub">8 locales · Santiago Centro</p>
-                </div>
-                <button class="btn-filtrar">⚙️ Filtrar</button>
-            </div>
-            <div class="locals-grid-3" id="locals-grid"></div>
-        </section>
-
-        <section class="section final-ad-section">
-            <div class="ad-slide-final-wrapper">
-                <div class="ad-slide-final-card">
-                    <img src="images/promocion1.png" alt="Promoción Final" class="ad-img-final">
-                    <div class="ad-dots-final">
-                        <span class="dot active"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
 
     <footer class="site-footer">
-        <div class="footer-content">
-            <p>LlamaBarrio © 2026 · <a href="#">Términos y Condiciones</a> · <a href="#">Privacidad</a></p>
-            <p class="disclaimer-text">LlamaBarrio es una vitrina informativa. No realizamos ventas ni transacciones.</p>
-        </div>
+        <p>LlamaBarrio © 2026 · <a href="#">Términos</a> · <a href="#">Privacidad</a></p>
     </footer>
 
-    <div class="floating-nav mobile-only">
-        <button class="btn-blue">+ Recomienda</button>
-        <button class="btn-outline">🏠 Soy Negocio</button>
+    <div id="modal-detalle" class="modal-overlay">
+        <div class="modal-card">
+            <button onclick="cerrarModal()" class="close-btn">✕</button>
+            <div class="modal-header-img"><img id="modal-img" src=""></div>
+            <div class="modal-content">
+                <h2 id="modal-titulo" style="margin:0; font-weight:800; text-align:center;"></h2>
+                <p id="modal-desc" style="color:#666; margin:10px 0; font-size:0.9rem; text-align:center;"></p>
+                <div class="modal-info-pill">
+                    <p>📍 <b>Dirección:</b> <span id="modal-dir"></span></p>
+                    <p>⏰ <b>Horario:</b> <span id="modal-hor"></span></p>
+                </div>
+                <a id="modal-wa" href="#" target="_blank" class="btn-wa">Enviar WhatsApp</a>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>
