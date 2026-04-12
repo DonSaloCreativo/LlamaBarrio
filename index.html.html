@@ -5,41 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>LlamaBarrio - Tu comunidad conectada</title>
     
-    <meta name="theme-color" content="#39FF14">
+    <meta name="theme-color" content="#000000">
     <link rel="manifest" href="/manifest.json">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css?v=4.0">
+    <link rel="stylesheet" href="style.css?v=5.0">
 
     <style>
       @media screen and (max-width: 800px) {
-          footer, 
-          .site-footer, 
-          [class*="footer"] {
-              display: none !important;
-              visibility: hidden !important;
-              height: 0 !important;
-              padding: 0 !important;
+          .site-footer {
+              background: #000 !important; /* Fondo negro puro */
+              padding: 12px 0 !important;   /* Muy delgado */
               margin: 0 !important;
-              opacity: 0 !important;
-              pointer-events: none !important;
+              border-top: 1px solid #333;
+          }
+          .footer-content p {
+              font-size: 10px !important;    /* Texto muy pequeño */
+              color: #fff !important;        /* Letras blancas */
+              margin: 0 !important;
+              letter-spacing: 0.5px;
+          }
+          .footer-content a {
+              color: #fff !important;
+              text-decoration: none;
+              font-weight: 600;
+          }
+          /* Ocultamos el disclaimer legal largo en la app */
+          .disclaimer-text {
+              display: none !important;
+          }
+          /* Ajuste para que no choque con los botones flotantes */
+          body {
+              padding-bottom: 120px !important;
           }
       }
     </style>
 
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="LlamaBarrio">
-    <link rel="apple-touch-icon" href="images/icon-192.png">
-
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js');
-        });
-      }
-    </script>
 </head>
 <body>
 
@@ -49,7 +53,7 @@
                 <img src="images/logo.png" alt="LlamaBarrio" class="logo-img">
             </div>
             <div class="nav-right desktop-only">
-                <a href="TU_LINK_DE_TALLY" target="_blank" class="btn-recomienda">+ Recomienda</a>
+                <a href="#" class="btn-recomienda">+ Recomienda</a>
                 <button class="btn-negocio-blue">Soy Negocio</button>
             </div>
         </div>
@@ -57,7 +61,6 @@
 
     <header class="hero">
         <h1>Encuentra tu próxima <br><span class="highlight">picada favorita</span></h1>
-        
         <div class="search-area">
             <div class="filter-group">
                 <div class="oval-input">
@@ -65,100 +68,24 @@
                     <select class="clean-select">
                         <option value="" disabled selected>Tu Comuna</option>
                         <option value="santiago">Santiago Centro</option>
-                        <option value="providencia">Providencia</option>
-                        <option value="las-condes">Las Condes</option>
                     </select>
                 </div>
             </div>
-            
             <div class="filter-group">
                 <div class="search-box oval-input">
                     <span class="search-icon">🔍</span>
-                    <input type="text" placeholder="¿Qué quieres comer?" id="main-search">
+                    <input type="text" placeholder="¿Qué quieres comer?">
                 </div>
             </div>
         </div>
-        
-        <p class="subtitle">Recomendadas por la comunidad · Sin registro</p>
     </header>
 
     <main class="content">
-        <section class="section">
-            <div class="section-header vertical-header">
-                <h2>Picadas de la comunidad</h2>
-                <p class="sub-small">Fotos enviadas por vecinos del barrio</p>
-            </div>
-            
-            <div class="community-grid centered-container">
-                <div class="comm-card orange-soft">
-                    <div class="comm-img-placeholder">Sushi</div>
-                    <div class="comm-info">
-                        <b>Camila R.</b>
-                        <p>"Joya en Recoleta." 🔥</p>
-                    </div>
-                </div>
-                <div class="comm-card orange-soft">
-                    <div class="comm-img-placeholder">Mote</div>
-                    <div class="comm-info">
-                        <b>Felipe T.</b>
-                        <p>"El mejor mote." 🥤</p>
-                    </div>
-                </div>
-                <div class="comm-card orange-soft">
-                    <div class="comm-img-placeholder">Masas</div>
-                    <div class="comm-info">
-                        <b>Rodrigo B.</b>
-                        <p>"Masa perfecta." 🥟</p>
-                    </div>
-                </div>
-                <div class="comm-card orange-soft">
-                    <div class="comm-img-placeholder">Pizzas</div>
-                    <div class="comm-info">
-                        <b>Valeria M.</b>
-                        <p>"Sabor artesanal." 🍕</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <div class="cta-banner">
-          <div class="cta-content">
-            <div class="cta-text">
-              <strong>¿Tienes una picada increíble?</strong>
-              <span>Aparece gratis en la app. Miles de personas buscan lugares como el tuyo 📷</span>
-            </div>
-            <a href="https://wa.me/569XXXXXXXX" class="cta-button">Contáctanos →</a>
-          </div>
-        </div>
-
-        <section class="section">
-            <div class="section-header">
-                <div class="header-text">
-                    <h2>📍 Locales cerca tuyo</h2>
-                    <p class="sub">8 locales · Santiago Centro</p>
-                </div>
-                <button class="btn-filtrar">⚙️ Filtrar</button>
-            </div>
-            <div class="locals-grid-3" id="locals-grid"></div>
-        </section>
-
-        <section class="section final-ad-section">
-            <div class="ad-slide-final-wrapper">
-                <div class="ad-slide-final-card">
-                    <img src="images/promocion1.png" alt="Promoción Final" class="ad-img-final">
-                    <div class="ad-dots-final">
-                        <span class="dot active"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
+        <section style="height: 100px;"></section> </main>
 
     <footer class="site-footer">
         <div class="footer-content">
-            <p>LlamaBarrio © 2026 · <a href="#">Términos y Condiciones</a> · <a href="#">Privacidad</a></p>
+            <p><a href="#">Términos y Condiciones</a> — LlamaBarrio 2026</p>
             <p class="disclaimer-text">LlamaBarrio es una vitrina informativa. No realizamos ventas ni transacciones.</p>
         </div>
     </footer>
