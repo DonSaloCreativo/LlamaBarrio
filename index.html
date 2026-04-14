@@ -1,111 +1,219 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LlamaBarrio - Próximamente</title>
-  
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    body {
-      background: linear-gradient(135deg, #ff7a00, #ffb347);
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      text-align: center;
-    }
-
-    .container {
-      max-width: 500px;
-      padding: 30px;
-    }
-
-    .logo {
-      width: 120px;
-      margin-bottom: 20px;
-    }
-
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-    }
-
-    h2 {
-      font-size: 1.2rem;
-      font-weight: normal;
-      margin-bottom: 25px;
-      opacity: 0.9;
-    }
-
-    p {
-      font-size: 1rem;
-      margin-bottom: 30px;
-      opacity: 0.85;
-    }
-
-    .loader {
-      border: 4px solid rgba(255,255,255,0.3);
-      border-top: 4px solid white;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 25px;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .footer {
-      font-size: 0.8rem;
-      opacity: 0.7;
-      margin-top: 20px;
-    }
-
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 2rem;
-      }
-      .logo {
-        width: 90px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LlamaBarrio - Tu comunidad conectada</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="index.html"><img src="images/logo.png" alt="LlamaBarrio" class="logo-img"></a>
+            </div>
+            <div class="nav-right desktop-only">
+                <a href="https://tally.so/r/ja7DOQ" class="btn-recomienda" data-form-modal="tally">+ Recomienda picada</a>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSe-NoZ-wev8KO0U6LT2ko9Ly0NyZcCjkZ4A0eBF-1TbH2qZxA/viewform" class="btn-negocio-blue" data-form-modal="business">Soy Negocio</a>
+            </div>
+        </div>
+    </nav>
 
-  <div class="container">
+    <header class="hero">
+        <div class="hero-badge">Comunidad local · Datos reales</div>
+        <h1>Picadas reales recomendadas por tu <span class="highlight-word">comunidad</span></h1>
+        <p class="hero-copy">Descubre datos útiles, cercanos y compartidos por vecinos de tu comuna.</p>
 
-    <!-- LOGO -->
-    <img src="./logo.png" alt="Logo LlamaBarrio" class="logo">
+        <div class="search-area">
+            <div class="oval-input loc-select">
+                <span class="icon-mark">📍</span>
+                <select class="clean-select" id="comuna-select">
+                    <option>Alhué</option>
+                    <option>Buin</option>
+                    <option>Calera de Tango</option>
+                    <option>Cerrillos</option>
+                    <option>Cerro Navia</option>
+                    <option>Colina</option>
+                    <option>Conchalí</option>
+                    <option>Curacaví</option>
+                    <option>El Bosque</option>
+                    <option>El Monte</option>
+                    <option>Estación Central</option>
+                    <option>Huechuraba</option>
+                    <option>Independencia</option>
+                    <option>Isla de Maipo</option>
+                    <option>La Cisterna</option>
+                    <option>La Florida</option>
+                    <option>La Granja</option>
+                    <option>La Pintana</option>
+                    <option>La Reina</option>
+                    <option>Lampa</option>
+                    <option>Las Condes</option>
+                    <option>Lo Barnechea</option>
+                    <option>Lo Espejo</option>
+                    <option>Lo Prado</option>
+                    <option>Macul</option>
+                    <option>Maipú</option>
+                    <option>María Pinto</option>
+                    <option>Melipilla</option>
+                    <option>Ñuñoa</option>
+                    <option>Padre Hurtado</option>
+                    <option>Paine</option>
+                    <option>Pedro Aguirre Cerda</option>
+                    <option>Peñaflor</option>
+                    <option>Peñalolén</option>
+                    <option>Pirque</option>
+                    <option>Providencia</option>
+                    <option>Pudahuel</option>
+                    <option>Puente Alto</option>
+                    <option>Quilicura</option>
+                    <option>Quinta Normal</option>
+                    <option>Recoleta</option>
+                    <option>Renca</option>
+                    <option selected>San Bernardo</option>
+                    <option>San Joaquín</option>
+                    <option>San José de Maipo</option>
+                    <option>San Miguel</option>
+                    <option>San Pedro</option>
+                    <option>San Ramón</option>
+                    <option>Santiago</option>
+                    <option>Talagante</option>
+                    <option>Tiltil</option>
+                    <option>Vitacura</option>
+                </select>
+            </div>
+            <div class="oval-input search-box">
+                <span class="icon-mark">🔎</span>
+                <input type="text" id="main-search" placeholder="Qué quieres comer o encontrar">
+            </div>
+            <button class="btn-buscar-main" type="button">Buscar</button>
+        </div>
 
-    <h1>🔥 LlamaBarrio</h1>
-    <h2>Estamos creando algo increíble 🚀</h2>
+        <div class="hero-categories" id="hero-categories">
+            <button type="button" class="category-pill is-active" data-category="Todas">Todas</button>
+            <button type="button" class="category-pill" data-category="Completos">Completos</button>
+            <button type="button" class="category-pill" data-category="Sushi">Sushi</button>
+            <button type="button" class="category-pill" data-category="Empanadas">Empanadas</button>
+            <button type="button" class="category-pill" data-category="Colaciones">Colaciones</button>
+            <button type="button" class="category-pill" data-category="Panadería">Panadería</button>
+            <button type="button" class="category-pill" data-category="Pizzas">Pizzas</button>
+            <button type="button" class="category-pill" data-category="Botillería">Botillería</button>
+            <button type="button" class="category-pill" data-category="Verdulería">Verdulería</button>
+        </div>
+    </header>
 
-    <div class="loader"></div>
+    <main class="main-wrapper">
+        <section class="section-block community-section">
+            <div class="section-heading">
+                <h2 class="section-title">Joyitas de la comunidad</h2>
+                <p class="sub-small">Recomendadas por vecinos del barrio.</p>
+                <p class="mobile-swipe-hint">Desliza hacia un lado para ver más joyitas</p>
+            </div>
+            <div class="community-grid">
+                <article class="comm-card">
+                    <div class="comm-img-box"><img src="images/sushi.jpg" alt="Sushi recomendado por la comunidad"></div>
+                    <div class="comm-info">
+                        <span class="comm-tag">Sushi · San Bernardo</span>
+                        <b>Camila R.</b>
+                        <p>"Joya en el centro, salva cualquier antojo de noche."</p>
+                    </div>
+                </article>
+                <article class="comm-card">
+                    <div class="comm-img-box"><img src="images/empanadas.jpg" alt="Empanadas recomendadas por la comunidad"></div>
+                    <div class="comm-info">
+                        <span class="comm-tag">Empanadas · San Bernardo</span>
+                        <b>Felipe T.</b>
+                        <p>"Muy buena masa y el pino no falla, típica picada del barrio."</p>
+                    </div>
+                </article>
+                <article class="comm-card">
+                    <div class="comm-img-box"><img src="images/panaderia.png" alt="Panadería recomendada por la comunidad"></div>
+                    <div class="comm-info">
+                        <span class="comm-tag">Panadería · San Bernardo</span>
+                        <b>Rodrigo B.</b>
+                        <p>"Pan calentito y buena once, de esas que uno recomienda al tiro."</p>
+                    </div>
+                </article>
+                <article class="comm-card">
+                    <div class="comm-img-box"><img src="images/pizzeria.png" alt="Pizzería recomendada por la comunidad"></div>
+                    <div class="comm-info">
+                        <span class="comm-tag">Pizzas · San Bernardo</span>
+                        <b>Valeria M.</b>
+                        <p>"Sabor artesanal y porciones generosas, ideal para compartir."</p>
+                    </div>
+                </article>
+            </div>
+        </section>
 
-    <p>
-      Nuestra web está en construcción.<br>
-      Muy pronto podrás descubrir y compartir las mejores picadas de tu barrio.
-    </p>
+        <section class="cta-banner">
+            <div class="cta-left">
+                <span class="mega-icon">📣</span>
+                <p class="cta-desc">
+                    <strong>¿Tienes una picada increíble?</strong>
+                    <span>Aparece gratis en LlamaBarrio y compártela con tu comuna.</span>
+                </p>
+            </div>
+            <a href="https://tally.so/r/ja7DOQ" class="btn-contact" data-form-modal="tally">Contáctanos →</a>
+        </section>
 
-    <p><strong>¡Vuelve pronto!</strong></p>
+        <section class="section-block">
+            <div class="section-heading section-heading-split">
+                <div>
+                    <h2 class="section-title">Locales cerca tuyo</h2>
+                    <p class="sub-small" id="current-comuna-label">San Bernardo</p>
+                </div>
+                <div class="mini-badges">
+                    <button type="button" class="mini-filter" id="open-now-filter">Abierto ahora</button>
+                </div>
+            </div>
+            <div class="locals-grid" id="locals-grid"></div>
+            <div id="no-results" class="no-results" hidden>
+                <p class="no-results-title">😕 No encontramos picadas por aquí...</p>
+                <p class="no-results-text">¡pero puedes ser el primero en recomendar una!</p>
+                <a href="https://tally.so/r/ja7DOQ" class="btn-empty-state" data-form-modal="tally">Recomendar picada</a>
+            </div>
+        </section>
 
-    <div class="footer">
-      © 2026 LlamaBarrio - Todos los derechos reservados
+        <section class="section-promo-final">
+            <div class="promo-copy">
+                <span class="promo-label">Destacado del barrio</span>
+                <h2 class="section-title">Espacio para ofertas, avisos y publicaciones destacadas</h2>
+                <p class="sub-small">Este bloque puede mostrar promociones de temporada, campañas locales o publicidad de negocios de la comunidad.</p>
+            </div>
+            <img src="images/promocion1.png" alt="Bloque promocional de LlamaBarrio" class="img-promo-final">
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>LlamaBarrio © 2026 · <a href="#">Términos</a> · <a href="#">Privacidad</a></p>
+        <p>En LlamaBarrio conectamos personas con picadas, pero no vendemos ni operamos los locales. Cada negocio es independiente y responsable de su servicio.</p>
+    </footer>
+
+    <div id="modal-detalle" class="modal-overlay">
+        <div class="modal-card">
+            <button type="button" onclick="cerrarModal()" class="close-btn">×</button>
+            <div class="modal-header-img"><img id="modal-img" src="" alt=""></div>
+            <div class="modal-content">
+                <span class="modal-tag" id="modal-categoria">Categoría</span>
+                <h2 id="modal-titulo"></h2>
+                <p id="modal-desc" class="modal-desc"></p>
+                <div class="modal-info-pill">
+                    <p><strong>Comuna y dirección:</strong> <span id="modal-dir"></span></p>
+                    <p><strong>Horario:</strong> <span id="modal-hor"></span></p>
+                </div>
+                <a id="modal-wa" href="#" target="_blank" rel="noopener noreferrer" class="btn-wa">Enviar WhatsApp</a>
+            </div>
+        </div>
     </div>
-  </div>
 
+    <div id="form-modal" class="modal-overlay form-modal-overlay">
+        <div class="form-modal-card">
+            <button type="button" class="close-btn" onclick="cerrarFormulario()">×</button>
+            <iframe id="form-modal-frame" src="" title="Formulario LlamaBarrio" loading="lazy"></iframe>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
