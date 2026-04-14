@@ -1,98 +1,111 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LlamaBarrio - Tu comunidad conectada</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LlamaBarrio - Próximamente</title>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #ff7a00, #ffb347);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 500px;
+      padding: 30px;
+    }
+
+    .logo {
+      width: 120px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      font-weight: normal;
+      margin-bottom: 25px;
+      opacity: 0.9;
+    }
+
+    p {
+      font-size: 1rem;
+      margin-bottom: 30px;
+      opacity: 0.85;
+    }
+
+    .loader {
+      border: 4px solid rgba(255,255,255,0.3);
+      border-top: 4px solid white;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 25px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .footer {
+      font-size: 0.8rem;
+      opacity: 0.7;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2rem;
+      }
+      .logo {
+        width: 90px;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <a href="index.html"><img src="images/logo.png" alt="Logo" class="logo-img"></a>
-            </div>
-            <div class="nav-right desktop-only">
-                <a href="#" class="btn-recomienda">+ Recomienda picada</a>
-                <button class="btn-negocio-blue">Soy Negocio</button>
-            </div>
-        </div>
-    </nav>
+  <div class="container">
 
-    <header class="hero">
-        <h1 style="font-size: 1.8rem; margin: 0;">Picadas reales de <br><span class="highlight">San Bernardo</span></h1>
-        
-        <div class="search-area">
-            <div class="oval-input loc-select">
-                <span>📍</span>
-                <select class="clean-select"><option>San Bernardo</option></select>
-            </div>
-            <div class="oval-input search-box">
-                <span>🔍</span>
-                <input type="text" id="main-search" placeholder="¿Qué quieres comer?">
-            </div>
-            <button class="btn-buscar-main">Buscar</button>
-        </div>
-        
-        <p class="subtitle">Recomendadas por la comunidad · Sin registro</p>
-    </header>
+    <!-- LOGO -->
+    <img src="./logo.png" alt="Logo LlamaBarrio" class="logo">
 
-    <div class="main-wrapper">
-        <section>
-            <h2 class="section-title"><span>📷</span> Picadas de la comunidad</h2>
-            <p class="sub-small">Fotos enviadas por vecinos del barrio</p>
-            <div class="community-grid">
-                <div class="comm-card"><div class="comm-img-box">Sushi</div><div class="comm-info"><b>Camila R.</b><p>"Joya en el centro." 🔥</p></div></div>
-                <div class="comm-card"><div class="comm-img-box">Mote</div><div class="comm-info"><b>Felipe T.</b><p>"El mejor mote." 🥤</p></div></div>
-                <div class="comm-card"><div class="comm-img-box">Masas</div><div class="comm-info"><b>Rodrigo B.</b><p>"Masa perfecta." 🥟</p></div></div>
-                <div class="comm-card"><div class="comm-img-box">Pizzas</div><div class="comm-info"><b>Valeria M.</b><p>"Sabor artesanal." 🍕</p></div></div>
-            </div>
-        </section>
+    <h1>🔥 LlamaBarrio</h1>
+    <h2>Estamos creando algo increíble 🚀</h2>
 
-        <div class="cta-banner">
-            <div class="cta-left">
-                <span class="mega-icon">📣</span>
-                <p class="cta-desc">
-                    <strong>¿Tienes una picada increíble?</strong> 
-                    <span>Aparece gratis en la app.</span>
-                </p>
-            </div>
-            <a href="#" class="btn-contact">Contáctanos →</a>
-        </div>
+    <div class="loader"></div>
 
-        <section>
-            <h2 class="section-title">📍 Locales cerca tuyo</h2>
-            <p class="sub-small">San Bernardo</p>
-            <div class="locals-grid" id="locals-grid"></div>
-        </section>
+    <p>
+      Nuestra web está en construcción.<br>
+      Muy pronto podrás descubrir y compartir las mejores picadas de tu barrio.
+    </p>
 
-        <section class="section-promo-final">
-            <img src="images/promocion1.png" alt="Promoción" class="img-promo-final">
-        </section>
+    <p><strong>¡Vuelve pronto!</strong></p>
+
+    <div class="footer">
+      © 2026 LlamaBarrio - Todos los derechos reservados
     </div>
+  </div>
 
-    <footer class="site-footer">
-        <p>LlamaBarrio © 2026 · <a href="#">Términos</a> · <a href="#">Privacidad</a></p>
-    </footer>
-
-    <div id="modal-detalle" class="modal-overlay">
-        <div class="modal-card">
-            <button onclick="cerrarModal()" class="close-btn">✕</button>
-            <div class="modal-header-img"><img id="modal-img" src=""></div>
-            <div class="modal-content">
-                <h2 id="modal-titulo" style="margin:0; font-weight:800; text-align:center;"></h2>
-                <p id="modal-desc" style="color:#666; margin:10px 0; font-size:0.9rem; text-align:center;"></p>
-                <div class="modal-info-pill">
-                    <p>📍 <b>Dirección:</b> <span id="modal-dir"></span></p>
-                    <p>⏰ <b>Horario:</b> <span id="modal-hor"></span></p>
-                </div>
-                <a id="modal-wa" href="#" target="_blank" class="btn-wa">Enviar WhatsApp</a>
-            </div>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
 </body>
 </html>
