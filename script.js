@@ -41,7 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 estado: j.Estado || "Pendiente"
             };
         }).filter(j => {
-            // Filtro robusto: solo mostrar joyitas aprobadas
             const estadoLimpio = String(j.estado).trim().toLowerCase();
             return estadoLimpio.includes("aprob");
         });
@@ -55,7 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("❌ Error cargando datos:", err);
     });
 
-    // RENDER JOYITAS (COMUNA ARRIBA, NOMBRE Y COMENTARIO ABAJO)
     function renderJoyitas(){
         const joyitasGrid = document.getElementById("joyitas-grid");
         if(!joyitasGrid) {
@@ -75,7 +73,6 @@ document.addEventListener("DOMContentLoaded", () => {
             c.className = "comm-card";
             c.style.cursor = "pointer";
             
-            // Manejo seguro de imagen
             const imgSrc = j.img && String(j.img).startsWith("http") 
                 ? j.img 
                 : (j.img && j.img !== "sin-imagen.png" 
@@ -121,6 +118,22 @@ document.addEventListener("DOMContentLoaded", () => {
         grid.innerHTML = "";
         console.log("🏪 Renderizando locales, cantidad:", locales.length);
         
+        // MAPEO DE IMÁGENES GENÉRICAS POR CATEGORÍA
+        const imagenesPorCategoria = {
+            "Almacén": "images/almacen.jpg",
+            "Botillería": "images/botilleria.jpg",
+            "Comida rápida": "images/comida-rapida.jpg",
+            "Comida Rápida": "images/comida-rapida.jpg",
+            "Panadería": "images/panaderia.jpg",
+            "Pastelería": "images/pasteleria.jpg",
+            "Pizzería": "images/pizzeria.jpg",
+            "Completos": "images/comida-rapida.jpg",
+            "Sushi": "images/comida-rapida.jpg",
+            "Empanadas": "images/comida-rapida.jpg",
+            "Colaciones": "images/panaderia.jpg",
+            "Pizzas": "images/pizzeria.jpg"
+        };
+        
         locales.forEach((local) => {
             const abierta = estaAbiertoAhora(local.hor);
             const card = document.createElement("article");
@@ -130,12 +143,17 @@ document.addEventListener("DOMContentLoaded", () => {
             card.dataset.search = `${local.name} ${local.loc} ${local.desc} ${local.category}`.toLowerCase();
             card.dataset.open = abierta ? "true" : "false";
             
-            // Manejo seguro de imagen para locales
-            const imgSrc = local.img && String(local.img).startsWith("http")
-                ? local.img
-                : (local.img && local.img !== "sin-imagen.png"
-                    ? `images/${local.img}`
-                    : "images/sin-imagen.png");
+            // LÓGICA DE IMAGEN: si tiene imagen real, usarla; si no, usar genérica por categoría
+            let imgSrc = "images/sin-imagen.png";
+            
+            if (local.img && String(local.img).startsWith("http")) {
+                imgSrc = local.img;
+            } else if (local.img && local.img !== "sin-imagen.png" && String(local.img).trim() !== "") {
+                imgSrc = `images/${local.img}`;
+            } else {
+                // Si no tiene imagen, buscar genérica por categoría
+                imgSrc = imagenesPorCategoria[local.category] || "images/sin-imagen.png";
+            }
             
             card.innerHTML = `
                 <div class="local-img-wrap">
@@ -181,13 +199,22 @@ document.addEventListener("DOMContentLoaded", () => {
     function filtrarLocales() {
         if (!grid) return;
         const termino = (searchInput?.value || "").trim().toLowerCase();
-        const comunaSeleccionada = comunaSelect?.value || "San Bernardo";
+        const comunaSeleccionada = comunaSelect?.value || "";
         const cards = grid.querySelectorAll(".local-card");
         let visibles = 0;
-        if (comunaLabel) comunaLabel.textContent = comunaSeleccionada;
+        
+        // Actualizar etiqueta de comuna
+        if (comunaLabel) {
+            if (comunaSeleccionada === "") {
+                comunaLabel.textContent = "Todas las comunas";
+            } else {
+                comunaLabel.textContent = comunaSeleccionada;
+            }
+        }
+        
         cards.forEach((card) => {
             const coincideBusqueda = termino === "" || card.dataset.search.includes(termino);
-            const coincideComuna = card.dataset.comuna === comunaSeleccionada;
+            const coincideComuna = comunaSeleccionada === "" || card.dataset.comuna === comunaSeleccionada;
             const coincideCategoria = categoriaActiva === "Todas" || card.dataset.category === categoriaActiva;
             const coincideAbierto = !soloAbiertos || card.dataset.open === "true";
             const mostrar = coincideBusqueda && coincideComuna && coincideCategoria && coincideAbierto;
@@ -228,6 +255,7 @@ function convertirHoraAMinutos(valor) {
     if (!match) return null;
     return Number(match[1]) * 60 + Number(match[2]);
 }
+
 function estaAbiertoAhora(horario) {
     if (!horario || !horario.includes("-")) return false;
     const ahora = new Date();
@@ -252,7 +280,6 @@ function abrirDetalle(local) {
     el("modal-precio").innerText = '';
     el("modal-autor").innerText = '';
     
-    // Manejo seguro de imagen en modal
     const imgSrc = local.img && String(local.img).startsWith("http")
         ? local.img
         : (local.img && local.img !== "sin-imagen.png"
@@ -279,7 +306,6 @@ function abrirDetalleJoyita(j) {
     el("modal-precio").innerText = j.price ? "💰 Precio: " + j.price : '';
     el("modal-autor").innerText = '';
     
-    // Manejo seguro de imagen en modal joyita
     const imgSrc = j.img && String(j.img).startsWith("http")
         ? j.img
         : (j.img && j.img !== "sin-imagen.png"
@@ -298,6 +324,7 @@ function cerrarModal() {
     const el = id => document.getElementById(id) || { style:{} };
     el("modal-detalle").style.display = "none";
 }
+
 function abrirFormulario(tipoFormulario) {
     const modal = document.getElementById("form-modal");
     const frame = document.getElementById("form-modal-frame");
@@ -306,6 +333,7 @@ function abrirFormulario(tipoFormulario) {
     frame.src = url;
     modal.style.display = "flex";
 }
+
 function cerrarFormulario() {
     const modal = document.getElementById("form-modal");
     const frame = document.getElementById("form-modal-frame");
@@ -313,6 +341,7 @@ function cerrarFormulario() {
     modal.style.display = "none";
     frame.src = "";
 }
+
 window.onclick = function (event) {
     if (event.target === document.getElementById("modal-detalle")) cerrarModal();
     if (event.target === document.getElementById("form-modal")) cerrarFormulario();
