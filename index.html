@@ -15,12 +15,13 @@
 
     body {
       background: linear-gradient(135deg, #ff7a00, #ffb347);
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
       text-align: center;
+      line-height: 1.5;
     }
 
     .container {
@@ -38,7 +39,7 @@
       margin-bottom: 10px;
     }
 
-    h2 {
+    .subtitle {
       font-size: 1.2rem;
       font-weight: normal;
       margin-bottom: 25px;
@@ -72,6 +73,24 @@
       margin-top: 20px;
     }
 
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+      white-space: nowrap;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .loader {
+        animation: none;
+      }
+    }
+
     @media (max-width: 600px) {
       h1 {
         font-size: 2rem;
@@ -85,15 +104,16 @@
 
 <body>
 
-  <div class="container">
+  <main class="container" role="main" aria-labelledby="site-title">
 
     <!-- LOGO -->
-    <img src="./logo.png" alt="Logo LlamaBarrio" class="logo">
+    <img src="./logo.png" alt="Logo LlamaBarrio" class="logo" decoding="async">
 
-    <h1>🔥 LlamaBarrio</h1>
-    <h2>Estamos creando algo increíble 🚀</h2>
+    <h1 id="site-title">🔥 LlamaBarrio</h1>
+    <p class="subtitle">Estamos creando algo increíble 🚀</p>
 
-    <div class="loader"></div>
+    <div class="loader" aria-hidden="true"></div>
+    <p class="sr-only" role="status">Cargando contenido próximamente.</p>
 
     <p>
       Nuestra web está en construcción.<br>
@@ -102,10 +122,10 @@
 
     <p><strong>¡Vuelve pronto!</strong></p>
 
-    <div class="footer">
-      © 2026 LlamaBarrio - Todos los derechos reservados
-    </div>
-  </div>
+    <footer class="footer">
+      <small>© 2026 LlamaBarrio - Todos los derechos reservados</small>
+    </footer>
+  </main>
 
 </body>
 </html>

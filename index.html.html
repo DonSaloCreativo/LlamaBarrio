@@ -2,8 +2,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LlamaBarrio - Tu comunidad conectada</title>
+    <meta name="description" content="Descubre picadas y negocios locales en tu comuna con LlamaBarrio.">
     
     <meta name="theme-color" content="#000000">
     <link rel="manifest" href="/manifest.json">
@@ -46,11 +47,14 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
-    <nav class="navbar">
+    <nav class="navbar" aria-label="Navegación principal">
         <div class="nav-container">
             <div class="logo">
-                <img src="images/logo.png" alt="LlamaBarrio" class="logo-img">
+                <a href="/" aria-label="Ir al inicio de LlamaBarrio">
+                    <img src="images/logo.png" alt="LlamaBarrio" class="logo-img">
+                </a>
             </div>
             <div class="nav-right desktop-only">
                 <a href="#" class="btn-recomienda">+ Recomienda</a>
@@ -62,38 +66,41 @@
     <header class="hero">
         <h1>Encuentra tu próxima <br><span class="highlight">picada favorita</span></h1>
         <div class="search-area">
-            <div class="filter-group">
-                <div class="oval-input">
-                    <span>📍</span>
-                    <select class="clean-select">
-                        <option value="" disabled selected>Tu Comuna</option>
-                        <option value="santiago">Santiago Centro</option>
-                    </select>
+                <div class="filter-group">
+                    <div class="oval-input">
+                        <span>📍</span>
+                        <label for="comuna-select" class="sr-only">Selecciona tu comuna</label>
+                        <select id="comuna-select" class="clean-select">
+                            <option value="" disabled selected>Tu Comuna</option>
+                            <option value="santiago">Santiago Centro</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <div class="search-box oval-input">
+                        <span class="search-icon">🔍</span>
+                        <label for="buscador-comida" class="sr-only">Buscar comida o negocio</label>
+                        <input id="buscador-comida" type="text" placeholder="¿Qué quieres comer?" autocomplete="off">
+                    </div>
                 </div>
             </div>
-            <div class="filter-group">
-                <div class="search-box oval-input">
-                    <span class="search-icon">🔍</span>
-                    <input type="text" placeholder="¿Qué quieres comer?">
-                </div>
-            </div>
-        </div>
     </header>
 
-    <main class="content">
-        <section style="height: 100px;"></section> </main>
+    <main id="main-content" class="content" tabindex="-1">
+        <section style="height: 100px;" aria-label="Sección de contenido en construcción"></section>
+    </main>
 
     <footer class="site-footer">
         <div class="footer-content">
-            <p><a href="#">Términos y Condiciones</a> — LlamaBarrio 2026</p>
+            <p><a href="#" aria-label="Leer términos y condiciones">Términos y Condiciones</a> — LlamaBarrio 2026</p>
             <p class="disclaimer-text">LlamaBarrio es una vitrina informativa. No realizamos ventas ni transacciones.</p>
         </div>
     </footer>
 
-    <div class="floating-nav mobile-only">
-        <button class="btn-blue">+ Recomienda</button>
-        <button class="btn-outline">🏠 Soy Negocio</button>
-    </div>
+    <nav class="floating-nav mobile-only" aria-label="Acciones rápidas">
+        <button type="button" class="btn-blue">+ Recomienda</button>
+        <button type="button" class="btn-outline">🏠 Soy Negocio</button>
+    </nav>
 
     <script src="script.js"></script>
 </body>

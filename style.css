@@ -24,6 +24,35 @@ body {
     overflow-x: hidden;
 }
 
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 12px;
+    z-index: 3000;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: #151515;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.skip-link:focus {
+    top: 12px;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+    white-space: nowrap;
+}
+
 img { max-width: 100%; display: block; }
 button, select, input { font: inherit; }
 button { cursor: pointer; }
