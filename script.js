@@ -9,6 +9,9 @@ let joyitas = [];
 document.addEventListener("DOMContentLoaded", () => {
     console.log("🔄 Iniciando carga de datos...");
     
+    setupFormTriggers();
+    setupFloatingCta();
+    
     Promise.all([
         fetch(`${API_BASE}?hoja=Publicaciones%20Locales`).then(r => r.json()),
         fetch(`${API_BASE}?hoja=Tally`).then(r => r.json())
@@ -49,6 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("✅ Joyitas procesadas:", joyitas);
         
         renderJoyitas();
+        setupTestimonials();
         renderLocales();
     }).catch(err => {
         console.error("❌ Error cargando datos:", err);
@@ -96,14 +100,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // ========== CONFIG BUSQUEDA Y FILTROS DE LOCALES ==========
     const grid = document.getElementById("locals-grid");
     const searchInput = document.getElementById("main-search");
     const searchButton = document.querySelector(".btn-buscar-main");
     const comunaSelect = document.getElementById("comuna-select");
     const comunaLabel = document.getElementById("current-comuna-label");
     const noResults = document.getElementById("no-results");
-    const formTriggers = document.querySelectorAll("[data-form-modal]");
+    const loadMoreHint = document.getElementById("load-more-hint");
     const categoryButtons = document.querySelectorAll(".category-pill");
     const openNowFilter = document.getElementById("open-now-filter");
 
@@ -118,7 +121,6 @@ document.addEventListener("DOMContentLoaded", () => {
         grid.innerHTML = "";
         console.log("🏪 Renderizando locales, cantidad:", locales.length);
         
-        // MAPEO DE IMÁGENES GENÉRICAS POR CATEGORÍA
         const imagenesPorCategoria = {
             "Almacén": "images/almacen.jpg",
             "Botillería": "images/botilleria.jpg",
@@ -134,7 +136,13 @@ document.addEventListener("DOMContentLoaded", () => {
             "Pizzas": "images/pizzeria.jpg"
         };
         
-        locales.forEach((local) => {
+        const isInitialLoad = (searchInput?.value || "").trim() === "" && 
+                              (comunaSelect?.value || "") === "";
+        const maxCards = isInitialLoad ? 10 : locales.length;
+        
+        const localesToRender = locales.slice(0, maxCards);
+        
+        localesToRender.forEach((local) => {
             const abierta = estaAbiertoAhora(local.hor);
             const card = document.createElement("article");
             card.className = "local-card";
@@ -143,7 +151,6 @@ document.addEventListener("DOMContentLoaded", () => {
             card.dataset.search = `${local.name} ${local.loc} ${local.desc} ${local.category}`.toLowerCase();
             card.dataset.open = abierta ? "true" : "false";
             
-            // LÓGICA DE IMAGEN: si tiene imagen real, usarla; si no, usar genérica por categoría
             let imgSrc = "images/sin-imagen.png";
             
             if (local.img && String(local.img).startsWith("http")) {
@@ -151,7 +158,6 @@ document.addEventListener("DOMContentLoaded", () => {
             } else if (local.img && local.img !== "sin-imagen.png" && String(local.img).trim() !== "") {
                 imgSrc = `images/${local.img}`;
             } else {
-                // Si no tiene imagen, buscar genérica por categoría
                 imgSrc = imagenesPorCategoria[local.category] || "images/sin-imagen.png";
             }
             
@@ -186,6 +192,13 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             grid.appendChild(card);
         });
+        
+        if (isInitialLoad && locales.length > 10) {
+            if (loadMoreHint) loadMoreHint.hidden = false;
+        } else {
+            if (loadMoreHint) loadMoreHint.hidden = true;
+        }
+        
         filtrarLocales();
     }
 
@@ -203,7 +216,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const cards = grid.querySelectorAll(".local-card");
         let visibles = 0;
         
-        // Actualizar etiqueta de comuna
         if (comunaLabel) {
             if (comunaSeleccionada === "") {
                 comunaLabel.textContent = "Todas las comunas";
@@ -224,9 +236,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (noResults) noResults.hidden = visibles !== 0;
     }
 
-    searchInput?.addEventListener("input", filtrarLocales);
-    searchButton?.addEventListener("click", filtrarLocales);
-    comunaSelect?.addEventListener("change", filtrarLocales);
+    if (searchInput) searchInput.addEventListener("input", filtrarLocales);
+    if (searchButton) searchButton.addEventListener("click", filtrarLocales);
+    if (comunaSelect) comunaSelect.addEventListener("change", filtrarLocales);
     categoryButtons.forEach((button) => {
         button.addEventListener("click", () => {
             categoriaActiva = button.dataset.category || "Todas";
@@ -234,21 +246,15 @@ document.addEventListener("DOMContentLoaded", () => {
             filtrarLocales();
         });
     });
-    openNowFilter?.addEventListener("click", () => {
-        soloAbiertos = !soloAbiertos;
-        openNowFilter.classList.toggle("is-active", soloAbiertos);
-        filtrarLocales();
-    });
-    formTriggers.forEach((trigger) => {
-        trigger.addEventListener("click", (event) => {
-            event.preventDefault();
-            abrirFormulario(trigger.dataset.formModal);
+    if (openNowFilter) {
+        openNowFilter.addEventListener("click", () => {
+            soloAbiertos = !soloAbiertos;
+            openNowFilter.classList.toggle("is-active", soloAbiertos);
+            filtrarLocales();
         });
-    });
+    }
     updateCategoryButtons();
 });
-
-// ========== FUNCIONES UTILIDAD Y POPUP ===========
 
 function convertirHoraAMinutos(valor) {
     const match = valor.match(/^(\d{1,2}):(\d{2})$/);
@@ -269,7 +275,6 @@ function estaAbiertoAhora(horario) {
     return minutosActuales >= inicio || minutosActuales <= fin;
 }
 
-// --- POPUP PARA LOCALES ---
 function abrirDetalle(local) {
     const el = id => document.getElementById(id) || { innerText:"", src: "", alt:"", href:"#", classList:{toggle:()=>{}}, style:{} };
     el("modal-titulo").innerText = local.name || "";
@@ -295,15 +300,14 @@ function abrirDetalle(local) {
     el("modal-detalle").style.display = "flex";
 }
 
-// --- POPUP PARA JOYITAS ---
 function abrirDetalleJoyita(j) {
     const el = id => document.getElementById(id) || { innerText:"", src:"", alt:"", href:"#", style:{} };
     el("modal-titulo").innerText = j.autor && j.autor.trim() ? `"${j.name}" - ${j.autor}` : `"${j.name}" - Anónimo`;
     el("modal-categoria").innerText = j.category || "";
-    el("modal-dir").innerText = j.ubicacion ? `📍 ${j.ubicacion}` : (j.comuna ? `Encontrado en: ${j.comuna}` : "");
+    el("modal-dir").innerText = j.ubicacion ? `${j.ubicacion}` : (j.comuna ? `Encontrado en: ${j.comuna}` : "");
     el("modal-desc").innerText = j.desc || '';
     el("modal-hor").innerText = '';
-    el("modal-precio").innerText = j.price ? "💰 Precio: " + j.price : '';
+    el("modal-precio").innerText = j.price ? "Precio: " + j.price : '';
     el("modal-autor").innerText = '';
     
     const imgSrc = j.img && String(j.img).startsWith("http")
@@ -319,7 +323,6 @@ function abrirDetalleJoyita(j) {
     el("modal-detalle").style.display = "flex";
 }
 
-// --- CIERRE MODALES ---
 function cerrarModal() {
     const el = id => document.getElementById(id) || { style:{} };
     el("modal-detalle").style.display = "none";
@@ -328,7 +331,10 @@ function cerrarModal() {
 function abrirFormulario(tipoFormulario) {
     const modal = document.getElementById("form-modal");
     const frame = document.getElementById("form-modal-frame");
-    const url = formUrls[tipoFormulario];
+    const url = {
+        tally: "https://tally.so/r/ja7DOQ",
+        business: "https://forms.gle/k3VE5zWxYB5Fxrdk6"
+    }[tipoFormulario];
     if (!modal || !frame || !url) return;
     frame.src = url;
     modal.style.display = "flex";
@@ -346,3 +352,60 @@ window.onclick = function (event) {
     if (event.target === document.getElementById("modal-detalle")) cerrarModal();
     if (event.target === document.getElementById("form-modal")) cerrarFormulario();
 };
+
+function setupTestimonials() {
+    const testimonialsGrid = document.getElementById('testimonials-grid');
+    const testimonialsDots = document.getElementById('testimonials-dots');
+
+    if (testimonialsGrid && testimonialsDots && window.innerWidth < 760) {
+        const cards = testimonialsGrid.querySelectorAll('.testimonial-card');
+        const totalCards = cards.length;
+        let testimonialIndex = 0;
+        
+        for (let i = 0; i < totalCards; i++) {
+            const dot = document.createElement('div');
+            dot.className = `testimonial-dot ${i === 0 ? 'active' : ''}`;
+            dot.addEventListener('click', () => showTestimonial(i));
+            testimonialsDots.appendChild(dot);
+        }
+        
+        function showTestimonial(index) {
+            testimonialIndex = index;
+            testimonialsGrid.style.transform = `translateX(-${index * 100}%)`;
+            
+            const dots = testimonialsDots.querySelectorAll('.testimonial-dot');
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
+        
+        setInterval(() => {
+            testimonialIndex = (testimonialIndex + 1) % totalCards;
+            showTestimonial(testimonialIndex);
+        }, 6000);
+        
+        testimonialsGrid.style.transition = 'transform 0.3s ease';
+    }
+}
+
+function setupFormTriggers() {
+    const formTriggers = document.querySelectorAll("[data-form-modal]");
+    formTriggers.forEach((trigger) => {
+        trigger.addEventListener("click", (event) => {
+            event.preventDefault();
+            const formType = trigger.getAttribute("data-form-modal");
+            abrirFormulario(formType);
+        });
+    });
+}
+
+function setupFloatingCta() {
+    const floatingBtns = document.querySelectorAll(".floating-cta-btn");
+    floatingBtns.forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            const formType = btn.getAttribute("data-form-modal");
+            abrirFormulario(formType);
+        });
+    });
+}

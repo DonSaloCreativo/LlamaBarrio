@@ -22,13 +22,29 @@
 
     <header class="hero">
         <div class="hero-badge">Comunidad local · Datos reales</div>
-        <h1>Picadas reales recomendadas por tu <span class="highlight-word">comunidad</span></h1>
-        <p class="hero-copy">Descubre datos útiles, cercanos y compartidos por vecinos de tu comuna.</p>
+        <h1>Descubre picadas reales <span class="highlight-word">de tu barrio</span></h1>
+        <p class="hero-copy">Verificadas por vecinos como tú. Sin bots, sin ruido.</p>
+
+        <div class="hero-stats">
+            <div class="stat-item">
+                <span class="stat-number">2.3K+</span>
+                <span class="stat-label">Picadas</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">15K+</span>
+                <span class="stat-label">Vecinos</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">47</span>
+                <span class="stat-label">Comunas</span>
+            </div>
+        </div>
 
         <div class="search-area">
             <div class="oval-input loc-select">
                 <span class="icon-mark">📍</span>
                 <select class="clean-select" id="comuna-select">
+                    <option value="">Todas las comunas</option>
                     <option>Alhué</option>
                     <option>Buin</option>
                     <option>Calera de Tango</option>
@@ -101,40 +117,58 @@
             <button type="button" class="category-pill" data-category="Botillería">Botillería</button>
             <button type="button" class="category-pill" data-category="Verdulería">Verdulería</button>
         </div>
+
+        <!-- MINI CÓMO FUNCIONA CON DISEÑO MEJORADO -->
+        <div class="mini-how-section">
+            <div class="mini-how-header">
+                <h3 class="mini-how-title">¿Cómo funciona?</h3>
+            </div>
+            <div class="mini-how-steps">
+                <div class="mini-step-item">
+                    <div class="mini-step-number">1</div>
+                    <div class="mini-step-text">Busca tu barrio y categoría</div>
+                </div>
+                <div class="mini-step-arrow">→</div>
+                <div class="mini-step-item">
+                    <div class="mini-step-number">2</div>
+                    <div class="mini-step-text">Descubre recomendaciones reales</div>
+                </div>
+                <div class="mini-step-arrow">→</div>
+                <div class="mini-step-item">
+                    <div class="mini-step-number">3</div>
+                    <div class="mini-step-text">Comparte tus mejores datos</div>
+                </div>
+            </div>
+        </div>
     </header>
 
     <main class="main-wrapper">
+        <!-- JOYITAS -->
         <section class="section-block community-section">
             <div class="section-heading">
                 <h2 class="section-title">Joyitas de la comunidad</h2>
-                <p class="sub-small">Recomendadas por vecinos del barrio.</p>
-                <p class="mobile-swipe-hint">Desliza hacia un lado para ver más joyitas</p>
+                <p class="sub-small">Recomendaciones de vecinos del barrio</p>
+                <p class="mobile-swipe-hint">Desliza hacia un lado para ver más</p>
             </div>
             <div class="community-grid" id="joyitas-grid"></div>
         </section>
 
-        <section class="cta-banner">
-            <div class="cta-left">
-                <span class="mega-icon">📣</span>
-                <p class="cta-desc">
-                    <strong>¿Tienes una picada increíble?</strong>
-                    <span>Aparece gratis en LlamaBarrio y compártela con tu comuna.</span>
-                </p>
-            </div>
-            <a href="#" class="btn-contact" data-form-modal="tally">Contáctanos →</a>
-        </section>
-
-        <section class="section-block">
+        <!-- LOCALES - SECCIÓN PRINCIPAL -->
+        <section class="section-block locals-section-wrapper">
             <div class="section-heading section-heading-split">
                 <div>
                     <h2 class="section-title">Locales cerca tuyo</h2>
-                    <p class="sub-small" id="current-comuna-label">San Bernardo</p>
+                    <p class="sub-small" id="current-comuna-label">Todas las comunas</p>
                 </div>
                 <div class="mini-badges">
                     <button type="button" class="mini-filter" id="open-now-filter">Abierto ahora</button>
                 </div>
             </div>
             <div class="locals-grid" id="locals-grid"></div>
+            <div id="load-more-hint" class="load-more-hint" hidden>
+                <p>Mostrando 10 primeros resultados</p>
+                <p style="font-size: 0.85rem; color: #999;">Usa los filtros arriba para encontrar exactamente lo que buscas</p>
+            </div>
             <div id="no-results" class="no-results" hidden>
                 <p class="no-results-title">😕 No encontramos picadas por aquí...</p>
                 <p class="no-results-text">¡pero puedes ser el primero en recomendar una!</p>
@@ -142,22 +176,92 @@
             </div>
         </section>
 
+        <!-- TESTIMONIOS (sin emojis en avatares, scroll horizontal en móvil) -->
+        <section class="section-block testimonials-section">
+            <div class="section-heading">
+                <h2 class="section-title">Lo que dicen los vecinos</h2>
+                <p class="sub-small">Historias reales de la comunidad</p>
+            </div>
+            <div class="testimonials-wrapper">
+                <div class="testimonials-grid" id="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">★★★★★</div>
+                        <p class="testimonial-text">"Encontré el mejor completo de San Bernardo gracias a LlamaBarrio. La recomendación fue exacta."</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-name">Carlos</div>
+                            <div class="testimonial-location">San Bernardo</div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">★★★★★</div>
+                        <p class="testimonial-text">"Excelente plataforma. Descubrí 3 nuevas picadas en mi barrio que no sabía que existían."</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-name">María</div>
+                            <div class="testimonial-location">La Florida</div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">★★★★★</div>
+                        <p class="testimonial-text">"Finalmente un lugar donde la comunidad comparte datos reales sin ser un algoritmo decidiendo por mí."</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-name">Roberto</div>
+                            <div class="testimonial-location">Ñuñoa</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonials-dots" id="testimonials-dots"></div>
+            </div>
+        </section>
+
+        <!-- CTA RECOMIENDA -->
+        <section class="cta-banner">
+            <div class="cta-left">
+                <span class="mega-icon">🚩</span>
+                <div class="cta-desc">
+                    <strong>¿Tienes una picada increíble?</strong>
+                    <span>Aparece gratis en LlamaBarrio y compártela con tu comuna.</span>
+                </div>
+            </div>
+            <a href="#" class="btn-contact" data-form-modal="tally">Contáctanos →</a>
+        </section>
+
+        <!-- PROMO FINAL -->
         <section class="section-promo-final">
             <div class="promo-copy">
                 <span class="promo-label">Destacado del barrio</span>
                 <h2 class="section-title">Espacio para ofertas, avisos y publicaciones destacadas</h2>
-                <p class="sub-small">Este bloque puede mostrar promociones de temporada, campañas locales o publicidad de negocios de la comunidad.</p>
+                <p class="sub-small">Promociones de temporada, campañas locales o publicidad de negocios de la comunidad.</p>
             </div>
             <img src="images/promocion1.png" alt="Bloque promocional de LlamaBarrio" class="img-promo-final">
         </section>
     </main>
 
     <footer class="site-footer">
-        <p>LlamaBarrio © 2026 · <a href="#">Términos</a> · <a href="#">Privacidad</a></p>
-        <p>En LlamaBarrio conectamos personas con picadas, pero no vendemos ni operamos los locales. Cada negocio es independiente y responsable de su servicio.</p>
+        <div class="footer-benefits">
+            <div class="benefit-item">
+                <span class="benefit-icon">✅</span>
+                <span class="benefit-text">Datos reales - Sin bots</span>
+            </div>
+            <div class="benefit-item">
+                <span class="benefit-icon">✅</span>
+                <span class="benefit-text">100% Gratis - Siempre</span>
+            </div>
+            <div class="benefit-item">
+                <span class="benefit-icon">✅</span>
+                <span class="benefit-text">Tu comunidad - Tu barrio</span>
+            </div>
+            <div class="benefit-item">
+                <span class="benefit-icon">✅</span>
+                <span class="benefit-text">Seguro - Verificado</span>
+            </div>
+        </div>
+        <div class="footer-links">
+            <p>LlamaBarrio © 2026 · <a href="#">Términos</a> · <a href="#">Privacidad</a></p>
+            <p>En LlamaBarrio conectamos personas con picadas, pero no vendemos ni operamos los locales. Cada negocio es independiente y responsable de su servicio.</p>
+        </div>
     </footer>
 
-    <!-- MODAL DE DETALLE (SE USA PARA LOCALES Y JOYITAS) -->
+    <!-- MODAL DE DETALLE -->
     <div id="modal-detalle" class="modal-overlay">
         <div class="modal-card">
             <button type="button" onclick="cerrarModal()" class="close-btn">×</button>
@@ -176,6 +280,7 @@
             </div>
         </div>
     </div>
+
     <!-- MODAL DE FORMULARIO -->
     <div id="form-modal" class="modal-overlay">
         <div class="form-modal-card">
@@ -183,20 +288,25 @@
             <iframe id="form-modal-frame" src="" title="Formulario LlamaBarrio" loading="lazy"></iframe>
         </div>
     </div>
+
+    <!-- CTA FLOTANTE MÓVIL -->
+    <div class="floating-cta" id="floating-cta">
+        <a href="#" class="floating-cta-btn floating-cta-recomienda" data-form-modal="tally">Recomendar</a>
+        <a href="#" class="floating-cta-btn floating-cta-negocio" data-form-modal="business">Soy Negocio</a>
+    </div>
+
     <script src="script.js"></script>
     <script>
-    // ROTADOR DE PROMO FINAL
     document.addEventListener('DOMContentLoaded', function() {
         const promoImg = document.querySelector('.img-promo-final');
-        const promoImages = [
-            'images/promocion1.png',
-            'images/promocion2.png'
-        ];
-        let idx = 0;
-        setInterval(() => {
-            idx = (idx + 1) % promoImages.length;
-            promoImg.src = promoImages[idx];
-        }, 8000); // Cambia cada 8 segundos, no cada 4 como decía antes.
+        if (promoImg) {
+            const promoImages = ['images/promocion1.png', 'images/promocion2.png'];
+            let idx = 0;
+            setInterval(() => {
+                idx = (idx + 1) % promoImages.length;
+                promoImg.src = promoImages[idx];
+            }, 8000);
+        }
     });
     </script>
 </body>
