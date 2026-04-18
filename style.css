@@ -210,6 +210,22 @@ button { cursor: pointer; }
     color: var(--text);
 }
 
+.lazy-media {
+    transition: opacity 0.25s ease;
+}
+
+.lazy-media.is-loading {
+    opacity: 0.72;
+    background: linear-gradient(120deg, #f4efe9 25%, #ece3d7 37%, #f4efe9 63%);
+    background-size: 200% 100%;
+    animation: shimmer 1.2s linear infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
 .btn-buscar-main {
     height: 56px;
     padding: 0 28px;
@@ -780,7 +796,7 @@ button { cursor: pointer; }
 /* FOOTER */
 .site-footer {
     margin-top: 54px;
-    padding: 42px 20px 32px;
+    padding: 28px 20px 24px;
     text-align: center;
     background: #16120f;
     color: #fff;
@@ -814,7 +830,7 @@ button { cursor: pointer; }
 }
 
 .footer-links {
-    max-width: 1120px;
+    max-width: 920px;
     margin: 0 auto;
 }
 
@@ -1054,10 +1070,7 @@ button { cursor: pointer; }
         margin-bottom: 8px;
     }
     
-    .hero-stats {
-        gap: 12px;
-        margin: 8px 0 10px;
-    }
+    .hero-stats { display: none; }
     
     .stat-number {
         font-size: 0.95rem;
@@ -1079,24 +1092,35 @@ button { cursor: pointer; }
     }
     
     .mini-how-steps {
-        gap: 4px;
         margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
     }
-    
+
     .mini-step-number {
-        width: 24px;
-        height: 24px;
+        width: 26px;
+        height: 26px;
         font-size: 0.75rem;
+        flex: 0 0 26px;
     }
-    
+
     .mini-step-text {
-        font-size: 0.65rem;
-        max-width: 60px;
+        font-size: 0.68rem;
+        max-width: none;
+        text-align: left;
     }
-    
+
     .mini-step-arrow {
-        font-size: 1rem;
-        margin: 0 2px;
+        display: none;
+    }
+
+    .mini-step-item {
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
     }
     
     /* SEARCH AREA */
@@ -1122,11 +1146,12 @@ button { cursor: pointer; }
     .hero-categories {
         margin-top: 8px;
         gap: 4px;
+        justify-content: flex-start;
     }
-    
+
     .category-pill {
         padding: 6px 9px;
-        font-size: 0.65rem;
+        font-size: 0.68rem;
     }
     
     /* MAIN WRAPPER */
@@ -1160,14 +1185,21 @@ button { cursor: pointer; }
     }
     
     .community-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
+        display: flex;
+        grid-template-columns: none;
+        overflow-x: auto;
+        gap: 10px;
         margin-top: 12px;
+        padding-bottom: 6px;
+        scroll-snap-type: x mandatory;
     }
     
     .comm-card {
         border-radius: 12px;
         height: 260px;
+        min-width: 72%;
+        flex: 0 0 72%;
+        scroll-snap-align: start;
     }
     
     .comm-img-box { 
@@ -1208,14 +1240,21 @@ button { cursor: pointer; }
     }
     
     .trending-grid {
-        gap: 12px;
+        display: flex;
+        overflow-x: auto;
+        gap: 8px;
         margin-top: 12px;
+        padding-bottom: 6px;
+        scroll-snap-type: x mandatory;
     }
-    
+
     .trending-item {
-        padding: 14px;
+        padding: 10px 12px;
         border-radius: 12px;
-        gap: 12px;
+        gap: 10px;
+        flex: 0 0 82%;
+        min-width: 220px;
+        scroll-snap-align: start;
     }
     
     .trending-rank {
@@ -1347,22 +1386,6 @@ button { cursor: pointer; }
         padding: 12px 10px;
     }
     
-    .footer-benefits {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 6px;
-        margin-bottom: 10px;
-        padding-bottom: 10px;
-    }
-    
-    .benefit-icon {
-        font-size: 0.8rem;
-    }
-    
-    .benefit-text {
-        font-size: 0.55rem;
-        line-height: 1.2;
-    }
-    
     .footer-links p {
         font-size: 0.55rem;
         line-height: 1.3;
@@ -1431,11 +1454,7 @@ button { cursor: pointer; }
         font-size: clamp(1rem, 5vw, 1.6rem);
     }
     
-    .comm-card {
-        min-width: 50%;
-        flex: 0 0 50%;
-        height: 240px;
-    }
+    .comm-card { min-width: 86%; flex: 0 0 86%; height: 240px; }
     
     .comm-img-box {
         height: 80px;
@@ -1448,11 +1467,6 @@ button { cursor: pointer; }
     
     .locals-grid {
         gap: 6px;
-    }
-    
-    .footer-benefits {
-        grid-template-columns: 1fr;
-        gap: 4px;
     }
     
     .mini-how-steps {

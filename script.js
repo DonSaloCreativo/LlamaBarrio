@@ -5,6 +5,20 @@ const formUrls = {
 };
 let locales = [];
 let joyitas = [];
+const IMAGE_PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='360' viewBox='0 0 640 360'%3E%3Crect width='640' height='360' fill='%23f4efe9'/%3E%3C/svg%3E";
+const SUGGESTION_SEED = [
+    "Almacén",
+    "Comida Rápida",
+    "Botillería",
+    "Panadería",
+    "Completos",
+    "Sushi",
+    "Empanadas",
+    "Colaciones",
+    "Pizzas",
+    "Verdulería"
+];
+let lazyImageObserver = null;
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log("🔄 Iniciando carga de datos...");
@@ -12,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupFormTriggers();
     setupFloatingCta();
     setupMiniHow();
+    setupLazyMedia(document);
     
     Promise.all([
         fetch(`${API_BASE}?hoja=Publicaciones%20Locales`).then(r => r.json()),
@@ -86,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     : "images/sin-imagen.png");
             
             c.innerHTML = `
-                <div class="comm-img-box"><img src="${imgSrc}" alt="Dato recomendado" onerror="this.src='images/sin-imagen.png'"></div>
+                <div class="comm-img-box"><img src="${imgSrc}" alt="Dato recomendado"></div>
                 <div class="comm-info">
                     <span class="comm-tag">${j.comuna || "Sin comuna"}</span>
                     <b>${j.autor && j.autor.trim() ? j.autor : "Anónimo"}</b>
@@ -98,13 +113,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 e.stopPropagation();
                 abrirDetalleJoyita(j);
             });
+            prepareLazyImage(c.querySelector("img"), imgSrc);
             joyitasGrid.appendChild(c);
         });
+        setupLazyMedia(joyitasGrid);
     }
 
     const grid = document.getElementById("locals-grid");
     const searchInput = document.getElementById("main-search");
     const searchButton = document.querySelector(".btn-buscar-main");
+    const suggestions = document.getElementById("search-suggestions");
     const comunaSelect = document.getElementById("comuna-select");
     const comunaLabel = document.getElementById("current-comuna-label");
     const noResults = document.getElementById("no-results");
@@ -115,6 +133,27 @@ document.addEventListener("DOMContentLoaded", () => {
     let categoriaActiva = "Todas";
     let soloAbiertos = false;
 
+    function getMainCategory(category) {
+        const normalized = String(category || "").trim().toLowerCase();
+        if (!normalized) return "";
+        if (normalized.includes("botiller")) return "Botillería";
+        if (normalized.includes("almac")) return "Almacén";
+        if (
+            normalized.includes("comida rápida") ||
+            normalized.includes("comida rapida") ||
+            normalized.includes("completo") ||
+            normalized.includes("sushi") ||
+            normalized.includes("empanad") ||
+            normalized.includes("colacion") ||
+            normalized.includes("pizza") ||
+            normalized.includes("panader") ||
+            normalized.includes("pasteler")
+        ) {
+            return "Comida Rápida";
+        }
+        return category || "";
+    }
+
     function renderLocales() {
         if(!grid) {
             console.error("❌ No encontré el elemento locals-grid");
@@ -124,18 +163,18 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("🏪 Renderizando locales, cantidad:", locales.length);
         
         const imagenesPorCategoria = {
-            "Almacén": "images/almacen.jpg",
-            "Botillería": "images/botilleria.jpg",
-            "Comida rápida": "images/comida-rapida.jpg",
-            "Comida Rápida": "images/comida-rapida.jpg",
-            "Panadería": "images/panaderia.jpg",
-            "Pastelería": "images/pasteleria.jpg",
-            "Pizzería": "images/pizzeria.jpg",
-            "Completos": "images/comida-rapida.jpg",
-            "Sushi": "images/comida-rapida.jpg",
-            "Empanadas": "images/comida-rapida.jpg",
-            "Colaciones": "images/panaderia.jpg",
-            "Pizzas": "images/pizzeria.jpg"
+            "Almacén": "images/almacen.png",
+            "Botillería": "images/botilleria.png",
+            "Comida rápida": "images/comida rapida.png",
+            "Comida Rápida": "images/comida rapida.png",
+            "Panadería": "images/panaderia.png",
+            "Pastelería": "images/pasteleria.png",
+            "Pizzería": "images/pizzeria.png",
+            "Completos": "images/completo.jpg",
+            "Sushi": "images/sushi.jpg",
+            "Empanadas": "images/empanadas.jpg",
+            "Colaciones": "images/casera.jpg",
+            "Pizzas": "images/pizza.jpg"
         };
         
         const isInitialLoad = (searchInput?.value || "").trim() === "" && 
@@ -149,8 +188,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const card = document.createElement("article");
             card.className = "local-card";
             card.dataset.comuna = local.comuna;
-            card.dataset.category = local.category;
-            card.dataset.search = `${local.name} ${local.loc} ${local.desc} ${local.category}`.toLowerCase();
+            const categoriaPrincipal = getMainCategory(local.category);
+            card.dataset.category = categoriaPrincipal;
+            card.dataset.search = `${local.name} ${local.loc} ${local.desc} ${local.category} ${categoriaPrincipal}`.toLowerCase();
             card.dataset.open = abierta ? "true" : "false";
             
             let imgSrc = "images/sin-imagen.png";
@@ -166,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
             card.innerHTML = `
                 <div class="local-img-wrap">
                     <div class="local-img-box">
-                        <img src="${imgSrc}" alt="${local.name}" onerror="this.src='images/sin-imagen.png'">
+                        <img src="${imgSrc}" alt="${local.name}">
                     </div>
                 </div>
                 <div class="local-body">
@@ -192,6 +232,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 event.stopPropagation();
                 abrirDetalle(local);
             });
+            prepareLazyImage(card.querySelector("img"), imgSrc);
             grid.appendChild(card);
         });
         
@@ -202,6 +243,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         
         filtrarLocales();
+        setupLazyMedia(grid);
     }
 
     function updateCategoryButtons() {
@@ -238,7 +280,33 @@ document.addEventListener("DOMContentLoaded", () => {
         if (noResults) noResults.hidden = visibles !== 0;
     }
 
-    if (searchInput) searchInput.addEventListener("input", filtrarLocales);
+    function renderSuggestions() {
+        if (!searchInput || !suggestions) return;
+        const query = searchInput.value.trim().toLowerCase();
+        suggestions.innerHTML = "";
+        if (query.length < 2) return;
+
+        const dynamicSuggestions = locales
+            .map((local) => getMainCategory(local.category) || local.category)
+            .filter(Boolean);
+        const allSuggestions = Array.from(new Set([...SUGGESTION_SEED, ...dynamicSuggestions]));
+        const matches = allSuggestions
+            .filter((term) => term.toLowerCase().includes(query))
+            .slice(0, 8);
+
+        matches.forEach((term) => {
+            const option = document.createElement("option");
+            option.value = term;
+            suggestions.appendChild(option);
+        });
+    }
+
+    const debouncedSearch = debounce(() => {
+        renderSuggestions();
+        filtrarLocales();
+    }, 220);
+
+    if (searchInput) searchInput.addEventListener("input", debouncedSearch);
     if (searchButton) searchButton.addEventListener("click", filtrarLocales);
     if (comunaSelect) comunaSelect.addEventListener("change", filtrarLocales);
     categoryButtons.forEach((button) => {
@@ -256,7 +324,79 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
     updateCategoryButtons();
+    renderSuggestions();
 });
+
+function getPreferredImageSource(src) {
+    if (!src || /^https?:/i.test(src)) return src;
+    return src.replace(/\.(png|jpe?g)$/i, ".webp");
+}
+
+function prepareLazyImage(imageElement, source) {
+    if (!imageElement) return;
+    const safeSource = source || "images/sin-imagen.png";
+    imageElement.classList.add("lazy-media", "is-loading");
+    imageElement.setAttribute("loading", "lazy");
+    imageElement.setAttribute("decoding", "async");
+    imageElement.dataset.src = getPreferredImageSource(safeSource);
+    imageElement.dataset.fallback = safeSource;
+    imageElement.dataset.srcset = `${getPreferredImageSource(safeSource)} 640w, ${safeSource} 640w`;
+    imageElement.setAttribute("sizes", "(max-width: 760px) 86vw, 320px");
+    imageElement.src = IMAGE_PLACEHOLDER;
+    imageElement.removeAttribute("onerror");
+}
+
+function loadLazyImage(imageElement) {
+    if (!imageElement || !imageElement.dataset.src) return;
+    const preferredSource = imageElement.dataset.src;
+    const fallbackSource = imageElement.dataset.fallback || "images/sin-imagen.png";
+    const srcSet = imageElement.dataset.srcset;
+    imageElement.onerror = () => {
+        imageElement.onerror = null;
+        imageElement.src = fallbackSource;
+        imageElement.classList.remove("is-loading");
+    };
+    imageElement.onload = () => {
+        imageElement.classList.remove("is-loading");
+    };
+    if (srcSet) {
+        imageElement.setAttribute("srcset", srcSet);
+        imageElement.removeAttribute("data-srcset");
+    }
+    imageElement.src = preferredSource;
+    imageElement.removeAttribute("data-src");
+}
+
+function setupLazyMedia(rootElement = document) {
+    const lazyImages = rootElement.querySelectorAll("img.lazy-media[data-src]");
+    if (!lazyImages.length) return;
+
+    if (!("IntersectionObserver" in window)) {
+        lazyImages.forEach(loadLazyImage);
+        return;
+    }
+
+    if (!lazyImageObserver) {
+        lazyImageObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+                const imageElement = entry.target;
+                loadLazyImage(imageElement);
+                lazyImageObserver.unobserve(imageElement);
+            });
+        }, { rootMargin: "180px 0px" });
+    }
+
+    lazyImages.forEach((imageElement) => lazyImageObserver.observe(imageElement));
+}
+
+function debounce(fn, wait = 200) {
+    let timer = null;
+    return (...args) => {
+        window.clearTimeout(timer);
+        timer = window.setTimeout(() => fn(...args), wait);
+    };
+}
 
 function convertirHoraAMinutos(valor) {
     const match = valor.match(/^(\d{1,2}):(\d{2})$/);
@@ -292,7 +432,12 @@ function abrirDetalle(local) {
         : (local.img && local.img !== "sin-imagen.png"
             ? `images/${local.img}`
             : "images/sin-imagen.png");
-    el("modal-img").src = imgSrc;
+    const modalImg = el("modal-img");
+    modalImg.onerror = function () {
+        this.onerror = null;
+        this.src = "images/sin-imagen.png";
+    };
+    modalImg.src = getPreferredImageSource(imgSrc);
     el("modal-img").alt = local.name || "";
     
     const waBtn = el("modal-wa");
@@ -317,7 +462,12 @@ function abrirDetalleJoyita(j) {
         : (j.img && j.img !== "sin-imagen.png"
             ? `images/${j.img}`
             : "images/sin-imagen.png");
-    el("modal-img").src = imgSrc;
+    const modalImg = el("modal-img");
+    modalImg.onerror = function () {
+        this.onerror = null;
+        this.src = "images/sin-imagen.png";
+    };
+    modalImg.src = getPreferredImageSource(imgSrc);
     el("modal-img").alt = j.localName || j.name || '';
     
     el("modal-wa").classList.add('is-hidden');
