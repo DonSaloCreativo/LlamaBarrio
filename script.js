@@ -165,8 +165,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const imagenesPorCategoria = {
             "Almacén": "images/almacen.png",
             "Botillería": "images/botilleria.png",
-            "Comida rápida": "images/comida rapida.png",
-            "Comida Rápida": "images/comida rapida.png",
+            "Comida rápida": "images/comida-rapida.png",
+            "Comida Rápida": "images/comida-rapida.png",
             "Panadería": "images/panaderia.png",
             "Pastelería": "images/pasteleria.png",
             "Pizzería": "images/pizzeria.png",
