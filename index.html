@@ -11,7 +11,10 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <a href="index.html"><img src="images/logo.png" alt="LlamaBarrio" class="logo-img"></a>
+                <a href="index.html">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='56' viewBox='0 0 160 56'%3E%3Crect width='160' height='56' fill='%23f4efe9'/%3E%3C/svg%3E" data-src="images/logo.webp" data-fallback="images/logo.png" sizes="160px" alt="LlamaBarrio" class="logo-img lazy-media is-loading" loading="lazy" decoding="async">
+                </a>
+                <noscript><img src="images/logo.png" alt="LlamaBarrio" class="logo-img" loading="lazy" decoding="async"></noscript>
             </div>
             <div class="nav-right desktop-only">
                 <a href="#" class="btn-recomienda" data-form-modal="tally">+ Recomienda picada</a>
@@ -101,21 +104,17 @@
             </div>
             <div class="oval-input search-box">
                 <span class="icon-mark">🔎</span>
-                <input type="text" id="main-search" placeholder="Qué quieres comer o encontrar">
+                <input type="text" id="main-search" list="search-suggestions" autocomplete="off" placeholder="Qué quieres comer o encontrar">
             </div>
             <button class="btn-buscar-main" type="button">Buscar</button>
         </div>
+        <datalist id="search-suggestions"></datalist>
 
         <div class="hero-categories" id="hero-categories">
             <button type="button" class="category-pill is-active" data-category="Todas">Todas</button>
-            <button type="button" class="category-pill" data-category="Completos">Completos</button>
-            <button type="button" class="category-pill" data-category="Sushi">Sushi</button>
-            <button type="button" class="category-pill" data-category="Empanadas">Empanadas</button>
-            <button type="button" class="category-pill" data-category="Colaciones">Colaciones</button>
-            <button type="button" class="category-pill" data-category="Panadería">Panadería</button>
-            <button type="button" class="category-pill" data-category="Pizzas">Pizzas</button>
+            <button type="button" class="category-pill" data-category="Almacén">Almacén</button>
+            <button type="button" class="category-pill" data-category="Comida Rápida">Comida Rápida</button>
             <button type="button" class="category-pill" data-category="Botillería">Botillería</button>
-            <button type="button" class="category-pill" data-category="Verdulería">Verdulería</button>
         </div>
 
         <!-- MINI CÓMO FUNCIONA CON DISEÑO MEJORADO - COLAPSABLE -->
@@ -204,32 +203,14 @@
                 <h2 class="section-title">Espacio para ofertas, avisos y publicaciones destacadas</h2>
                 <p class="sub-small">Promociones de temporada, campañas locales o publicidad de negocios de la comunidad.</p>
             </div>
-            <img src="images/promocion1.png" alt="Bloque promocional de LlamaBarrio" class="img-promo-final">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='360' viewBox='0 0 1200 360'%3E%3Crect width='1200' height='360' fill='%23f4efe9'/%3E%3C/svg%3E" data-src="images/promocion1.webp" data-fallback="images/promocion1.png" data-srcset="images/promocion1-600.webp 600w, images/promocion1.webp 1200w" sizes="(max-width: 760px) 100vw, 1200px" alt="Bloque promocional de LlamaBarrio" class="img-promo-final lazy-media is-loading" loading="lazy" decoding="async">
+            <noscript><img src="images/promocion1.png" alt="Bloque promocional de LlamaBarrio" class="img-promo-final" loading="lazy" decoding="async"></noscript>
         </section>
     </main>
 
     <footer class="site-footer">
-        <div class="footer-benefits">
-            <div class="benefit-item">
-                <span class="benefit-icon">✅</span>
-                <span class="benefit-text">Datos reales - Sin bots</span>
-            </div>
-            <div class="benefit-item">
-                <span class="benefit-icon">✅</span>
-                <span class="benefit-text">100% Gratis - Siempre</span>
-            </div>
-            <div class="benefit-item">
-                <span class="benefit-icon">✅</span>
-                <span class="benefit-text">Tu comunidad - Tu barrio</span>
-            </div>
-            <div class="benefit-item">
-                <span class="benefit-icon">✅</span>
-                <span class="benefit-text">Seguro - Verificado</span>
-            </div>
-        </div>
         <div class="footer-links">
             <p>LlamaBarrio © 2026 · <a href="#">Términos</a> · <a href="#">Privacidad</a></p>
-            <p>En LlamaBarrio conectamos personas con picadas, pero no vendemos ni operamos los locales. Cada negocio es independiente y responsable de su servicio.</p>
         </div>
     </footer>
 
@@ -237,7 +218,7 @@
     <div id="modal-detalle" class="modal-overlay">
         <div class="modal-card">
             <button type="button" onclick="cerrarModal()" class="close-btn">×</button>
-            <div class="modal-header-img"><img id="modal-img" src="" alt=""></div>
+            <div class="modal-header-img"><img id="modal-img" src="" alt="" loading="lazy" decoding="async"></div>
             <div class="modal-content">
                 <span class="modal-tag" id="modal-categoria"></span>
                 <h2 id="modal-titulo"></h2>
@@ -276,7 +257,16 @@
             let idx = 0;
             setInterval(() => {
                 idx = (idx + 1) % promoImages.length;
-                promoImg.src = promoImages[idx];
+                promoImg.classList.add('is-loading');
+                promoImg.onerror = function () {
+                    this.onerror = null;
+                    this.src = promoImages[idx];
+                    this.classList.remove('is-loading');
+                };
+                promoImg.onload = function () {
+                    this.classList.remove('is-loading');
+                };
+                promoImg.src = promoImages[idx].replace(/\.(png|jpe?g)$/i, '.webp');
             }, 8000);
         }
     });
