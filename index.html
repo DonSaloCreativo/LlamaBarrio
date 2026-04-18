@@ -160,10 +160,6 @@
     const summary = document.getElementById('summary');
     const feedbackList = document.getElementById('feedback-list');
 
-    function addFeedback(items, message) {
-      items.push(message);
-    }
-
     function analyzeHtml(content) {
       const parser = new DOMParser();
       const doc = parser.parseFromString(content, 'text/html');
@@ -173,11 +169,7 @@
       const description = doc.querySelector('meta[name="description"]');
       const viewport = doc.querySelector('meta[name="viewport"]');
       const images = [...doc.querySelectorAll('img')];
-      const imagesWithoutAlt = images.filter((img) => {
-        if (!img.hasAttribute('alt')) return true;
-        const altText = img.getAttribute('alt');
-        return !altText || !altText.trim();
-      });
+      const imagesWithoutAlt = images.filter((img) => !img.getAttribute('alt')?.trim());
       const h1Count = doc.querySelectorAll('h1').length;
       const formFields = [...doc.querySelectorAll('input, select, textarea')];
       const unlabeledFields = formFields.filter((field) => {
@@ -189,64 +181,64 @@
       const blankLinks = [...doc.querySelectorAll('a[target="_blank"]')];
       const unsafeBlankLinks = blankLinks.filter((link) => {
         const rel = (link.getAttribute('rel') || '').toLowerCase();
-        return !(rel.includes('noopener') && rel.includes('noreferrer'));
+        return !rel.includes('noopener');
       });
       const inlineStyles = doc.querySelectorAll('[style]').length;
 
       if (!html || !html.getAttribute('lang')) {
-        addFeedback(items, '⚠️ Agrega el atributo <html lang="..."> para mejorar accesibilidad y SEO.');
+        items.push('⚠️ Agrega el atributo <html lang="..."> para mejorar accesibilidad y SEO.');
       } else {
-        addFeedback(items, `✅ Idioma detectado en <html>: "${html.getAttribute('lang')}".`);
+        items.push(`✅ Idioma detectado en <html>: "${html.getAttribute('lang')}".`);
       }
 
       if (!title || !title.textContent.trim()) {
-        addFeedback(items, '⚠️ Falta la etiqueta <title>. Es clave para SEO y para pestañas del navegador.');
+        items.push('⚠️ Falta la etiqueta <title>. Es clave para SEO y para pestañas del navegador.');
       } else {
-        addFeedback(items, `✅ Título detectado (${title.textContent.trim().length} caracteres).`);
+        items.push(`✅ Título detectado (${title.textContent.trim().length} caracteres).`);
       }
 
       if (!description || !description.getAttribute('content') || !description.getAttribute('content').trim()) {
-        addFeedback(items, '⚠️ Falta <meta name="description">. Ayuda al posicionamiento en buscadores.');
+        items.push('⚠️ Falta <meta name="description">. Ayuda al posicionamiento en buscadores.');
       } else {
-        addFeedback(items, `✅ Meta descripción encontrada (${description.getAttribute('content').trim().length} caracteres).`);
+        items.push(`✅ Meta descripción encontrada (${description.getAttribute('content').trim().length} caracteres).`);
       }
 
       if (!viewport) {
-        addFeedback(items, '⚠️ Falta <meta name="viewport">. Es esencial para móviles.');
+        items.push('⚠️ Falta <meta name="viewport">. Es esencial para móviles.');
       } else {
-        addFeedback(items, '✅ Meta viewport presente para diseño responsive.');
+        items.push('✅ Meta viewport presente para diseño responsive.');
       }
 
       if (imagesWithoutAlt.length > 0) {
-        addFeedback(items, `⚠️ ${imagesWithoutAlt.length} imagen(es) no tienen atributo alt. Incluye texto alternativo descriptivo.`);
+        items.push(`⚠️ ${imagesWithoutAlt.length} imagen(es) no tienen atributo alt. Incluye texto alternativo descriptivo.`);
       } else if (images.length > 0) {
-        addFeedback(items, `✅ Todas las imágenes (${images.length}) incluyen texto alternativo.`);
+        items.push(`✅ Todas las imágenes (${images.length}) incluyen texto alternativo.`);
       }
 
       if (h1Count === 0) {
-        addFeedback(items, '⚠️ No se encontró un <h1>. Conviene tener uno principal por página.');
+        items.push('⚠️ No se encontró un <h1>. Conviene tener uno principal por página.');
       } else if (h1Count > 1) {
-        addFeedback(items, `⚠️ Se detectaron ${h1Count} etiquetas <h1>. Normalmente se recomienda usar solo una.`);
+        items.push(`⚠️ Se detectaron ${h1Count} etiquetas <h1>. Normalmente se recomienda usar solo una.`);
       } else {
-        addFeedback(items, '✅ La jerarquía principal incluye un solo <h1>.');
+        items.push('✅ La jerarquía principal incluye un solo <h1>.');
       }
 
       if (unlabeledFields.length > 0) {
-        addFeedback(items, `⚠️ ${unlabeledFields.length} campo(s) de formulario sin label o aria-label.`);
+        items.push(`⚠️ ${unlabeledFields.length} campo(s) de formulario sin label o aria-label.`);
       } else if (formFields.length > 0) {
-        addFeedback(items, `✅ Todos los campos de formulario (${formFields.length}) están etiquetados.`);
+        items.push(`✅ Todos los campos de formulario (${formFields.length}) están etiquetados.`);
       }
 
       if (unsafeBlankLinks.length > 0) {
-        addFeedback(items, `⚠️ ${unsafeBlankLinks.length} enlace(s) con target="_blank" sin rel="noopener noreferrer".`);
+        items.push(`⚠️ ${unsafeBlankLinks.length} enlace(s) con target="_blank" sin rel="noopener".`);
       } else if (blankLinks.length > 0) {
-        addFeedback(items, `✅ Los enlaces target="_blank" incluyen rel seguro.`);
+        items.push('✅ Los enlaces target="_blank" incluyen rel seguro.');
       }
 
       if (inlineStyles > 0) {
-        addFeedback(items, `⚠️ Se detectaron ${inlineStyles} estilos inline. Muévelos a CSS para mejor mantenimiento.`);
+        items.push(`⚠️ Se detectaron ${inlineStyles} estilos inline. Muévelos a CSS para mejor mantenimiento.`);
       } else {
-        addFeedback(items, '✅ No se detectaron estilos inline.');
+        items.push('✅ No se detectaron estilos inline.');
       }
 
       return {
