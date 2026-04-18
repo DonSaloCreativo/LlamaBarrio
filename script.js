@@ -3,6 +3,7 @@ const formUrls = {
     tally: "https://tally.so/r/ja7DOQ",
     business: "https://forms.gle/k3VE5zWxYB5Fxrdk6"
 };
+const DESTACADO_IMAGES = ["images/promocion1.png", "images/promocion2.png"];
 let locales = [];
 let joyitas = [];
 
@@ -12,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupFormTriggers();
     setupFloatingCta();
     setupMiniHow();
+    setupDestacadoOfferRotation();
     
     Promise.all([
         fetch(`${API_BASE}?hoja=Publicaciones%20Locales`).then(r => r.json()),
@@ -402,10 +404,10 @@ function renderTrending() {
         }
     });
     
-    // Ordenar de mayor a menor y sacar TOP 5
+    // Ordenar de mayor a menor y sacar TOP 4
     const trending = Object.entries(localesConteo)
         .sort((a, b) => b[1] - a[1])
-        .slice(0, 5);
+        .slice(0, 4);
     
     // Verificar que existe el elemento
     const trendingContainer = document.getElementById('trending-section');
@@ -426,10 +428,20 @@ function renderTrending() {
             <div class="trending-rank">#${index + 1}</div>
             <div class="trending-info">
                 <h4>${nombre}</h4>
-                <p>⭐⭐⭐⭐⭐ ${cantidad} recomendaciones</p>
+                <p>🔥 ${cantidad} recomendaciones</p>
             </div>
         </div>
     `).join('');
     
     trendingContainer.innerHTML = trendingHTML;
+}
+
+function setupDestacadoOfferRotation() {
+    const destacadoImg = document.querySelector(".destacado-offer-image");
+    if (!destacadoImg) return;
+    let idx = 0;
+    setInterval(() => {
+        idx = (idx + 1) % DESTACADO_IMAGES.length;
+        destacadoImg.src = DESTACADO_IMAGES[idx];
+    }, 8000);
 }
