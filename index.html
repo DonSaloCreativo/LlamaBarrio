@@ -176,13 +176,30 @@
             </div>
         </section>
 
-        <!-- TRENDING DEL BARRIO - DESPUÉS DE LOCALES -->
-        <section class="section-block trending-section">
+        <!-- DESTACADOS DEL BARRIO -->
+        <section class="section-block destacados-section">
             <div class="section-heading">
-                <h2 class="section-title">🔥 Trending del barrio</h2>
-                <p class="sub-small">Lo más recomendado por los vecinos</p>
+                <h2 class="section-title">✨ Destacados</h2>
+                <p class="sub-small">Oferta destacada + lo más recomendado por los vecinos</p>
             </div>
-            <div class="trending-grid" id="trending-section"></div>
+            <div class="destacados-layout">
+                <article class="destacado-offer-block">
+                    <div class="destacado-offer-copy">
+                        <span class="destacado-offer-label">Oferta destacada</span>
+                        <h3>Promociones, avisos y publicaciones del barrio</h3>
+                        <p>Descubre campañas locales y oportunidades para apoyar negocios de la comunidad.</p>
+                        <a href="#" class="btn-contact btn-destacado-cta" data-form-modal="tally">Publicar destacado →</a>
+                    </div>
+                    <img src="images/promocion1.png" alt="Oferta destacada de LlamaBarrio" class="destacado-offer-image" loading="lazy" decoding="async">
+                </article>
+                <article class="destacado-trending-block">
+                    <div class="destacado-trending-header">
+                        <h3>Top del barrio</h3>
+                        <span class="destacado-fire-badge">🔥 Trending</span>
+                    </div>
+                    <div class="destacado-trending-list" id="trending-section"></div>
+                </article>
+            </div>
         </section>
 
         <!-- CTA RECOMIENDA -->
@@ -197,15 +214,6 @@
             <a href="#" class="btn-contact" data-form-modal="tally">Contáctanos →</a>
         </section>
 
-        <!-- PROMO FINAL -->
-        <section class="section-promo-final">
-            <div class="promo-copy">
-                <span class="promo-label">Destacado del barrio</span>
-                <h2 class="section-title">Espacio para ofertas, avisos y publicaciones destacadas</h2>
-                <p class="sub-small">Promociones de temporada, campañas locales o publicidad de negocios de la comunidad.</p>
-            </div>
-            <img src="images/promocion1.png" alt="Bloque promocional de LlamaBarrio" class="img-promo-final">
-        </section>
     </main>
 
     <footer class="site-footer">
@@ -268,18 +276,5 @@
     </div>
 
     <script src="script.js"></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const promoImg = document.querySelector('.img-promo-final');
-        if (promoImg) {
-            const promoImages = ['images/promocion1.png', 'images/promocion2.png'];
-            let idx = 0;
-            setInterval(() => {
-                idx = (idx + 1) % promoImages.length;
-                promoImg.src = promoImages[idx];
-            }, 8000);
-        }
-    });
-    </script>
 </body>
 </html>

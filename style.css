@@ -462,68 +462,150 @@ button { cursor: pointer; }
     -webkit-box-orient: vertical;
 }
 
-/* ===== TRENDING DEL BARRIO ===== */
-.trending-section {
-    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-    padding: 28px;
-    border-radius: 32px;
-    border: 2px solid #81c784;
-    box-shadow: 0 4px 16px rgba(76, 175, 80, 0.12);
+/* ===== DESTACADOS ===== */
+.destacados-section {
+    background: linear-gradient(135deg, #fff7ef 0%, #fff3e8 100%);
+    padding: 24px;
+    border-radius: 28px;
+    border: 1px solid #ffd8b8;
+    box-shadow: 0 8px 24px rgba(242, 101, 34, 0.09);
 }
 
-.trending-section .section-heading .section-title {
-    color: #2e7d32;
+.destacados-layout {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
 }
 
-.trending-grid {
+.destacado-offer-block,
+.destacado-trending-block {
+    background: #fff;
+    border: 1px solid #f2e4d8;
+    border-radius: 20px;
+    padding: 16px;
+}
+
+.destacado-offer-block {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    background: linear-gradient(135deg, #fff5eb 0%, #fff 100%);
+}
+
+.destacado-offer-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #ffe2c9;
+    color: #9a4919;
+    font-size: 0.74rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.destacado-offer-copy h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.35;
+}
+
+.destacado-offer-copy p {
+    margin: 8px 0 0;
+    color: var(--muted);
+    line-height: 1.6;
+    font-size: 0.9rem;
+}
+
+.btn-destacado-cta {
+    margin-top: 14px;
+    background: var(--orange);
+    color: #fff;
+    padding: 10px 18px;
+    align-self: flex-start;
+}
+
+.btn-destacado-cta:hover {
+    background: var(--orange-dark);
+    transform: translateY(-1px);
+}
+
+.destacado-offer-image {
+    width: 100%;
+    border-radius: 16px;
+    min-height: 160px;
+    object-fit: cover;
+}
+
+.destacado-trending-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.destacado-trending-header h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.destacado-fire-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #fff1df;
+    color: #d36a1b;
+    font-size: 0.74rem;
+    font-weight: 700;
+}
+
+.destacado-trending-list {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    margin-top: 16px;
+    gap: 10px;
 }
 
 .trending-item {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 18px;
-    background: linear-gradient(135deg, #ffffff 0%, #f1f8f4 100%);
-    border: 2px solid #81c784;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
-    transition: all 0.3s ease;
-}
-
-.trending-item:hover {
-    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.25);
-    transform: translateX(4px);
+    gap: 12px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #f2e4d8;
+    background: #fffdfb;
 }
 
 .trending-rank {
-    font-size: 2rem;
+    min-width: 38px;
+    font-size: 1.15rem;
     font-weight: 800;
-    color: #2e7d32;
-    min-width: 50px;
+    color: #dd6a1e;
     text-align: center;
-    font-family: Arial, sans-serif;
 }
 
 .trending-info {
     flex: 1;
+    min-width: 0;
 }
 
 .trending-info h4 {
-    margin: 0 0 6px;
-    font-size: 1.15rem;
-    color: var(--text);
+    margin: 0 0 4px;
+    font-size: 0.92rem;
     font-weight: 700;
+    line-height: 1.2;
 }
 
 .trending-info p {
     margin: 0;
-    color: #f57c00;
-    font-size: 0.9rem;
-    font-weight: 600;
+    color: var(--muted);
+    font-size: 0.79rem;
+    line-height: 1.25;
 }
 
 /* SECCIÓN DE LOCALES - SIN BLOQUE ===== */
@@ -743,38 +825,6 @@ button { cursor: pointer; }
     font-size: 0.95rem;
     color: rgba(255, 255, 255, 0.95);
     line-height: 1.5;
-}
-
-/* PROMO FINAL - SOLO IMAGEN SIN MARCO */
-.section-promo-final {
-    margin-top: 48px;
-    padding: 0;
-    border: none;
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
-    position: relative;
-    overflow: visible;
-}
-
-.section-promo-final::before {
-    display: none;
-}
-
-.section-promo-final .promo-copy {
-    display: none;
-}
-
-.promo-label {
-    display: none;
-}
-
-.img-promo-final {
-    width: 100%;
-    border-radius: 0;
-    box-shadow: none;
-    margin: 0;
-    padding: 0;
 }
 
 /* FOOTER */
@@ -1000,6 +1050,13 @@ button { cursor: pointer; }
     .footer-benefits { grid-template-columns: repeat(2, 1fr); }
 }
 
+@media (min-width: 981px) {
+    .destacados-layout {
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+    }
+}
+
 /* ===== MÓVIL (< 760px) ===== */
 @media (max-width: 760px) {
     .desktop-only { display: none !important; }
@@ -1196,40 +1253,63 @@ button { cursor: pointer; }
         -webkit-line-clamp: 2;
     }
     
-    /* TRENDING MÓVIL */
-    .trending-section {
-        padding: 12px;
+    /* DESTACADOS MÓVIL */
+    .destacados-section {
         margin-top: 12px;
+        padding: 12px;
         border-radius: 14px;
     }
-    
-    .trending-section .section-heading .section-title {
-        font-size: 1.2rem;
+
+    .destacados-layout {
+        margin-top: 10px;
+        gap: 10px;
     }
-    
-    .trending-grid {
-        gap: 12px;
-        margin-top: 12px;
-    }
-    
-    .trending-item {
-        padding: 14px;
+
+    .destacado-offer-block,
+    .destacado-trending-block {
+        padding: 12px;
         border-radius: 12px;
-        gap: 12px;
     }
-    
+
+    .destacado-offer-copy h3 {
+        font-size: 0.95rem;
+    }
+
+    .destacado-offer-copy p {
+        font-size: 0.74rem;
+    }
+
+    .btn-destacado-cta {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 14px;
+        font-size: 0.75rem;
+    }
+
+    .destacado-trending-header h3 {
+        font-size: 0.92rem;
+    }
+
+    .destacado-fire-badge {
+        font-size: 0.65rem;
+        padding: 4px 8px;
+    }
+
+    .trending-item {
+        padding: 10px;
+    }
+
     .trending-rank {
-        font-size: 1.6rem;
-        min-width: 40px;
-    }
-    
-    .trending-info h4 {
+        min-width: 34px;
         font-size: 1rem;
-        margin: 0 0 4px;
     }
-    
-    .trending-info p {
+
+    .trending-info h4 {
         font-size: 0.8rem;
+    }
+
+    .trending-info p {
+        font-size: 0.68rem;
     }
     
     /* LOCALES */
@@ -1328,17 +1408,6 @@ button { cursor: pointer; }
     .btn-contact {
         padding: 6px 10px;
         font-size: 0.65rem;
-    }
-    
-    /* PROMO */
-    .section-promo-final {
-        margin-top: 16px;
-        padding: 0;
-    }
-    
-    .img-promo-final {
-        border-radius: 0;
-        box-shadow: none;
     }
     
     /* FOOTER */
