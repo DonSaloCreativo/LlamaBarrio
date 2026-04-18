@@ -6,6 +6,7 @@ const formUrls = {
 let locales = [];
 let joyitas = [];
 const IMAGE_PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='360' viewBox='0 0 640 360'%3E%3Crect width='640' height='360' fill='%23f4efe9'/%3E%3C/svg%3E";
+const LAZY_IMAGE_ROOT_MARGIN = "180px 0px";
 const SUGGESTION_SEED = [
     "Almacén",
     "Comida Rápida",
@@ -170,11 +171,11 @@ document.addEventListener("DOMContentLoaded", () => {
             "Panadería": "images/panaderia.png",
             "Pastelería": "images/pasteleria.png",
             "Pizzería": "images/pizzeria.png",
-            "Completos": "images/completo.jpg",
-            "Sushi": "images/sushi.jpg",
-            "Empanadas": "images/empanadas.jpg",
-            "Colaciones": "images/casera.jpg",
-            "Pizzas": "images/pizza.jpg"
+            "Completos": "images/completo.png",
+            "Sushi": "images/sushi.png",
+            "Empanadas": "images/empanadas.png",
+            "Colaciones": "images/casera.png",
+            "Pizzas": "images/pizza.png"
         };
         
         const isInitialLoad = (searchInput?.value || "").trim() === "" && 
@@ -340,7 +341,6 @@ function prepareLazyImage(imageElement, source) {
     imageElement.setAttribute("decoding", "async");
     imageElement.dataset.src = getPreferredImageSource(safeSource);
     imageElement.dataset.fallback = safeSource;
-    imageElement.dataset.srcset = `${getPreferredImageSource(safeSource)} 640w, ${safeSource} 640w`;
     imageElement.setAttribute("sizes", "(max-width: 760px) 86vw, 320px");
     imageElement.src = IMAGE_PLACEHOLDER;
     imageElement.removeAttribute("onerror");
@@ -384,7 +384,7 @@ function setupLazyMedia(rootElement = document) {
                 loadLazyImage(imageElement);
                 lazyImageObserver.unobserve(imageElement);
             });
-        }, { rootMargin: "180px 0px" });
+        }, { rootMargin: LAZY_IMAGE_ROOT_MARGIN });
     }
 
     lazyImages.forEach((imageElement) => lazyImageObserver.observe(imageElement));
