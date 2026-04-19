@@ -15,6 +15,10 @@ function normalizeCategoryKey(value) {
         .toLowerCase();
 }
 
+function escapeRegExp(value) {
+    return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 function getCategorySearchStats() {
     try {
         const saved = localStorage.getItem(CATEGORY_STATS_STORAGE_KEY);
@@ -28,7 +32,9 @@ function getCategorySearchStats() {
 function setCategorySearchStats(stats) {
     try {
         localStorage.setItem(CATEGORY_STATS_STORAGE_KEY, JSON.stringify(stats));
-    } catch (error) {}
+    } catch (error) {
+        console.warn("No se pudo guardar top categorías en localStorage:", error);
+    }
 }
 
 function registerCategorySearch(category) {
@@ -145,46 +151,49 @@ document.addEventListener("DOMContentLoaded", () => {
     const categoryButtons = document.querySelectorAll(".category-pill");
     const openNowFilter = document.getElementById("open-now-filter");
     const footerTopCategories = document.getElementById("footer-top-categories");
+    const availableCategoriesMeta = Array.from(categoryButtons)
+        .map((button) => button.dataset.category || "")
+        .filter((category) => category && category !== "Todas")
+        .map((category) => ({
+            value: category,
+            normalized: normalizeCategoryKey(category),
+            pattern: new RegExp(`(^|\\s)${escapeRegExp(normalizeCategoryKey(category))}(\\s|$)`)
+        }));
+    const exactCategoryMap = new Map(availableCategoriesMeta.map((item) => [item.normalized, item.value]));
+    const availableCategoryMap = new Map(availableCategoriesMeta.map((item) => [item.normalized, item.value]));
 
     let categoriaActiva = "Todas";
     let soloAbiertos = false;
 
     function getAvailableCategories() {
-        return Array.from(categoryButtons)
-            .map((button) => button.dataset.category || "")
-            .filter((category) => category && category !== "Todas");
+        return availableCategoriesMeta.map((item) => item.value);
     }
 
     function resolveSearchToCategory(term) {
         const cleanTerm = normalizeCategoryKey(term);
         if (!cleanTerm) return "";
-        const categories = getAvailableCategories();
-        const normalizedCategories = categories.map((category) => ({
-            value: category,
-            normalized: normalizeCategoryKey(category)
-        }));
-        const exactMatch = normalizedCategories.find((item) => item.normalized === cleanTerm);
-        if (exactMatch) return exactMatch.value;
-        const partialMatch = normalizedCategories.find((item) =>
-            cleanTerm.includes(item.normalized) || item.normalized.includes(cleanTerm)
-        );
-        return partialMatch ? partialMatch.value : "";
+        const exactMatch = exactCategoryMap.get(cleanTerm);
+        if (exactMatch) return exactMatch;
+        const phraseMatch = availableCategoriesMeta.find((item) => {
+            return item.pattern.test(cleanTerm);
+        });
+        return phraseMatch ? phraseMatch.value : "";
     }
 
     function getTopCategoriesForFooter(limit = 6) {
         const available = getAvailableCategories();
-        const availableMap = new Map(
-            available.map((category) => [normalizeCategoryKey(category), category])
-        );
         const stats = getCategorySearchStats();
         const ranked = Object.entries(stats)
-            .filter(([key]) => availableMap.has(key))
+            .filter(([key]) => availableCategoryMap.has(key))
             .sort((a, b) => b[1] - a[1])
-            .map(([key]) => availableMap.get(key));
+            .map(([key]) => availableCategoryMap.get(key));
+        const includedCategories = new Set(ranked);
         const topCategories = [...ranked];
         available.forEach((category) => {
             if (topCategories.length >= limit) return;
-            if (!topCategories.includes(category)) topCategories.push(category);
+            if (includedCategories.has(category)) return;
+            topCategories.push(category);
+            includedCategories.add(category);
         });
         return topCategories.slice(0, limit);
     }
@@ -192,11 +201,14 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderFooterTopCategories() {
         if (!footerTopCategories) return;
         const categories = getTopCategoriesForFooter();
-        footerTopCategories.innerHTML = categories.map((category) => `
-            <li><a href="#locals-grid" class="footer-top-category-link" data-category="${category}">${category}</a></li>
-        `).join("");
-
-        footerTopCategories.querySelectorAll(".footer-top-category-link").forEach((link) => {
+        footerTopCategories.innerHTML = "";
+        categories.forEach((category) => {
+            const listItem = document.createElement("li");
+            const link = document.createElement("a");
+            link.href = "#locales";
+            link.className = "footer-top-category-link";
+            link.dataset.category = category;
+            link.textContent = category;
             link.addEventListener("click", (event) => {
                 event.preventDefault();
                 const selectedCategory = link.dataset.category || "Todas";
@@ -206,6 +218,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 const localsSection = document.querySelector(".locals-section-wrapper");
                 if (localsSection) localsSection.scrollIntoView({ behavior: "smooth", block: "start" });
             });
+            listItem.appendChild(link);
+            footerTopCategories.appendChild(listItem);
         });
     }
 
