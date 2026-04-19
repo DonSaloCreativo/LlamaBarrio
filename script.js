@@ -5,6 +5,45 @@ const formUrls = {
 };
 let locales = [];
 let joyitas = [];
+const CATEGORY_STATS_STORAGE_KEY = "llamabarrioTopCategorySearches";
+
+function normalizeCategoryKey(value) {
+    return String(value || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .toLowerCase();
+}
+
+function escapeRegExp(value) {
+    return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function getCategorySearchStats() {
+    try {
+        const saved = localStorage.getItem(CATEGORY_STATS_STORAGE_KEY);
+        const parsed = saved ? JSON.parse(saved) : {};
+        return parsed && typeof parsed === "object" ? parsed : {};
+    } catch (error) {
+        return {};
+    }
+}
+
+function setCategorySearchStats(stats) {
+    try {
+        localStorage.setItem(CATEGORY_STATS_STORAGE_KEY, JSON.stringify(stats));
+    } catch (error) {
+        console.warn("No se pudo guardar top categorías en localStorage:", error);
+    }
+}
+
+function registerCategorySearch(category) {
+    const key = normalizeCategoryKey(category);
+    if (!key || key === "todas") return;
+    const stats = getCategorySearchStats();
+    stats[key] = (stats[key] || 0) + 1;
+    setCategorySearchStats(stats);
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log("🔄 Iniciando carga de datos...");
@@ -111,9 +150,85 @@ document.addEventListener("DOMContentLoaded", () => {
     const loadMoreHint = document.getElementById("load-more-hint");
     const categoryButtons = document.querySelectorAll(".category-pill");
     const openNowFilter = document.getElementById("open-now-filter");
+    const footerTopCategories = document.getElementById("footer-top-categories");
+    const availableCategoriesMeta = Array.from(categoryButtons)
+        .map((button) => button.dataset.category || "")
+        .filter((category) => category && category !== "Todas")
+        .map((category) => ({
+            value: category,
+            normalized: normalizeCategoryKey(category),
+            pattern: new RegExp(`(^|\\s)${escapeRegExp(normalizeCategoryKey(category))}(\\s|$)`)
+        }));
+    const exactCategoryMap = new Map(availableCategoriesMeta.map((item) => [item.normalized, item.value]));
+    const availableCategoryMap = new Map(availableCategoriesMeta.map((item) => [item.normalized, item.value]));
 
     let categoriaActiva = "Todas";
     let soloAbiertos = false;
+
+    function getAvailableCategories() {
+        return availableCategoriesMeta.map((item) => item.value);
+    }
+
+    function resolveSearchToCategory(term) {
+        const cleanTerm = normalizeCategoryKey(term);
+        if (!cleanTerm) return "";
+        const exactMatch = exactCategoryMap.get(cleanTerm);
+        if (exactMatch) return exactMatch;
+        const phraseMatch = availableCategoriesMeta.find((item) => {
+            return item.pattern.test(cleanTerm);
+        });
+        return phraseMatch ? phraseMatch.value : "";
+    }
+
+    function getTopCategoriesForFooter(limit = 6) {
+        const available = getAvailableCategories();
+        const stats = getCategorySearchStats();
+        const ranked = Object.entries(stats)
+            .filter(([key]) => availableCategoryMap.has(key))
+            .sort((a, b) => b[1] - a[1])
+            .map(([key]) => availableCategoryMap.get(key));
+        const includedCategories = new Set(ranked);
+        const topCategories = [...ranked];
+        available.forEach((category) => {
+            if (topCategories.length >= limit) return;
+            if (includedCategories.has(category)) return;
+            topCategories.push(category);
+            includedCategories.add(category);
+        });
+        return topCategories.slice(0, limit);
+    }
+
+    function renderFooterTopCategories() {
+        if (!footerTopCategories) return;
+        const categories = getTopCategoriesForFooter();
+        footerTopCategories.innerHTML = "";
+        categories.forEach((category) => {
+            const listItem = document.createElement("li");
+            const link = document.createElement("a");
+            link.href = "#locales";
+            link.className = "footer-top-category-link";
+            link.dataset.category = category;
+            link.textContent = category;
+            link.addEventListener("click", (event) => {
+                event.preventDefault();
+                const selectedCategory = link.dataset.category || "Todas";
+                categoriaActiva = selectedCategory;
+                updateCategoryButtons();
+                filtrarLocales();
+                const localsSection = document.querySelector(".locals-section-wrapper");
+                if (localsSection) localsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+            });
+            listItem.appendChild(link);
+            footerTopCategories.appendChild(listItem);
+        });
+    }
+
+    function trackSearchInputCategory() {
+        const matchedCategory = resolveSearchToCategory(searchInput?.value || "");
+        if (!matchedCategory) return;
+        registerCategorySearch(matchedCategory);
+        renderFooterTopCategories();
+    }
 
     function renderLocales() {
         if(!grid) {
@@ -238,14 +353,29 @@ document.addEventListener("DOMContentLoaded", () => {
         if (noResults) noResults.hidden = visibles !== 0;
     }
 
-    if (searchInput) searchInput.addEventListener("input", filtrarLocales);
-    if (searchButton) searchButton.addEventListener("click", filtrarLocales);
+    if (searchInput) {
+        searchInput.addEventListener("input", filtrarLocales);
+        searchInput.addEventListener("keydown", (event) => {
+            if (event.key !== "Enter") return;
+            event.preventDefault();
+            trackSearchInputCategory();
+            filtrarLocales();
+        });
+    }
+    if (searchButton) {
+        searchButton.addEventListener("click", () => {
+            trackSearchInputCategory();
+            filtrarLocales();
+        });
+    }
     if (comunaSelect) comunaSelect.addEventListener("change", filtrarLocales);
     categoryButtons.forEach((button) => {
         button.addEventListener("click", () => {
             categoriaActiva = button.dataset.category || "Todas";
+            registerCategorySearch(categoriaActiva);
             updateCategoryButtons();
             filtrarLocales();
+            renderFooterTopCategories();
         });
     });
     if (openNowFilter) {
@@ -256,6 +386,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
     updateCategoryButtons();
+    renderFooterTopCategories();
 });
 
 function convertirHoraAMinutos(valor) {
