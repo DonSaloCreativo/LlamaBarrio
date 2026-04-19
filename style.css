@@ -1114,6 +1114,7 @@ button { cursor: pointer; }
     .mobile-swipe-hint { display: block; }
     .section-title { font-size: 1.4rem; }
     
+    /* JOYITAS - SCROLL HORIZONTAL */
     .community-grid { 
         display: flex;
         flex-direction: row;
@@ -1127,9 +1128,33 @@ button { cursor: pointer; }
     }
 
     .comm-card {
-        min-width: 160px;
-        height: 260px;
+        width: 150px;
+        height: 240px;
+        min-width: 150px;
         flex-shrink: 0;
+    }
+
+    .comm-img-box {
+        height: 110px;
+    }
+
+    .comm-info {
+        padding: 10px;
+    }
+
+    .comm-tag {
+        font-size: 0.65rem;
+        padding: 3px 6px;
+    }
+
+    .comm-info b {
+        font-size: 0.72rem;
+        margin-bottom: 3px;
+    }
+
+    .comm-info p {
+        font-size: 0.68rem;
+        -webkit-line-clamp: 2;
     }
     
     .locals-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1141,21 +1166,91 @@ button { cursor: pointer; }
         padding-bottom: 120px;
     }
     
-    .footer-extended {
-        padding: 24px 10px;
+    /* DESTACADOS - STACK VERTICAL */
+    .destacados-section {
         margin-top: 24px;
+    }
+
+    .destacados-title {
+        font-size: 1.4rem;
+        margin-bottom: 16px;
+    }
+
+    .destacados-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        align-items: stretch;
+    }
+
+    .destacados-oferta {
+        height: 180px;
+        border-radius: 12px;
+    }
+
+    .destacados-trending {
+        padding: 16px;
+        border-radius: 12px;
+        max-height: 220px;
+        overflow-y: auto;
+    }
+
+    .trending-title {
+        font-size: 0.95rem;
+        margin-bottom: 12px;
+    }
+
+    .trending-compact {
+        gap: 8px;
+    }
+
+    .trending-compact-item {
+        padding: 10px;
+        font-size: 0.85rem;
+        border-radius: 6px;
+    }
+
+    .trending-compact-item strong {
+        font-size: 0.9rem;
+    }
+    
+    /* CTA BANNER */
+    .cta-banner {
+        margin: 16px auto;
+        padding: 18px;
+        gap: 12px;
+        flex-direction: column;
+    }
+
+    .cta-desc strong {
+        font-size: 1.05rem;
+    }
+
+    .cta-desc span {
+        font-size: 0.8rem;
+    }
+
+    .btn-contact {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+    
+    /* FOOTER */
+    .footer-extended {
+        padding: 20px 10px;
+        margin-top: 8px;
         margin-bottom: 20px;
         text-align: center;
     }
     
     .footer-extended-container {
         grid-template-columns: 1fr;
-        gap: 20px;
+        gap: 16px;
     }
     
     .footer-column h3 {
-        font-size: 0.95rem;
-        margin-bottom: 10px;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
         text-align: center;
     }
     
@@ -1166,58 +1261,177 @@ button { cursor: pointer; }
     
     .footer-column a,
     .footer-column p {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         text-align: center;
     }
 
     .site-footer {
-        padding: 20px 10px;
+        padding: 16px 10px;
         text-align: center;
     }
 
-    .destacados-wrapper {
-        gap: 16px;
+    .site-footer p {
+        font-size: 0.8rem;
     }
 
-    .destacados-oferta {
-        height: 200px;
+    .site-footer p + p {
+        font-size: 0.75rem;
+        margin-top: 8px;
     }
 
-    .destacados-trending {
+    /* FAQ MODAL */
+    .faq-modal-card {
+        width: min(95%, 100%);
         padding: 16px;
     }
 
-    .trending-title {
-        font-size: 0.95rem;
-        margin-bottom: 12px;
+    .faq-content h2 {
+        font-size: 1.3rem;
+        margin-bottom: 16px;
     }
 
-    .cta-banner {
-        margin: 24px auto;
-        padding: 20px;
-        gap: 16px;
+    .faq-question {
+        font-size: 0.85rem;
+        padding: 10px;
     }
 
-    .faq-modal-card {
+    .faq-answer p {
+        padding: 10px;
+        font-size: 0.85rem;
+    }
+
+    .faq-icon {
+        font-size: 1.2rem;
+    }
+/* INFO MODALS */
+.info-modal-card {
+    width: min(92%, 600px);
+    max-height: 85vh;
+    overflow-y: auto;
+    background: #fff;
+    border-radius: 24px;
+    padding: 32px;
+}
+
+.info-content h2 {
+    margin: 0 0 24px 0;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+}
+
+.info-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.info-step {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--orange);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.step-desc {
+    flex: 1;
+}
+
+.step-desc strong {
+    display: block;
+    font-size: 1.05rem;
+    color: var(--text);
+    margin-bottom: 6px;
+}
+
+.step-desc p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.6;
+    font-size: 0.9rem;
+}
+
+.about-text {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--text);
+    text-align: center;
+    margin: 0;
+}
+
+.info-modal-card::-webkit-scrollbar {
+    width: 8px;
+}
+
+.info-modal-card::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.info-modal-card::-webkit-scrollbar-thumb {
+    background: var(--orange-soft);
+    border-radius: 4px;
+}
+
+@media (max-width: 760px) {
+    .info-modal-card {
         width: min(95%, 100%);
         padding: 20px;
     }
 
-    .faq-content h2 {
-        font-size: 1.4rem;
-        margin-bottom: 20px;
-        text-align: center;
+    .info-content h2 {
+        font-size: 1.3rem;
+        margin-bottom: 18px;
     }
 
-    .faq-question {
-        font-size: 0.9rem;
-        padding: 12px;
-        text-align: left;
+    .info-steps {
+        gap: 16px;
     }
 
-    .faq-answer p {
-        padding: 12px;
+    .step-number {
+        width: 36px;
+        height: 36px;
         font-size: 0.9rem;
-        text-align: left;
+    }
+
+    .step-desc strong {
+        font-size: 0.95rem;
+    }
+
+    .step-desc p {
+        font-size: 0.85rem;
+    }
+
+    .about-text {
+        font-size: 0.9rem;
+    }
+}
+
+/* FOOTER CATEGORIES - SPACING */
+.footer-column ul {
+    gap: 6px;
+}
+
+@media (max-width: 760px) {
+    .footer-column ul {
+        gap: 4px;
+    }
+
+    .footer-column a,
+    .footer-column p {
+        line-height: 1.4;
     }
 }

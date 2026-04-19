@@ -198,8 +198,8 @@
             <div class="footer-column">
                 <h3>❓ Ayuda</h3>
                 <ul>
-                    <li><a href="#faq">Preguntas Frecuentes</a></li>
-                    <li><a href="#como-usar">¿Cómo usar LlamaBarrio?</a></li>
+                    <li><a href="javascript:void(0);" onclick="abrirFAQ(); return false;">Preguntas Frecuentes</a></li>
+                    <li><a href="javascript:void(0);" onclick="abrirComoUsar(); return false;">¿Cómo usar LlamaBarrio?</a></li>
                     <li><a href="#" data-form-modal="business">Contacto para locales</a></li>
                 </ul>
             </div>
@@ -208,8 +208,7 @@
             <div class="footer-column">
                 <h3>ℹ️ Información</h3>
                 <ul>
-                    <li><a href="#quienes-somos">¿Quiénes somos?</a></li>
-                    <li><p class="footer-text">LlamaBarrio conecta personas con picadas, pero no operamos ni vendemos en los locales. Cada negocio es independiente y responsable.</p></li>
+                    <li><a href="javascript:void(0);" onclick="abrirQuienesSomos(); return false;">¿Quiénes somos?</a></li>
                 </ul>
             </div>
         </div>
@@ -317,6 +316,50 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CÓMO USAR -->
+    <div id="como-usar-modal" class="modal-overlay">
+        <div class="info-modal-card">
+            <button type="button" class="close-btn" onclick="cerrarComoUsar()">&times;</button>
+            <div class="info-content">
+                <h2>¿Cómo usar LlamaBarrio?</h2>
+                <div class="info-steps">
+                    <div class="info-step">
+                        <div class="step-number">1</div>
+                        <div class="step-desc">
+                            <strong>Busca tu barrio y categoría</strong>
+                            <p>Selecciona la comuna donde te encuentras y elige qué tipo de picada buscas: completos, panadería, pizzas, botillería o cualquier otra opción disponible.</p>
+                        </div>
+                    </div>
+                    <div class="info-step">
+                        <div class="step-number">2</div>
+                        <div class="step-desc">
+                            <strong>Descubre recomendaciones reales</strong>
+                            <p>Explora todas las picadas y locales recomendados por vecinos como tú. Lee las descripciones, mira las imágenes y conoce los horarios de atención.</p>
+                        </div>
+                    </div>
+                    <div class="info-step">
+                        <div class="step-number">3</div>
+                        <div class="step-desc">
+                            <strong>Comparte tus mejores datos</strong>
+                            <p>¿Encontraste una picada increíble? Recomiéndala en LlamaBarrio para que otros vecinos también la descubran. Así fortalecemos la comunidad local.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL QUIÉNES SOMOS -->
+    <div id="quienes-somos-modal" class="modal-overlay">
+        <div class="info-modal-card">
+            <button type="button" class="close-btn" onclick="cerrarQuienesSomos()">&times;</button>
+            <div class="info-content">
+                <h2>¿Quiénes somos?</h2>
+                <p class="about-text">LlamaBarrio conecta personas con picadas, pero no operamos ni vendemos en los locales. Cada negocio es independiente y responsable de su servicio. Nuestro objetivo es fortalecer la comunidad local, generando un espacio donde los vecinos puedan compartir sus mejores recomendaciones y descubrir opciones auténticas en sus barrios.</p>
             </div>
         </div>
     </div>

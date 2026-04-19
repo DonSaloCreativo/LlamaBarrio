@@ -361,6 +361,26 @@ function cerrarFAQ() {
     if (modal) modal.style.display = "none";
 }
 
+function abrirComoUsar() {
+    const modal = document.getElementById("como-usar-modal");
+    if (modal) modal.style.display = "flex";
+}
+
+function cerrarComoUsar() {
+    const modal = document.getElementById("como-usar-modal");
+    if (modal) modal.style.display = "none";
+}
+
+function abrirQuienesSomos() {
+    const modal = document.getElementById("quienes-somos-modal");
+    if (modal) modal.style.display = "flex";
+}
+
+function cerrarQuienesSomos() {
+    const modal = document.getElementById("quienes-somos-modal");
+    if (modal) modal.style.display = "none";
+}
+
 function toggleFAQ(button) {
     const item = button.parentElement;
     const wasActive = item.classList.contains("active");
@@ -376,6 +396,8 @@ window.onclick = function (event) {
     if (event.target === document.getElementById("modal-detalle")) cerrarModal();
     if (event.target === document.getElementById("form-modal")) cerrarFormulario();
     if (event.target === document.getElementById("faq-modal")) cerrarFAQ();
+    if (event.target === document.getElementById("como-usar-modal")) cerrarComoUsar();
+    if (event.target === document.getElementById("quienes-somos-modal")) cerrarQuienesSomos();
 };
 
 function setupFormTriggers() {
@@ -391,7 +413,6 @@ function setupFormTriggers() {
 
 function setupMobileNav() {
     const mobileNavItems = document.querySelectorAll(".mobile-nav-item");
-    const faqLinks = document.querySelectorAll('a[href="#faq"]');
     
     mobileNavItems.forEach((item) => {
         item.addEventListener("click", (e) => {
@@ -404,13 +425,9 @@ function setupMobileNav() {
                 return;
             }
             
-            // Remover active de todos
             mobileNavItems.forEach(i => i.classList.remove("active"));
-            
-            // Agregar active al clickeado
             item.classList.add("active");
             
-            // Scroll a secciones
             if (section === "inicio") {
                 window.scrollTo({ top: 0, behavior: "smooth" });
             } else if (section === "joyitas") {
@@ -419,13 +436,6 @@ function setupMobileNav() {
                     joyitasSection.scrollIntoView({ behavior: "smooth" });
                 }
             }
-        });
-    });
-    
-    faqLinks.forEach(link => {
-        link.addEventListener("click", (e) => {
-            e.preventDefault();
-            abrirFAQ();
         });
     });
 }
