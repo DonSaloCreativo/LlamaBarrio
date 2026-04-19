@@ -344,8 +344,6 @@ button { cursor: pointer; }
     grid-template-columns: repeat(4, 1fr);
     gap: 18px;
     margin-top: 24px;
-    overflow-x: auto;
-    overflow-y: hidden;
     padding-bottom: 12px;
     scroll-behavior: smooth;
 }
@@ -374,9 +372,7 @@ button { cursor: pointer; }
     display: flex;
     flex-direction: column;
     height: 280px;
-    min-width: 180px;
     transition: all 0.3s ease;
-    flex-shrink: 0;
 }
 
 .comm-card:hover {
@@ -1117,11 +1113,25 @@ button { cursor: pointer; }
     .hero-categories { gap: 8px; }
     .mobile-swipe-hint { display: block; }
     .section-title { font-size: 1.4rem; }
+    
     .community-grid { 
-        grid-template-columns: auto;
+        display: flex;
+        flex-direction: row;
+        gap: 12px;
+        margin-top: 24px;
         overflow-x: auto;
+        overflow-y: hidden;
         -webkit-overflow-scrolling: touch;
+        padding-bottom: 12px;
+        scroll-behavior: smooth;
     }
+
+    .comm-card {
+        min-width: 160px;
+        height: 260px;
+        flex-shrink: 0;
+    }
+    
     .locals-grid { grid-template-columns: repeat(2, 1fr); }
     .mobile-navbar { display: flex !important; }
     .nav-right { display: none; }
