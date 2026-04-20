@@ -1,13 +1,13 @@
-﻿const CACHE_NAME = 'llamabarrio-v2';
+﻿const CACHE_NAME = 'llamabarrio-v3';
 const APP_SHELL = [
     './',
     'index.html',
     'style.css',
     'script.js',
-    'manifest.json.json',
+    'manifest.json',
     'images/logo.png',
-    'images/icon-192.png.png',
-    'images/icon-512.png.png'
+    'images/icon-192.png',
+    'images/icon-512.png'
 ];
 
 self.addEventListener('install', (event) => {
