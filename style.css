@@ -1029,7 +1029,6 @@ button { cursor: pointer; }
     padding: 0;
     margin: 0;
     height: auto;
-    display: flex;
     justify-content: space-around;
     align-items: stretch;
 }
@@ -1303,6 +1302,8 @@ button { cursor: pointer; }
     .faq-icon {
         font-size: 1.2rem;
     }
+}
+
 /* INFO MODALS */
 .info-modal-card {
     width: min(92%, 600px);
