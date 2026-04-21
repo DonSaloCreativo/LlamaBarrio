@@ -1,4 +1,4 @@
-:root {
+﻿:root {
     --orange: #f26522;
     --orange-dark: #d95619;
     --orange-soft: #fff3e8;
@@ -1436,3 +1436,5 @@ button { cursor: pointer; }
         line-height: 1.4;
     }
 }
+
+.site-footer a:hover { color: #f26522; }
