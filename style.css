@@ -1868,6 +1868,10 @@ a { color: inherit; }
         margin-top: 30px;
     }
 
+    .site-footer .footer-links p:last-child {
+        display: none;
+    }
+
     .footer-extended-container {
         grid-template-columns: 1fr;
         gap: 18px;
