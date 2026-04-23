@@ -9,9 +9,12 @@ let joyitas = [];
 document.addEventListener("DOMContentLoaded", () => {
     console.log("🔄 Iniciando carga de datos...");
     
+    setupVisualEnhancements();
+    setupFooterLegal();
     setupFormTriggers();
     setupMobileNav();
     setupMiniHow();
+    renderLoadingSkeletons();
     
     Promise.all([
         fetch(`${API_BASE}?hoja=Publicaciones%20Locales`).then(r => r.json()),
@@ -57,8 +60,11 @@ document.addEventListener("DOMContentLoaded", () => {
         renderTrending();
         renderLocales();
         initTrendingCompact();
+        refreshRevealTargets();
     }).catch(err => {
         console.error("❌ Error cargando datos:", err);
+        clearLoadingSkeletons();
+        refreshRevealTargets();
     });
 
     function renderJoyitas(){
@@ -87,10 +93,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     : "images/sin-imagen.png");
             
             c.innerHTML = `
-                <div class="comm-img-box"><img src="${imgSrc}" alt="Dato recomendado" onerror="this.src='images/sin-imagen.png'"></div>
+                <div class="comm-img-box">
+                    <img src="${imgSrc}" alt="Dato recomendado" onerror="this.src='images/sin-imagen.png'">
+                    <div class="comm-image-overlay">
+                        <span class="comm-tag">${j.comuna || "Sin comuna"}</span>
+                        <span class="comm-chip">Joyita</span>
+                    </div>
+                </div>
                 <div class="comm-info">
-                    <span class="comm-tag">${j.comuna || "Sin comuna"}</span>
-                    <b>${j.autor && j.autor.trim() ? j.autor : "Anónimo"}</b>
+                    <div class="comm-info-top">
+                        <b>${j.localName || j.name || "Recomendación local"}</b>
+                        <span class="comm-author-line">por ${j.autor && j.autor.trim() ? j.autor : "Anónimo"}</span>
+                    </div>
                     <p>"${j.desc || ""}"</p>
                 </div>
             `;
@@ -101,6 +115,8 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             joyitasGrid.appendChild(c);
         });
+
+        refreshRevealTargets();
     }
 
     const grid = document.getElementById("locals-grid");
@@ -168,13 +184,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="local-img-wrap">
                     <div class="local-img-box">
                         <img src="${imgSrc}" alt="${local.name}" onerror="this.src='images/sin-imagen.png'">
+                        <div class="local-image-overlay">
+                            <div class="local-headline">
+                                <span class="local-inline-tag">${local.category}</span>
+                                <span class="local-status ${abierta ? "open" : "closed"}">${abierta ? "Abierto" : "Cerrado"}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="local-body">
-                    <div class="local-headline">
-                        <span class="local-inline-tag">${local.category}</span>
-                        <span class="local-status ${abierta ? "open" : "closed"}">${abierta ? "Abierto" : "Cerrado"}</span>
-                    </div>
                     <div class="local-topline">
                         <h3>${local.name}</h3>
                     </div>
@@ -203,6 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         
         filtrarLocales();
+        refreshRevealTargets();
     }
 
     function updateCategoryButtons() {
@@ -258,6 +277,89 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     updateCategoryButtons();
 });
+
+let revealObserver;
+
+function setupVisualEnhancements() {
+    const revealTargets = document.querySelectorAll(
+        ".hero, .community-section, .locals-section-wrapper, .destacados-section, .cta-banner, .footer-extended, .site-footer"
+    );
+
+    revealTargets.forEach((element) => element.classList.add("ui-reveal"));
+
+    if (!("IntersectionObserver" in window)) {
+        revealTargets.forEach((element) => element.classList.add("is-visible"));
+        return;
+    }
+
+    revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add("is-visible");
+            revealObserver.unobserve(entry.target);
+        });
+    }, {
+        threshold: 0.16,
+        rootMargin: "0px 0px -40px 0px"
+    });
+
+    revealTargets.forEach((element) => revealObserver.observe(element));
+}
+
+function refreshRevealTargets() {
+    const dynamicTargets = document.querySelectorAll(".comm-card, .local-card, .trending-compact-item");
+
+    dynamicTargets.forEach((element, index) => {
+        if (element.dataset.revealReady === "true") return;
+        element.dataset.revealReady = "true";
+        element.classList.add("ui-reveal");
+        element.style.transitionDelay = `${Math.min(index * 35, 210)}ms`;
+
+        if (revealObserver) {
+            revealObserver.observe(element);
+        } else {
+            element.classList.add("is-visible");
+        }
+    });
+}
+
+function renderLoadingSkeletons() {
+    const joyitasGrid = document.getElementById("joyitas-grid");
+    const localsGrid = document.getElementById("locals-grid");
+    const trendingCompact = document.getElementById("trending-compact");
+
+    if (joyitasGrid) {
+        joyitasGrid.innerHTML = Array.from({ length: 4 }, () => '<article class="ui-skeleton" aria-hidden="true"></article>').join("");
+    }
+
+    if (localsGrid) {
+        localsGrid.innerHTML = Array.from({ length: 6 }, () => '<article class="ui-skeleton ui-skeleton--local" aria-hidden="true"></article>').join("");
+    }
+
+    if (trendingCompact) {
+        trendingCompact.innerHTML = Array.from({ length: 3 }, () => '<div class="ui-skeleton ui-skeleton--compact" aria-hidden="true"></div>').join("");
+    }
+
+    refreshRevealTargets();
+}
+
+function clearLoadingSkeletons() {
+    const joyitasGrid = document.getElementById("joyitas-grid");
+    const localsGrid = document.getElementById("locals-grid");
+    const trendingCompact = document.getElementById("trending-compact");
+
+    if (joyitasGrid && joyitasGrid.querySelector(".ui-skeleton")) {
+        joyitasGrid.innerHTML = "";
+    }
+
+    if (localsGrid && localsGrid.querySelector(".ui-skeleton")) {
+        localsGrid.innerHTML = "";
+    }
+
+    if (trendingCompact && trendingCompact.querySelector(".ui-skeleton")) {
+        trendingCompact.innerHTML = "";
+    }
+}
 
 function convertirHoraAMinutos(valor) {
     const match = valor.match(/^(\d{1,2}):(\d{2})$/);
@@ -381,6 +483,88 @@ function cerrarQuienesSomos() {
     if (modal) modal.style.display = "none";
 }
 
+function setupFooterLegal() {
+    const footerLinks = document.querySelector(".footer-links");
+    if (footerLinks) {
+        footerLinks.innerHTML = `
+            <p>LlamaBarrio © 2026 · <a href="javascript:void(0);" onclick="abrirTerminos(); return false;">Términos</a> · <a href="javascript:void(0);" onclick="abrirPrivacidad(); return false;">Privacidad</a></p>
+            <p>En LlamaBarrio conectamos personas con picadas, pero no vendemos ni operamos los locales. Cada negocio es independiente y responsable de su servicio.</p>
+            <p>Creado por <a href="https://www.fullcreator.cl" target="_blank" rel="noopener noreferrer">FullCreator Lab</a></p>
+        `;
+    }
+
+    createLegalModal(
+        "terminos-modal",
+        "Términos de uso",
+        [
+            ["Uso de la plataforma", "LlamaBarrio es una plataforma informativa y comunitaria para descubrir picadas y recomendaciones locales. El contenido publicado tiene fines referenciales y puede cambiar con el tiempo."],
+            ["Responsabilidad de los negocios", "Cada local publicado es independiente y responsable de sus productos, precios, horarios, medios de contacto y calidad de servicio. LlamaBarrio no vende ni opera en nombre de los negocios."],
+            ["Contenido enviado por usuarios", "Las recomendaciones recibidas mediante formularios pueden ser revisadas, aprobadas, editadas o descartadas para mantener la calidad, pertinencia y seguridad de la comunidad."],
+            ["Actualizaciones", "Podemos modificar el diseño, las funcionalidades, el contenido y estos términos para mejorar la plataforma. El uso continuado del sitio implica aceptación de dichas actualizaciones."]
+        ]
+    );
+
+    createLegalModal(
+        "privacidad-modal",
+        "Política de privacidad",
+        [
+            ["Datos recibidos", "Cuando un usuario completa formularios de recomendación o contacto, podemos recibir datos como nombre, comuna, descripción, fotografías y medios de contacto entregados voluntariamente."],
+            ["Uso de la información", "La información se utiliza para revisar recomendaciones, publicar contenidos relevantes, responder consultas y mejorar la experiencia general dentro de la plataforma."],
+            ["No venta de datos", "LlamaBarrio no vende datos personales a terceros. Solo se publica la información necesaria para mostrar una recomendación o facilitar el contacto con un negocio cuando corresponde."],
+            ["Corrección o eliminación", "Si necesitas corregir, actualizar o solicitar la eliminación de un contenido o dato enviado a la plataforma, puedes contactarnos y revisaremos tu solicitud."]
+        ]
+    );
+}
+
+function createLegalModal(id, title, items) {
+    if (document.getElementById(id)) return;
+
+    const steps = items.map(([heading, text], index) => `
+        <div class="info-step">
+            <div class="step-number">${index + 1}</div>
+            <div class="step-desc">
+                <strong>${heading}</strong>
+                <p>${text}</p>
+            </div>
+        </div>
+    `).join("");
+
+    const modal = document.createElement("div");
+    modal.id = id;
+    modal.className = "modal-overlay";
+    modal.innerHTML = `
+        <div class="info-modal-card">
+            <button type="button" class="close-btn" onclick="${id === "terminos-modal" ? "cerrarTerminos()" : "cerrarPrivacidad()"}">&times;</button>
+            <div class="info-content">
+                <h2>${title}</h2>
+                <div class="info-steps">${steps}</div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+}
+
+function abrirTerminos() {
+    const modal = document.getElementById("terminos-modal");
+    if (modal) modal.style.display = "flex";
+}
+
+function cerrarTerminos() {
+    const modal = document.getElementById("terminos-modal");
+    if (modal) modal.style.display = "none";
+}
+
+function abrirPrivacidad() {
+    const modal = document.getElementById("privacidad-modal");
+    if (modal) modal.style.display = "flex";
+}
+
+function cerrarPrivacidad() {
+    const modal = document.getElementById("privacidad-modal");
+    if (modal) modal.style.display = "none";
+}
+
 function toggleFAQ(button) {
     const item = button.parentElement;
     const wasActive = item.classList.contains("active");
@@ -398,6 +582,8 @@ window.onclick = function (event) {
     if (event.target === document.getElementById("faq-modal")) cerrarFAQ();
     if (event.target === document.getElementById("como-usar-modal")) cerrarComoUsar();
     if (event.target === document.getElementById("quienes-somos-modal")) cerrarQuienesSomos();
+    if (event.target === document.getElementById("terminos-modal")) cerrarTerminos();
+    if (event.target === document.getElementById("privacidad-modal")) cerrarPrivacidad();
 };
 
 function setupFormTriggers() {

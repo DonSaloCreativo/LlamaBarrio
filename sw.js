@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = 'llamabarrio-v3';
+const CACHE_NAME = 'llamabarrio-v4';
 const APP_SHELL = [
     './',
     'index.html',
@@ -6,8 +6,9 @@ const APP_SHELL = [
     'script.js',
     'manifest.json',
     'images/logo.png',
-    'images/icon-192.png',
-    'images/icon-512.png'
+    'images/favicon.png',
+    'images/icon-192.png.png',
+    'images/icon-512.png.png'
 ];
 
 self.addEventListener('install', (event) => {
@@ -33,6 +34,11 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
+    const requestUrl = new URL(event.request.url);
+    if (requestUrl.origin !== self.location.origin) {
+        return;
+    }
+
     event.respondWith(
         caches.match(event.request).then((cachedResponse) => {
             if (cachedResponse) {
@@ -49,7 +55,13 @@ self.addEventListener('fetch', (event) => {
                     caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
                     return networkResponse;
                 })
-                .catch(() => caches.match('index.html'));
+                .catch(() => {
+                    if (event.request.mode === 'navigate') {
+                        return caches.match('index.html');
+                    }
+
+                    return Response.error();
+                });
         })
     );
 });
