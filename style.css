@@ -1736,27 +1736,7 @@ a { color: inherit; }
     }
 
     .float-food {
-        width: 52px;
-        height: 52px;
-        font-size: 1.55rem;
-        border-radius: 18px;
-    }
-
-    .food-3,
-    .food-4,
-    .food-5,
-    .food-6 {
         display: none;
-    }
-
-    .food-1 {
-        top: 18px;
-        left: 2%;
-    }
-
-    .food-2 {
-        top: 82px;
-        right: 2%;
     }
 
     .hero-copy {
@@ -1931,14 +1911,6 @@ a { color: inherit; }
 
     .hero h1 {
         font-size: 2.2rem;
-    }
-
-    .float-food {
-        width: 46px;
-        height: 46px;
-        font-size: 1.35rem;
-        border-radius: 16px;
-        opacity: 0.8;
     }
 
     .hero-copy {
