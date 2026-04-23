@@ -488,7 +488,6 @@ function setupFooterLegal() {
     if (footerLinks) {
         footerLinks.innerHTML = `
             <p>LlamaBarrio © 2026 · <a href="javascript:void(0);" onclick="abrirTerminos(); return false;">Términos</a> · <a href="javascript:void(0);" onclick="abrirPrivacidad(); return false;">Privacidad</a></p>
-            <p>En LlamaBarrio conectamos personas con picadas, pero no vendemos ni operamos los locales. Cada negocio es independiente y responsable de su servicio.</p>
             <p>Creado por <a href="https://www.fullcreator.cl" target="_blank" rel="noopener noreferrer">FullCreator Lab</a></p>
         `;
     }
