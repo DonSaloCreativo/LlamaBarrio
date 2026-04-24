@@ -6,6 +6,74 @@ const formUrls = {
 let locales = [];
 let joyitas = [];
 
+function normalizeFieldName(value) {
+    return String(value || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
+}
+
+function getFieldValue(source, preferredKeys = [], partialKeys = []) {
+    if (!source || typeof source !== "object") return "";
+
+    for (const key of preferredKeys) {
+        if (source[key] !== undefined && source[key] !== null && String(source[key]).trim() !== "") {
+            return String(source[key]).trim();
+        }
+    }
+
+    const entries = Object.entries(source);
+    for (const [rawKey, rawValue] of entries) {
+        if (rawValue === undefined || rawValue === null || String(rawValue).trim() === "") continue;
+        const normalizedKey = normalizeFieldName(rawKey);
+        if (partialKeys.some((partial) => normalizedKey.includes(normalizeFieldName(partial)))) {
+            return String(rawValue).trim();
+        }
+    }
+
+    return "";
+}
+
+function getHorarioValue(source) {
+    const directValue = getFieldValue(source, ["Horario", "horario", "hor"], ["horario", "atencion", "hora"]);
+    if (directValue) return directValue;
+
+    if (!source || typeof source !== "object") return "";
+
+    for (const rawValue of Object.values(source)) {
+        const text = String(rawValue || "").trim();
+        if (/^\d{1,2}:\d{2}\s*-\s*\d{1,2}:\d{2}$/.test(text)) {
+            return text;
+        }
+    }
+
+    return "";
+}
+
+function getPhoneHref(value) {
+    const raw = String(value || "").trim();
+    if (!raw) return "";
+    if (/sin contacto/i.test(raw)) return "";
+
+    let digits = raw.replace(/\D/g, "");
+    if (!digits) return "";
+
+    if (digits.startsWith("56")) {
+        return `tel:+${digits}`;
+    }
+
+    if (digits.length === 9 && digits.startsWith("9")) {
+        return `tel:+56${digits}`;
+    }
+
+    if (digits.length === 8 || digits.length === 9) {
+        return `tel:+56${digits}`;
+    }
+
+    return `tel:+${digits}`;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     console.log("🔄 Iniciando carga de datos...");
     
@@ -24,14 +92,15 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("📊 Datos RAW de Joyitas:", joyitasData);
         
         locales = (localesData || []).map(local => ({
-            name: local.Nombre || local.name || "",
-            comuna: local.Comuna || local.comuna || "",
-            loc: local.Dirección || local.loc || "",
-            desc: local.Descripción || local.desc || "",
-            hor: local.Horario || local.hor || "",
+            name: getFieldValue(local, ["Nombre", "name"], ["nombre"]),
+            comuna: getFieldValue(local, ["Comuna", "comuna"], ["comuna"]),
+            loc: getFieldValue(local, ["Dirección", "Direccion", "loc"], ["direccion", "ubicacion", "direccionexacta"]),
+            desc: getFieldValue(local, ["Descripción", "Descripcion", "desc"], ["descripcion"]),
+            hor: getHorarioValue(local),
             img: (local.Imagen || local.Img || local.img || "sin-imagen.png"),
-            wa: (typeof local.WhatsApp === "string" ? local.WhatsApp : (local.wa || "")),
-            category: local.Categoria || local.category || ""
+            wa: getFieldValue(local, ["WhatsApp", "Whatsapp", "whatsapp", "wa"], ["whatsapp", "telefono", "contacto", "celular"]),
+            category: getFieldValue(local, ["Categoria", "Categoría", "category"], ["categoria"]),
+            raw: local
         }));
         
         joyitas = (joyitasData || []).map(j => {
@@ -382,11 +451,20 @@ function estaAbiertoAhora(horario) {
 
 function abrirDetalle(local) {
     const el = id => document.getElementById(id) || { innerText:"", src: "", alt:"", href:"#", classList:{toggle:()=>{}}, style:{} };
+    const horarioDetalle = local.hor || getHorarioValue(local.raw);
+    const contactoDetalle = local.wa || getFieldValue(local.raw, ["WhatsApp", "Whatsapp", "whatsapp", "wa"], ["whatsapp", "telefono", "contacto", "celular"]);
+    const contactoLink = getPhoneHref(contactoDetalle);
+
     el("modal-titulo").innerText = local.name || "";
     el("modal-categoria").innerText = local.category || "";
-    el("modal-dir").innerText = `${local.comuna || ""} · ${local.loc || ""}`;
-    el("modal-desc").innerText = local.desc || "";
-    el("modal-hor").innerText = local.hor ? `Horario: ${local.hor}` : "";
+    el("modal-dir").innerText = local.loc ? `Dirección: ${local.loc}` : "";
+    el("modal-desc").innerText = local.desc || "Sin descripción disponible.";
+    el("modal-hor").innerText = horarioDetalle ? `Horario: ${horarioDetalle}` : "Horario no informado";
+    el("modal-contacto").innerText = typeof contactoDetalle === "string" && contactoDetalle.trim() !== ""
+        ? contactoDetalle.trim()
+        : "Sin contacto";
+    el("modal-contacto").href = contactoLink || "#";
+    el("modal-contacto").target = contactoLink ? "_self" : "";
     el("modal-precio").innerText = '';
     el("modal-autor").innerText = '';
     
@@ -399,21 +477,37 @@ function abrirDetalle(local) {
     el("modal-img").alt = local.name || "";
     
     const waBtn = el("modal-wa");
-    const waLink = typeof local.wa === "string" && local.wa.trim() !== "" ? `https://wa.me/${local.wa.replace(/\D/g, "")}` : "#";
-    waBtn.href = waLink;
-    if (waBtn.classList) waBtn.classList.toggle("is-hidden", waLink === "#");
+    waBtn.href = "#";
+    if (waBtn.classList) waBtn.classList.add("is-hidden");
     el("modal-detalle").style.display = "flex";
 }
 
 function abrirDetalleJoyita(j) {
-    const el = id => document.getElementById(id) || { innerText:"", src:"", alt:"", href:"#", style:{} };
-    el("modal-titulo").innerText = j.localName ? `${j.localName}` : (j.name || "Recomendación");
-    el("modal-categoria").innerText = j.category || "";
-    el("modal-dir").innerText = j.ubicacion ? `${j.ubicacion}` : (j.comuna ? `${j.comuna}` : "");
-    el("modal-desc").innerText = j.desc || '';
-    el("modal-hor").innerText = '';
-    el("modal-precio").innerText = j.price ? "Precio: " + j.price : '';
-    el("modal-autor").innerText = j.autor && j.autor.trim() ? `Por: ${j.autor}` : '';
+    const el = id => document.getElementById(id) || {
+        innerText:"", src:"", alt:"", href:"#",
+        style:{},
+        classList:{ add:()=>{}, remove:()=>{}, toggle:()=>{} }
+    };
+    const titulo = j.localName && j.localName.trim() ? j.localName.trim() : (j.name || "Recomendación");
+    const comuna = j.comuna && j.comuna.trim() ? `Comuna: ${j.comuna.trim()}` : "";
+    const encontrado = j.name && j.name.trim() ? `¿Dónde lo encontraste?: ${j.name.trim()}` : "";
+    const descripcion = j.desc && j.desc.trim() ? j.desc.trim() : "Sin comentario disponible.";
+    const autor = j.autor && j.autor.trim() ? j.autor.trim() : "Anónimo";
+
+    el("modal-titulo").innerText = titulo;
+    el("modal-categoria").innerText = "";
+    el("modal-categoria").classList.add("is-hidden");
+    el("modal-dir").innerText = comuna;
+    el("modal-dir").style.display = comuna ? "block" : "none";
+    el("modal-desc").innerText = descripcion;
+    el("modal-desc").style.display = "block";
+    el("modal-hor").innerText = encontrado;
+    el("modal-hor").style.display = encontrado ? "block" : "none";
+    el("modal-contacto").innerText = `Recomendado por: ${autor}`;
+    el("modal-contacto").href = "#";
+    el("modal-contacto").target = "";
+    el("modal-precio").innerText = "";
+    el("modal-autor").innerText = '';
     
     const imgSrc = j.img && String(j.img).startsWith("http")
         ? j.img
