@@ -148,6 +148,16 @@
             <div class="community-grid" id="joyitas-grid"></div>
         </section>
 
+        <section class="section-block offers-section is-hidden" id="offers-section">
+            <div class="section-heading section-heading-split offers-heading">
+                <div>
+                    <h2 class="section-title">Ofertas de hoy</h2>
+                    <p class="sub-small">Avisos breves y promociones puntuales de locales publicados</p>
+                </div>
+            </div>
+            <div class="offers-feed" id="offers-feed"></div>
+        </section>
+
         <!-- LOCALES -->
         <section class="section-block locals-section-wrapper">
             <div class="section-heading section-heading-split">
@@ -224,6 +234,7 @@
                 <h3>ℹ️ Información</h3>
                 <ul>
                     <li><a href="javascript:void(0);" onclick="abrirQuienesSomos(); return false;">¿Quiénes somos?</a></li>
+                    <li><a href="#" class="footer-ads-link" data-form-modal="business">Publicidad para mi negocio</a></li>
                 </ul>
             </div>
         </div>
@@ -263,6 +274,38 @@
         <div class="form-modal-card">
             <button type="button" class="close-btn" onclick="cerrarFormulario()">&times;</button>
             <iframe id="form-modal-frame" src="" title="Formulario LlamaBarrio" loading="lazy"></iframe>
+        </div>
+    </div>
+
+    <div id="business-form-modal" class="modal-overlay">
+        <div class="business-form-card">
+            <button type="button" class="close-btn" onclick="cerrarBusinessFormulario()">&times;</button>
+            <div class="business-form-content">
+                <h2>Publicitar mi local o negocio</h2>
+                <p class="business-form-subtitle">Si eres local o persona natural y quieres contactarte por publicidad, escríbenos aquí.</p>
+                <form action="https://formsubmit.co/salomon.creativo@gmail.com" method="POST" class="business-form-grid">
+                    <input type="hidden" name="_subject" value="Nuevo contacto comercial desde LlamaBarrio">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_template" value="table">
+                    <label class="business-field">
+                        <span>Nombre</span>
+                        <input type="text" name="Nombre" required>
+                    </label>
+                    <label class="business-field">
+                        <span>Correo</span>
+                        <input type="email" name="Correo" required>
+                    </label>
+                    <label class="business-field">
+                        <span>Teléfono</span>
+                        <input type="tel" name="Telefono" required>
+                    </label>
+                    <label class="business-field business-field-full">
+                        <span>Solicitud</span>
+                        <textarea name="Solicitud" rows="5" required></textarea>
+                    </label>
+                    <button type="submit" class="btn-contact business-submit">Enviar solicitud</button>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -376,6 +419,10 @@
             <div class="info-content">
                 <h2>¿Quiénes somos?</h2>
                 <p class="about-text">LlamaBarrio conecta personas con picadas, pero no operamos ni vendemos en los locales. Cada negocio es independiente y responsable de su servicio. Nuestro objetivo es fortalecer la comunidad local, generando un espacio donde los vecinos puedan compartir sus mejores recomendaciones y descubrir opciones auténticas en sus barrios.</p>
+                <div class="about-cta-box">
+                    <p class="about-cta-text">Si eres local o persona natural y quieres contactarte por publicidad, escríbenos.</p>
+                    <a href="#" class="btn-contact about-cta-button" data-form-modal="business">Publicitar mi local o negocio</a>
+                </div>
             </div>
         </div>
     </div>

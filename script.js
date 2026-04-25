@@ -5,6 +5,7 @@ const formUrls = {
 };
 let locales = [];
 let joyitas = [];
+let ofertasHoy = [];
 
 function normalizeFieldName(value) {
     return String(value || "")
@@ -112,6 +113,89 @@ function getPriorityValue(source) {
     return 999;
 }
 
+function parseDateValue(value) {
+    const raw = String(value || "").trim();
+    if (!raw) return null;
+
+    const isoMatch = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (isoMatch) {
+        const [, year, month, day] = isoMatch;
+        return new Date(Number(year), Number(month) - 1, Number(day), 0, 0, 0, 0);
+    }
+
+    const slashMatch = raw.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+    if (slashMatch) {
+        const [, day, month, year] = slashMatch;
+        return new Date(Number(year), Number(month) - 1, Number(day), 0, 0, 0, 0);
+    }
+
+    const parsed = new Date(raw);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function parseDurationMs(value) {
+    const raw = String(value || "")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    if (!raw) return null;
+
+    const match = raw.match(/(\d+)\s*(hora|horas|dia|dias|semana|semanas|mes|meses)/);
+    if (!match) return null;
+
+    const amount = Number(match[1]);
+    const unit = match[2];
+
+    if (unit.startsWith("hora")) return amount * 60 * 60 * 1000;
+    if (unit.startsWith("dia")) return amount * 24 * 60 * 60 * 1000;
+    if (unit.startsWith("semana")) return amount * 7 * 24 * 60 * 60 * 1000;
+    if (unit.startsWith("mes")) return amount * 30 * 24 * 60 * 60 * 1000;
+
+    return null;
+}
+
+function isOfferActive(oferta) {
+    if (!oferta.desde || !oferta.tiempoMs) return true;
+
+    const start = parseDateValue(oferta.desde);
+    if (!start) return true;
+
+    const expiresAt = start.getTime() + oferta.tiempoMs;
+    return Date.now() <= expiresAt;
+}
+
+function getOfferExpiryDate(oferta) {
+    if (!oferta.desde || !oferta.tiempoMs) return null;
+
+    const start = parseDateValue(oferta.desde);
+    if (!start) return null;
+
+    return new Date(start.getTime() + oferta.tiempoMs);
+}
+
+function formatDateDisplay(date) {
+    if (!(date instanceof Date) || Number.isNaN(date.getTime())) return "";
+
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+}
+
+function fetchSheetData(sheetName) {
+    return fetch(`${API_BASE}?hoja=${encodeURIComponent(sheetName)}`)
+        .then((response) => response.json())
+        .catch(() => []);
+}
+
+function fetchOffersData() {
+    return fetchSheetData("Ofertas de hoy").then((data) => {
+        if (Array.isArray(data) && data.length) return data;
+        return fetchSheetData("Ofertas Hoy");
+    });
+}
+
 function getPhoneHref(value) {
     const raw = String(value || "").trim();
     if (!raw) return "";
@@ -146,11 +230,13 @@ document.addEventListener("DOMContentLoaded", () => {
     renderLoadingSkeletons();
     
     Promise.all([
-        fetch(`${API_BASE}?hoja=Publicaciones%20Locales`).then(r => r.json()),
-        fetch(`${API_BASE}?hoja=Tally`).then(r => r.json())
-    ]).then(([localesData, joyitasData]) => {
+        fetchSheetData("Publicaciones Locales"),
+        fetchSheetData("Tally"),
+        fetchOffersData()
+    ]).then(([localesData, joyitasData, ofertasData]) => {
         console.log("📊 Datos RAW de Locales:", localesData);
         console.log("📊 Datos RAW de Joyitas:", joyitasData);
+        console.log("📊 Datos RAW de Ofertas:", ofertasData);
         
         locales = (localesData || []).map(local => ({
             name: getFieldValue(local, ["Nombre", "name"], ["nombre"]),
@@ -190,11 +276,39 @@ document.addEventListener("DOMContentLoaded", () => {
                 category: j.Categoria || j.category || "",
                 comuna: j["Comuna"] || j["Comun"] || j.Comuna || j.comuna || "",
                 ubicacion: j["¿Dónde lo encontraste?"] || j.loc || "",
-                estado: j.Estado || "Pendiente"
+                estado: j.Estado || "Pendiente",
+                prioridad: getPriorityValue(j)
             };
         }).filter(j => {
             const estadoLimpio = String(j.estado).trim().toLowerCase();
             return estadoLimpio.includes("aprob");
+        }).sort((a, b) => {
+            const prioridadA = a.prioridad ?? 999;
+            const prioridadB = b.prioridad ?? 999;
+            if (prioridadA !== prioridadB) return prioridadA - prioridadB;
+
+            const tituloA = (a.localName || a.name || "").trim();
+            const tituloB = (b.localName || b.name || "").trim();
+            return tituloA.localeCompare(tituloB, "es", { sensitivity: "base" });
+        });
+
+        ofertasHoy = (ofertasData || []).map(oferta => ({
+            local: getFieldValue(oferta, ["Local", "Nombre del local", "Nombre", "name"], ["local", "nombre"]),
+            texto: getFieldValue(oferta, ["Oferta", "Texto", "Mensaje", "Promocion", "Promoción"], ["oferta", "texto", "mensaje", "promo", "promocion"]),
+            comuna: getFieldValue(oferta, ["Comuna", "comuna"], ["comuna"]),
+            desde: getFieldValue(oferta, ["Desde", "Fecha", "Inicio"], ["desde", "fecha", "inicio"]),
+            tiempo: getFieldValue(oferta, ["Tiempo", "Duracion", "Duración"], ["tiempo", "duracion"]),
+            tiempoMs: parseDurationMs(getFieldValue(oferta, ["Tiempo", "Duracion", "Duración"], ["tiempo", "duracion"])),
+            estado: getFieldValue(oferta, ["Estado", "estado"], ["estado"]),
+            prioridad: getPriorityValue(oferta)
+        })).filter(oferta => {
+            const estado = String(oferta.estado || "").trim().toLowerCase();
+            return oferta.local && oferta.texto && (!estado || estado.includes("aprob")) && isOfferActive(oferta);
+        }).sort((a, b) => {
+            const prioridadA = a.prioridad ?? 999;
+            const prioridadB = b.prioridad ?? 999;
+            if (prioridadA !== prioridadB) return prioridadA - prioridadB;
+            return a.local.localeCompare(b.local, "es", { sensitivity: "base" });
         });
         
         console.log("✅ Locales procesados:", locales);
@@ -203,6 +317,7 @@ document.addEventListener("DOMContentLoaded", () => {
         renderJoyitas();
         renderTrending();
         renderLocales();
+        renderOffers();
         initTrendingCompact();
         refreshRevealTargets();
     }).catch(err => {
@@ -472,6 +587,7 @@ function renderLoadingSkeletons() {
     const joyitasGrid = document.getElementById("joyitas-grid");
     const localsGrid = document.getElementById("locals-grid");
     const trendingCompact = document.getElementById("trending-compact");
+    const offersFeed = document.getElementById("offers-feed");
 
     if (joyitasGrid) {
         joyitasGrid.innerHTML = Array.from({ length: 4 }, () => '<article class="ui-skeleton" aria-hidden="true"></article>').join("");
@@ -485,6 +601,10 @@ function renderLoadingSkeletons() {
         trendingCompact.innerHTML = Array.from({ length: 3 }, () => '<div class="ui-skeleton ui-skeleton--compact" aria-hidden="true"></div>').join("");
     }
 
+    if (offersFeed) {
+        offersFeed.innerHTML = Array.from({ length: 3 }, () => '<div class="ui-skeleton ui-skeleton--compact" aria-hidden="true"></div>').join("");
+    }
+
     refreshRevealTargets();
 }
 
@@ -492,6 +612,7 @@ function clearLoadingSkeletons() {
     const joyitasGrid = document.getElementById("joyitas-grid");
     const localsGrid = document.getElementById("locals-grid");
     const trendingCompact = document.getElementById("trending-compact");
+    const offersFeed = document.getElementById("offers-feed");
 
     if (joyitasGrid && joyitasGrid.querySelector(".ui-skeleton")) {
         joyitasGrid.innerHTML = "";
@@ -504,6 +625,32 @@ function clearLoadingSkeletons() {
     if (trendingCompact && trendingCompact.querySelector(".ui-skeleton")) {
         trendingCompact.innerHTML = "";
     }
+
+    if (offersFeed && offersFeed.querySelector(".ui-skeleton")) {
+        offersFeed.innerHTML = "";
+    }
+}
+
+function renderOffers() {
+    const section = document.getElementById("offers-section");
+    const feed = document.getElementById("offers-feed");
+    if (!section || !feed) return;
+
+    if (!ofertasHoy.length) {
+        section.classList.add("is-hidden");
+        feed.innerHTML = "";
+        return;
+    }
+
+    section.classList.remove("is-hidden");
+    feed.innerHTML = ofertasHoy.map((oferta) => `
+        <article class="offer-item">
+            <strong>${oferta.local}</strong>
+            <p>${oferta.texto}</p>
+            ${oferta.comuna ? `<span>${oferta.comuna}</span>` : ""}
+            ${getOfferExpiryDate(oferta) ? `<small>Válido hasta el ${formatDateDisplay(getOfferExpiryDate(oferta))}</small>` : ""}
+        </article>
+    `).join("");
 }
 
 function convertirHoraAMinutos(valor) {
@@ -605,6 +752,12 @@ function cerrarModal() {
 }
 
 function abrirFormulario(tipoFormulario) {
+    if (tipoFormulario === "business") {
+        const businessModal = document.getElementById("business-form-modal");
+        if (businessModal) businessModal.style.display = "flex";
+        return;
+    }
+
     const modal = document.getElementById("form-modal");
     const frame = document.getElementById("form-modal-frame");
     const url = {
@@ -622,6 +775,11 @@ function cerrarFormulario() {
     if (!modal || !frame) return;
     modal.style.display = "none";
     frame.src = "";
+}
+
+function cerrarBusinessFormulario() {
+    const modal = document.getElementById("business-form-modal");
+    if (modal) modal.style.display = "none";
 }
 
 function abrirFAQ() {
@@ -749,6 +907,7 @@ function toggleFAQ(button) {
 window.onclick = function (event) {
     if (event.target === document.getElementById("modal-detalle")) cerrarModal();
     if (event.target === document.getElementById("form-modal")) cerrarFormulario();
+    if (event.target === document.getElementById("business-form-modal")) cerrarBusinessFormulario();
     if (event.target === document.getElementById("faq-modal")) cerrarFAQ();
     if (event.target === document.getElementById("como-usar-modal")) cerrarComoUsar();
     if (event.target === document.getElementById("quienes-somos-modal")) cerrarQuienesSomos();
