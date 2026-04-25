@@ -1328,6 +1328,7 @@ a { color: inherit; }
 #modal-hor {
     color: #55667d;
     font-weight: 500;
+    line-height: 1.75;
 }
 
 #modal-contacto {

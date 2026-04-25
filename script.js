@@ -35,20 +35,31 @@ function getFieldValue(source, preferredKeys = [], partialKeys = []) {
     return "";
 }
 
-function getHorarioValue(source) {
-    const directValue = getFieldValue(source, ["Horario", "horario", "hor"], ["horario", "atencion", "hora"]);
-    if (directValue) return directValue;
+function getScheduleValue(source, preferredKeys = [], partialKeys = []) {
+    return getFieldValue(source, preferredKeys, partialKeys);
+}
 
-    if (!source || typeof source !== "object") return "";
+function getTodaySchedule(local) {
+    const hoy = new Date().getDay();
+    if (hoy >= 1 && hoy <= 5) return local.horLV || "";
+    if (hoy === 6) return local.horS || "";
+    return local.horD || "";
+}
 
-    for (const rawValue of Object.values(source)) {
-        const text = String(rawValue || "").trim();
-        if (/^\d{1,2}:\d{2}\s*-\s*\d{1,2}:\d{2}$/.test(text)) {
-            return text;
-        }
-    }
+function getScheduleSummary(local) {
+    const bloques = [];
+    if (local.horLV) bloques.push(`L-V: ${local.horLV}`);
+    if (local.horS) bloques.push(`Sáb: ${local.horS}`);
+    if (local.horD) bloques.push(`Dom: ${local.horD}`);
+    return bloques.join(" | ");
+}
 
-    return "";
+function getScheduleSummaryHtml(local) {
+    const bloques = [];
+    if (local.horLV) bloques.push(`L-V: ${local.horLV}`);
+    if (local.horS) bloques.push(`Sáb: ${local.horS}`);
+    if (local.horD) bloques.push(`Dom: ${local.horD}`);
+    return bloques.join("<br>");
 }
 
 function getPhoneHref(value) {
@@ -96,7 +107,9 @@ document.addEventListener("DOMContentLoaded", () => {
             comuna: getFieldValue(local, ["Comuna", "comuna"], ["comuna"]),
             loc: getFieldValue(local, ["Dirección", "Direccion", "loc"], ["direccion", "ubicacion", "direccionexacta"]),
             desc: getFieldValue(local, ["Descripción", "Descripcion", "desc"], ["descripcion"]),
-            hor: getHorarioValue(local),
+            horLV: getScheduleValue(local, ["Horario_LV", "Horario LV", "HorarioLV"], ["horariolv"]),
+            horS: getScheduleValue(local, ["Horario_S", "Horario S", "HorarioS"], ["horarios"]),
+            horD: getScheduleValue(local, ["Horario_D", "Horario D", "HorarioD"], ["horariod"]),
             img: (local.Imagen || local.Img || local.img || "sin-imagen.png"),
             wa: getFieldValue(local, ["WhatsApp", "Whatsapp", "whatsapp", "wa"], ["whatsapp", "telefono", "contacto", "celular"]),
             category: getFieldValue(local, ["Categoria", "Categoría", "category"], ["categoria"]),
@@ -231,7 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const localesToRender = locales.slice(0, maxCards);
         
         localesToRender.forEach((local) => {
-            const abierta = estaAbiertoAhora(local.hor);
+            const abierta = estaAbiertoAhora(getTodaySchedule(local));
             const card = document.createElement("article");
             card.className = "local-card";
             card.dataset.comuna = local.comuna;
@@ -451,7 +464,8 @@ function estaAbiertoAhora(horario) {
 
 function abrirDetalle(local) {
     const el = id => document.getElementById(id) || { innerText:"", src: "", alt:"", href:"#", classList:{toggle:()=>{}}, style:{} };
-    const horarioDetalle = local.hor || getHorarioValue(local.raw);
+    const horarioDetalle = getScheduleSummary(local);
+    const horarioDetalleHtml = getScheduleSummaryHtml(local);
     const contactoDetalle = local.wa || getFieldValue(local.raw, ["WhatsApp", "Whatsapp", "whatsapp", "wa"], ["whatsapp", "telefono", "contacto", "celular"]);
     const contactoLink = getPhoneHref(contactoDetalle);
 
@@ -459,7 +473,7 @@ function abrirDetalle(local) {
     el("modal-categoria").innerText = local.category || "";
     el("modal-dir").innerText = local.loc ? `Dirección: ${local.loc}` : "";
     el("modal-desc").innerText = local.desc || "Sin descripción disponible.";
-    el("modal-hor").innerText = horarioDetalle ? `Horario: ${horarioDetalle}` : "Horario no informado";
+    el("modal-hor").innerHTML = horarioDetalleHtml ? `Horario:<br>${horarioDetalleHtml}` : "Horario no informado";
     el("modal-contacto").innerText = typeof contactoDetalle === "string" && contactoDetalle.trim() !== ""
         ? contactoDetalle.trim()
         : "Sin contacto";
