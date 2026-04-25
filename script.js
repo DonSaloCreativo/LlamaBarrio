@@ -99,6 +99,19 @@ function getScheduleSummaryHtml(local) {
     return bloques.join("<br>");
 }
 
+function getPriorityValue(source) {
+    const raw = getFieldValue(source, ["Prioridad", "prioridad"], ["prioridad"]);
+    const normalized = String(raw || "").trim().toLowerCase();
+
+    if (!normalized) return 999;
+    if (/^\d+$/.test(normalized)) return Number(normalized);
+    if (normalized === "destacado" || normalized === "premium") return 1;
+    if (normalized === "media") return 2;
+    if (normalized === "normal") return 3;
+
+    return 999;
+}
+
 function getPhoneHref(value) {
     const raw = String(value || "").trim();
     if (!raw) return "";
@@ -151,8 +164,19 @@ document.addEventListener("DOMContentLoaded", () => {
             img: (local.Imagen || local.Img || local.img || "sin-imagen.png"),
             wa: getFieldValue(local, ["WhatsApp", "Whatsapp", "whatsapp", "wa"], ["whatsapp", "telefono", "contacto", "celular"]),
             category: getFieldValue(local, ["Categoria", "Categoría", "category"], ["categoria"]),
+            prioridad: getPriorityValue(local),
             raw: local
-        }));
+        })).sort((a, b) => {
+            const prioridadA = a.prioridad ?? 999;
+            const prioridadB = b.prioridad ?? 999;
+            if (prioridadA !== prioridadB) return prioridadA - prioridadB;
+
+            const abiertaA = estaAbiertoAhora(getTodaySchedule(a)) ? 1 : 0;
+            const abiertaB = estaAbiertoAhora(getTodaySchedule(b)) ? 1 : 0;
+            if (abiertaA !== abiertaB) return abiertaB - abiertaA;
+
+            return a.name.localeCompare(b.name, "es", { sensitivity: "base" });
+        });
         
         joyitas = (joyitasData || []).map(j => {
             console.log("🎉 Joyita cruda:", j);
