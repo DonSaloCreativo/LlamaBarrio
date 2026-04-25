@@ -14,6 +14,43 @@ function normalizeFieldName(value) {
         .replace(/[^a-z0-9]/g, "");
 }
 
+function normalizeSearchText(value) {
+    return String(value || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9\s,]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+function getSearchVariants(term) {
+    const normalized = normalizeSearchText(term);
+    if (!normalized) return [];
+
+    const variants = new Set([normalized]);
+    const words = normalized.split(" ").filter(Boolean);
+
+    words.forEach((word) => {
+        variants.add(word);
+
+        if (word.endsWith("es") && word.length > 3) {
+            variants.add(word.slice(0, -2));
+        }
+
+        if (word.endsWith("s") && word.length > 2) {
+            variants.add(word.slice(0, -1));
+        }
+
+        if (!word.endsWith("s")) {
+            variants.add(`${word}s`);
+            variants.add(`${word}es`);
+        }
+    });
+
+    return Array.from(variants);
+}
+
 function getFieldValue(source, preferredKeys = [], partialKeys = []) {
     if (!source || typeof source !== "object") return "";
 
@@ -107,6 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
             comuna: getFieldValue(local, ["Comuna", "comuna"], ["comuna"]),
             loc: getFieldValue(local, ["Dirección", "Direccion", "loc"], ["direccion", "ubicacion", "direccionexacta"]),
             desc: getFieldValue(local, ["Descripción", "Descripcion", "desc"], ["descripcion"]),
+            tags: getFieldValue(local, ["Tags", "tags", "Comunidad", "comunidad"], ["tags", "comunidad"]),
             horLV: getScheduleValue(local, ["Horario_LV", "Horario LV", "HorarioLV"], ["horariolv"]),
             horS: getScheduleValue(local, ["Horario_S", "Horario S", "HorarioS"], ["horarios"]),
             horD: getScheduleValue(local, ["Horario_D", "Horario D", "HorarioD"], ["horariod"]),
@@ -249,7 +287,7 @@ document.addEventListener("DOMContentLoaded", () => {
             card.className = "local-card";
             card.dataset.comuna = local.comuna;
             card.dataset.category = local.category;
-            card.dataset.search = `${local.name} ${local.loc} ${local.desc} ${local.category}`.toLowerCase();
+            card.dataset.search = normalizeSearchText(`${local.name} ${local.loc} ${local.desc} ${local.category} ${local.tags || ""}`);
             card.dataset.open = abierta ? "true" : "false";
             
             let imgSrc = "images/sin-imagen.png";
@@ -315,7 +353,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function filtrarLocales() {
         if (!grid) return;
-        const termino = (searchInput?.value || "").trim().toLowerCase();
+        const termino = normalizeSearchText(searchInput?.value || "");
+        const terminoVariantes = getSearchVariants(termino);
         const comunaSeleccionada = comunaSelect?.value || "";
         const cards = grid.querySelectorAll(".local-card");
         let visibles = 0;
@@ -329,7 +368,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         
         cards.forEach((card) => {
-            const coincideBusqueda = termino === "" || card.dataset.search.includes(termino);
+            const coincideBusqueda = termino === "" || terminoVariantes.some((variant) => card.dataset.search.includes(variant));
             const coincideComuna = comunaSeleccionada === "" || card.dataset.comuna === comunaSeleccionada;
             const coincideCategoria = categoriaActiva === "Todas" || card.dataset.category === categoriaActiva;
             const coincideAbierto = !soloAbiertos || card.dataset.open === "true";
