@@ -827,12 +827,20 @@ a { color: inherit; }
 
 .comm-img-box img,
 .local-img-box img,
-.modal-header-img img,
+.modal-header-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    transform: scale(1.02);
+}
+
 .destacados-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transform: scale(1.02);
+    object-position: center center;
+    transform: scale(1);
 }
 
 .comm-info,

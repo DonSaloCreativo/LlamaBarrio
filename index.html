@@ -452,8 +452,9 @@
     document.addEventListener('DOMContentLoaded', function() {
         const destacadosImg = document.querySelector('#destacados-img');
         if (destacadosImg) {
-            const promoImages = ['images/promocion1.png', 'images/promocion2.png'];
+            const promoImages = ['images/promocion1.png', 'images/promocion2.png', 'images/promocion3.png'];
             let idx = 0;
+            destacadosImg.src = promoImages[idx];
             setInterval(() => {
                 idx = (idx + 1) % promoImages.length;
                 destacadosImg.src = promoImages[idx];
