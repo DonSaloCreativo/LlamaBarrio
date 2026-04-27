@@ -405,13 +405,17 @@ document.addEventListener("DOMContentLoaded", () => {
             "Comida rápida": "images/comida-rapida.jpg",
             "Comida Rápida": "images/comida-rapida.jpg",
             "Panadería": "images/panaderia.jpg",
+            "Cafetería": "images/panaderia.jpg",
+            "Cafeterías": "images/panaderia.jpg",
             "Pastelería": "images/pasteleria.jpg",
+            "Florería": "images/sin-imagen.png",
             "Pizzería": "images/pizzeria.jpg",
             "Completos": "images/comida-rapida.jpg",
             "Sushi": "images/comida-rapida.jpg",
             "Empanadas": "images/comida-rapida.jpg",
             "Colaciones": "images/panaderia.jpg",
-            "Pizzas": "images/pizzeria.jpg"
+            "Pizzas": "images/pizzeria.jpg",
+            "Servicios": "images/sin-imagen.png"
         };
         
         const isInitialLoad = (searchInput?.value || "").trim() === "" && 

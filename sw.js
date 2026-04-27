@@ -1,9 +1,12 @@
-const CACHE_NAME = 'llamabarrio-v4';
+const CACHE_NAME = 'llamabarrio-v5';
 const APP_SHELL = [
     './',
     'index.html',
+    'emprendimientos.html',
     'style.css',
     'script.js',
+    'emprendimientos.css',
+    'emprendimientos.js',
     'manifest.json',
     'images/logo.png',
     'images/favicon.png',

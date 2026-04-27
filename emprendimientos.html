@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LlamaBarrio Emprendimientos y Servicios</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="emprendimientos.css">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+</head>
+<body>
+    <nav class="services-nav">
+        <div class="services-nav-inner">
+            <a href="index.html" class="services-logo-link">
+                <img src="images/logo.png" alt="LlamaBarrio" class="services-logo">
+            </a>
+            <div class="services-nav-actions">
+                <a href="index.html" class="services-nav-back">Volver a picadas</a>
+                <a href="https://forms.gle/mBWHgDvbY17pTk1Y7" class="services-nav-cta" target="_blank" rel="noopener noreferrer">Publicita tu servicio</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="services-shell">
+        <section class="services-hero">
+            <div class="services-badge">Nuevo espacio para vecinos y pymes</div>
+            <h1>Emprendimientos y servicios <span>del barrio</span></h1>
+            <p>Encuentra personas, oficios y pequeños negocios por comuna de forma simple y directa.</p>
+
+            <div class="services-search-panel">
+                <div class="services-input services-input-select">
+                    <span class="services-input-icon">📍</span>
+                    <select id="services-comuna">
+                        <option value="">Todas las comunas</option>
+                        <option>Alhué</option>
+                        <option>Buin</option>
+                        <option>Calera de Tango</option>
+                        <option>Cerrillos</option>
+                        <option>Cerro Navia</option>
+                        <option>Colina</option>
+                        <option>Conchalí</option>
+                        <option>Curacaví</option>
+                        <option>El Bosque</option>
+                        <option>El Monte</option>
+                        <option>Estación Central</option>
+                        <option>Huechuraba</option>
+                        <option>Independencia</option>
+                        <option>Isla de Maipo</option>
+                        <option>La Cisterna</option>
+                        <option>La Florida</option>
+                        <option>La Granja</option>
+                        <option>La Pintana</option>
+                        <option>La Reina</option>
+                        <option>Lampa</option>
+                        <option>Las Condes</option>
+                        <option>Lo Barnechea</option>
+                        <option>Lo Espejo</option>
+                        <option>Lo Prado</option>
+                        <option>Macul</option>
+                        <option>Maipú</option>
+                        <option>María Pinto</option>
+                        <option>Melipilla</option>
+                        <option>Ñuñoa</option>
+                        <option>Padre Hurtado</option>
+                        <option>Paine</option>
+                        <option>Pedro Aguirre Cerda</option>
+                        <option>Peñaflor</option>
+                        <option>Peñalolén</option>
+                        <option>Pirque</option>
+                        <option>Providencia</option>
+                        <option>Pudahuel</option>
+                        <option>Puente Alto</option>
+                        <option>Quilicura</option>
+                        <option>Quinta Normal</option>
+                        <option>Recoleta</option>
+                        <option>Renca</option>
+                        <option>San Bernardo</option>
+                        <option>San Joaquín</option>
+                        <option>San José de Maipo</option>
+                        <option>San Miguel</option>
+                        <option>San Pedro</option>
+                        <option>San Ramón</option>
+                        <option>Santiago</option>
+                        <option>Talagante</option>
+                        <option>Tiltil</option>
+                        <option>Vitacura</option>
+                    </select>
+                </div>
+
+                <div class="services-input services-input-search">
+                    <span class="services-input-icon">🔎</span>
+                    <input type="text" id="services-search" placeholder="Qué servicio o emprendimiento buscas">
+                </div>
+            </div>
+
+            <div class="services-categories">
+                <button type="button" class="service-chip is-active" data-category="Todas">Todas</button>
+                <button type="button" class="service-chip" data-category="Pintor">Pintor</button>
+                <button type="button" class="service-chip" data-category="Construcción">Construcción</button>
+                <button type="button" class="service-chip" data-category="Gasfiter">Gasfiter</button>
+                <button type="button" class="service-chip" data-category="Maquillaje">Maquillaje</button>
+                <button type="button" class="service-chip" data-category="Flores">Flores</button>
+                <button type="button" class="service-chip" data-category="Regalos">Regalos</button>
+            </div>
+        </section>
+
+        <section class="services-results">
+            <div class="services-results-head">
+                <div>
+                    <h2>Disponibles en tu búsqueda</h2>
+                    <p id="services-current-comuna">Todas las comunas</p>
+                </div>
+            </div>
+
+            <div class="services-grid" id="services-grid"></div>
+
+            <div class="services-empty" id="services-empty" hidden>
+                <p class="services-empty-title">Todavía no hay resultados aquí.</p>
+                <p class="services-empty-copy">Prueba otra comuna, cambia el rubro o publica tu emprendimiento para aparecer.</p>
+                <a href="https://forms.gle/mBWHgDvbY17pTk1Y7" class="services-empty-cta" target="_blank" rel="noopener noreferrer">Quiero aparecer aquí</a>
+            </div>
+        </section>
+    </main>
+
+    <div id="services-modal" class="services-modal" hidden>
+        <div class="services-modal-backdrop" data-close-services-modal></div>
+        <div class="services-modal-card">
+            <button type="button" class="services-modal-close" data-close-services-modal>&times;</button>
+            <div class="services-modal-top">
+                <span id="services-modal-category" class="services-modal-tag"></span>
+                <h3 id="services-modal-title"></h3>
+                <p id="services-modal-description"></p>
+            </div>
+            <div class="services-modal-meta">
+                <p id="services-modal-comuna"></p>
+                <p id="services-modal-cobertura"></p>
+                <p id="services-modal-contacto"></p>
+                <p id="services-modal-instagram"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="emprendimientos.js"></script>
+</body>
+</html>
