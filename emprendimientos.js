@@ -1,4 +1,4 @@
-const SERVICES_API_BASE = "https://script.google.com/macros/s/AKfycbzbdLTbh0a9sVSC7DOB04QrLLANsSak2pd4qQE2GqZ1BSDqwtgD69vot3R2MQk-GFV0uw/exec";
+﻿const SERVICES_API_BASE = "https://script.google.com/macros/s/AKfycbzbdLTbh0a9sVSC7DOB04QrLLANsSak2pd4qQE2GqZ1BSDqwtgD69vot3R2MQk-GFV0uw/exec";
 
 let servicesData = [];
 let activeServiceCategory = "Todas";
@@ -173,11 +173,34 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.querySelectorAll("[data-close-services-modal]").forEach((trigger) => {
-        trigger.addEventListener("click", closeServicesModal);
-    });
+    trigger.addEventListener("click", closeServicesModal);
+});
 
-    window.addEventListener("keydown", (event) => {
-        if (event.key !== "Escape") return;
-        closeServicesModal();
+document.querySelectorAll("[data-open-services-form]").forEach((trigger) => {
+    trigger.addEventListener("click", (event) => {
+        event.preventDefault();
+        openServicesBusinessModal();
     });
 });
+
+document.querySelectorAll("[data-close-services-business-modal]").forEach((trigger) => {
+    trigger.addEventListener("click", closeServicesBusinessModal);
+});
+
+window.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    closeServicesModal();
+    closeServicesBusinessModal();
+});
+});
+
+function openServicesBusinessModal() {
+    const modal = document.getElementById("services-business-modal");
+    if (modal) modal.hidden = false;
+}
+
+function closeServicesBusinessModal() {
+    const modal = document.getElementById("services-business-modal");
+    if (modal) modal.hidden = true;
+}
+

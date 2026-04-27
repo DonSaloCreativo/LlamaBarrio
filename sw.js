@@ -1,4 +1,4 @@
-const CACHE_NAME = 'llamabarrio-v5';
+﻿const CACHE_NAME = 'llamabarrio-v6';
 const APP_SHELL = [
     './',
     'index.html',
@@ -68,3 +68,4 @@ self.addEventListener('fetch', (event) => {
         })
     );
 });
+

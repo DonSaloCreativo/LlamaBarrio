@@ -1,4 +1,4 @@
-:root {
+﻿:root {
     --services-bg: #eef4ff;
     --services-bg-2: #f7faff;
     --services-card: #ffffff;
@@ -26,14 +26,19 @@ body {
 }
 
 .services-nav {
-    padding: 18px 24px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1200;
+    padding: 12px 24px 0;
+    background: linear-gradient(180deg, rgba(241, 247, 255, 0.9), rgba(241, 247, 255, 0.45) 72%, transparent);
+    backdrop-filter: blur(18px);
 }
 
 .services-nav-inner {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 16px 18px;
-    border-radius: 28px;
+    padding: 12px 16px;
+    border-radius: 24px;
     border: 1px solid rgba(255, 255, 255, 0.88);
     background: rgba(255, 255, 255, 0.78);
     backdrop-filter: blur(18px);
@@ -69,8 +74,8 @@ body {
     transition: transform 0.22s ease, box-shadow 0.22s ease, background-color 0.22s ease;
 }
 
-.services-nav-back {
-    padding: 12px 18px;
+ .services-nav-back {
+    padding: 10px 16px;
     color: #9a4c16;
     background: linear-gradient(135deg, rgba(255, 231, 214, 0.92), rgba(255, 245, 236, 0.96));
     border: 1px solid rgba(255, 164, 95, 0.26);
@@ -82,7 +87,7 @@ body {
 .services-nav-cta,
 .services-empty-cta,
 .services-submit {
-    padding: 13px 22px;
+    padding: 10px 18px;
     color: #fff;
     border: 0;
     background: linear-gradient(135deg, #5f85ff, #3c61da);
@@ -390,7 +395,7 @@ body {
     width: min(92vw, 560px);
     margin: 6vh auto 0;
     padding: 28px;
-    border-radius: 28px;
+    border-radius: 24px;
     border: 1px solid rgba(255, 255, 255, 0.84);
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(244, 248, 255, 0.98));
     box-shadow: 0 30px 70px rgba(16, 25, 41, 0.18);
@@ -516,5 +521,59 @@ body {
 
     .services-categories::-webkit-scrollbar {
         display: none;
+    }
+}
+
+@media (min-width: 821px) {
+    .services-nav-actions {
+        gap: 10px;
+    }
+
+    .services-nav-back,
+    .services-nav-cta {
+        font-size: 0.9rem;
+        min-height: 42px;
+    }
+}
+
+@media (max-width: 640px) {
+    .services-nav {
+        padding-top: 8px;
+    }
+
+    .services-nav-inner {
+        padding: 12px 12px;
+    }
+
+    .services-nav-actions {
+        gap: 8px;
+    }
+
+    .services-nav-back,
+    .services-nav-cta {
+        min-height: 38px;
+        padding: 9px 14px !important;
+        font-size: 0.82rem;
+    }
+}
+
+.services-modal-card-form {
+    width: min(92vw, 720px);
+}
+
+.services-modal-card-form .services-modal-top p {
+    max-width: 52ch;
+}
+
+.services-modal-card-form .services-submit {
+    grid-column: 1 / -1;
+    width: 100%;
+    margin-top: 4px;
+}
+
+@media (max-width: 640px) {
+    .services-modal-card-form {
+        width: min(94vw, 100%);
+        padding: 22px 18px;
     }
 }

@@ -231,7 +231,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     Promise.all([
         fetchSheetData("Publicaciones Locales"),
-        fetchSheetData("Tally"),
+        fetchSheetData("Publicaciones Tally"),
         fetchOffersData()
     ]).then(([localesData, joyitasData, ofertasData]) => {
         console.log("📊 Datos RAW de Locales:", localesData);
@@ -276,12 +276,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 category: j.Categoria || j.category || "",
                 comuna: j["Comuna"] || j["Comun"] || j.Comuna || j.comuna || "",
                 ubicacion: j["¿Dónde lo encontraste?"] || j.loc || "",
-                estado: j.Estado || "Pendiente",
+                estado: j.Estado || j.estado || "",
                 prioridad: getPriorityValue(j)
             };
         }).filter(j => {
             const estadoLimpio = String(j.estado).trim().toLowerCase();
-            return estadoLimpio.includes("aprob");
+            return estadoLimpio === "" || estadoLimpio.includes("aprob");
         }).sort((a, b) => {
             const prioridadA = a.prioridad ?? 999;
             const prioridadB = b.prioridad ?? 999;
@@ -935,9 +935,14 @@ function setupMobileNav() {
     
     mobileNavItems.forEach((item) => {
         item.addEventListener("click", (e) => {
-            e.preventDefault();
             const section = item.getAttribute("data-section");
             const formModal = item.getAttribute("data-form-modal");
+
+            if (!section && !formModal) {
+                return;
+            }
+
+            e.preventDefault();
             
             if (formModal) {
                 abrirFormulario(formModal);
@@ -952,7 +957,7 @@ function setupMobileNav() {
             } else if (section === "joyitas") {
                 const joyitasSection = document.querySelector(".community-section");
                 if (joyitasSection) {
-                    joyitasSection.scrollIntoView({ behavior: "smooth" });
+                    joyitasSection.scrollIntoView({ behavior: "smooth", block: "start" });
                 }
             }
         });
@@ -1034,3 +1039,6 @@ function initTrendingCompact() {
     
     trendingCompact.innerHTML = html;
 }
+
+
+
