@@ -1,7 +1,8 @@
 ﻿const API_BASE = "https://script.google.com/macros/s/AKfycbzbdLTbh0a9sVSC7DOB04QrLLANsSak2pd4qQE2GqZ1BSDqwtgD69vot3R2MQk-GFV0uw/exec";
 const formUrls = {
     tally: "https://tally.so/r/ja7DOQ",
-    business: "https://forms.gle/tipCiPctSK1nNjjL9"
+    business: "https://forms.gle/tipCiPctSK1nNjjL9",
+    offer: "#"
 };
 let locales = [];
 let joyitas = [];
@@ -764,6 +765,12 @@ function abrirFormulario(tipoFormulario) {
         return;
     }
 
+    if (tipoFormulario === "offer") {
+        const offerModal = document.getElementById("offer-form-modal");
+        if (offerModal) offerModal.style.display = "flex";
+        return;
+    }
+
     const modal = document.getElementById("form-modal");
     const frame = document.getElementById("form-modal-frame");
     const url = {
@@ -787,6 +794,13 @@ function cerrarBusinessFormulario() {
     const modal = document.getElementById("business-form-modal");
     const frame = document.getElementById("business-form-frame");
     if (frame) frame.src = "";
+    if (modal) modal.style.display = "none";
+}
+
+function cerrarOfertaFormulario() {
+    const modal = document.getElementById("offer-form-modal");
+    const form = modal ? modal.querySelector("form") : null;
+    if (form) form.reset();
     if (modal) modal.style.display = "none";
 }
 
@@ -916,6 +930,7 @@ window.onclick = function (event) {
     if (event.target === document.getElementById("modal-detalle")) cerrarModal();
     if (event.target === document.getElementById("form-modal")) cerrarFormulario();
     if (event.target === document.getElementById("business-form-modal")) cerrarBusinessFormulario();
+    if (event.target === document.getElementById("offer-form-modal")) cerrarOfertaFormulario();
     if (event.target === document.getElementById("faq-modal")) cerrarFAQ();
     if (event.target === document.getElementById("como-usar-modal")) cerrarComoUsar();
     if (event.target === document.getElementById("quienes-somos-modal")) cerrarQuienesSomos();

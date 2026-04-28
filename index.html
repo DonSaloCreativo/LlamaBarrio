@@ -205,6 +205,15 @@
             </div>
             <a href="#" class="btn-contact" data-form-modal="tally">Contáctanos →</a>
         </section>
+
+        <section class="offer-cta-strip" aria-label="Publicar oferta">
+            <div class="offer-cta-copy">
+                <strong>¿Tienes una buena Oferta y la quieres publicar?</strong>
+                <span>Publica una oferta puntual para hoy o una promoción por tiempo limitado.</span>
+                <small>Solo para negocios que ya están publicados dentro de la web.</small>
+            </div>
+            <button type="button" class="offer-cta-button" data-form-modal="offer">Publicar oferta</button>
+        </section>
     </main>
 
     <!-- FOOTER EXTENDIDO (3 COLUMNAS) -->
@@ -286,11 +295,62 @@
             <div class="business-form-content">
                 <h2>Publicitar mi local o negocio</h2>
                 <p class="business-form-subtitle">Completa tu formulario dentro de la misma página para que llegue directamente al Sheet de locales.</p>
+                <p class="business-form-subtitle">Importante: para publicar ofertas primero debes estar publicado como local dentro de LlamaBarrio.</p>
                 <iframe
                     id="business-form-frame"
                     src=""
                     title="Formulario para locales"
                     loading="lazy"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div id="offer-form-modal" class="modal-overlay">
+        <div class="offer-form-card">
+            <button type="button" class="close-btn" onclick="cerrarOfertaFormulario()">&times;</button>
+            <div class="offer-form-content">
+                <h2>Publicar oferta</h2>
+                <p class="offer-form-subtitle">Envíanos una promoción puntual y la revisamos antes de publicarla en LlamaBarrio.</p>
+                <p class="offer-form-note">Importante: este formulario es solo para locales que ya están publicados dentro de la web.</p>
+                <form class="offer-form" action="https://formsubmit.co/salomon.creativo@gmail.com" method="POST">
+                    <input type="hidden" name="_subject" value="Nueva oferta enviada desde LlamaBarrio">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_template" value="table">
+
+                    <label>
+                        <span>Nombre local</span>
+                        <input type="text" name="Nombre local" required>
+                    </label>
+
+                    <label>
+                        <span>Comuna</span>
+                        <input type="text" name="Comuna" required>
+                    </label>
+
+                    <label>
+                        <span>Oferta o promoción</span>
+                        <textarea name="Oferta o promocion" rows="4" required></textarea>
+                    </label>
+
+                    <div class="offer-form-row">
+                        <label>
+                            <span>Válida desde</span>
+                            <input type="date" name="Valida desde" required>
+                        </label>
+
+                        <label>
+                            <span>Hasta</span>
+                            <input type="date" name="Hasta" required>
+                        </label>
+                    </div>
+
+                    <label>
+                        <span>Contacto</span>
+                        <input type="text" name="Contacto" required>
+                    </label>
+
+                    <button type="submit" class="offer-submit-btn">Enviar oferta</button>
+                </form>
             </div>
         </div>
     </div>
