@@ -285,29 +285,12 @@
             <button type="button" class="close-btn" onclick="cerrarBusinessFormulario()">&times;</button>
             <div class="business-form-content">
                 <h2>Publicitar mi local o negocio</h2>
-                <p class="business-form-subtitle">Si eres local o persona natural y quieres contactarte por publicidad, escríbenos aquí.</p>
-                <form action="https://formsubmit.co/salomon.creativo@gmail.com" method="POST" class="business-form-grid">
-                    <input type="hidden" name="_subject" value="Nuevo contacto comercial desde LlamaBarrio">
-                    <input type="hidden" name="_captcha" value="false">
-                    <input type="hidden" name="_template" value="table">
-                    <label class="business-field">
-                        <span>Nombre</span>
-                        <input type="text" name="Nombre" required>
-                    </label>
-                    <label class="business-field">
-                        <span>Correo</span>
-                        <input type="email" name="Correo" required>
-                    </label>
-                    <label class="business-field">
-                        <span>Teléfono</span>
-                        <input type="tel" name="Telefono" required>
-                    </label>
-                    <label class="business-field business-field-full">
-                        <span>Solicitud</span>
-                        <textarea name="Solicitud" rows="5" required></textarea>
-                    </label>
-                    <button type="submit" class="btn-contact business-submit">Enviar solicitud</button>
-                </form>
+                <p class="business-form-subtitle">Completa tu formulario dentro de la misma página para que llegue directamente al Sheet de locales.</p>
+                <iframe
+                    id="business-form-frame"
+                    src=""
+                    title="Formulario para locales"
+                    loading="lazy"></iframe>
             </div>
         </div>
     </div>

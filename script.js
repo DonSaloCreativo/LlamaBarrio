@@ -1,7 +1,7 @@
 ﻿const API_BASE = "https://script.google.com/macros/s/AKfycbzbdLTbh0a9sVSC7DOB04QrLLANsSak2pd4qQE2GqZ1BSDqwtgD69vot3R2MQk-GFV0uw/exec";
 const formUrls = {
     tally: "https://tally.so/r/ja7DOQ",
-    business: "https://forms.gle/k3VE5zWxYB5Fxrdk6"
+    business: "https://forms.gle/tipCiPctSK1nNjjL9"
 };
 let locales = [];
 let joyitas = [];
@@ -758,6 +758,8 @@ function cerrarModal() {
 function abrirFormulario(tipoFormulario) {
     if (tipoFormulario === "business") {
         const businessModal = document.getElementById("business-form-modal");
+        const businessFrame = document.getElementById("business-form-frame");
+        if (businessFrame) businessFrame.src = formUrls.business;
         if (businessModal) businessModal.style.display = "flex";
         return;
     }
@@ -783,6 +785,8 @@ function cerrarFormulario() {
 
 function cerrarBusinessFormulario() {
     const modal = document.getElementById("business-form-modal");
+    const frame = document.getElementById("business-form-frame");
+    if (frame) frame.src = "";
     if (modal) modal.style.display = "none";
 }
 
