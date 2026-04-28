@@ -1,4 +1,5 @@
-﻿const SERVICES_API_BASE = "https://script.google.com/macros/s/AKfycbzbdLTbh0a9sVSC7DOB04QrLLANsSak2pd4qQE2GqZ1BSDqwtgD69vot3R2MQk-GFV0uw/exec";
+const SERVICES_API_BASE = "https://script.google.com/macros/s/AKfycbzbdLTbh0a9sVSC7DOB04QrLLANsSak2pd4qQE2GqZ1BSDqwtgD69vot3R2MQk-GFV0uw/exec";
+const SERVICES_FORM_URL = "https://forms.gle/mBWHgDvbY17pTk1Y7";
 
 let servicesData = [];
 let activeServiceCategory = "Todas";
@@ -44,22 +45,12 @@ function getServicesFieldValue(source, preferredKeys = [], partialKeys = []) {
 function getServicesPriority(source) {
     const raw = getServicesFieldValue(source, ["Prioridad", "prioridad"], ["prioridad"]);
     const value = String(raw || "").trim().toLowerCase();
+
     if (!value) return 999;
     if (/^\d+$/.test(value)) return Number(value);
     if (value === "destacado" || value === "premium") return 1;
     if (value === "media") return 2;
     return 3;
-}
-
-function getServicesPhoneHref(value) {
-    const raw = String(value || "").trim();
-    if (!raw) return "";
-    let digits = raw.replace(/\D/g, "");
-    if (!digits) return "";
-    if (digits.startsWith("56")) return `tel:+${digits}`;
-    if (digits.length === 9 && digits.startsWith("9")) return `tel:+56${digits}`;
-    if (digits.length === 8 || digits.length === 9) return `tel:+56${digits}`;
-    return `tel:+${digits}`;
 }
 
 function openServicesModal(service) {
@@ -80,6 +71,24 @@ function openServicesModal(service) {
 function closeServicesModal() {
     const modal = document.getElementById("services-modal");
     if (modal) modal.hidden = true;
+}
+
+function openServicesBusinessModal() {
+    const modal = document.getElementById("services-business-modal");
+    const frame = document.getElementById("services-business-frame");
+    if (!modal || !frame) return;
+
+    frame.src = SERVICES_FORM_URL;
+    modal.hidden = false;
+}
+
+function closeServicesBusinessModal() {
+    const modal = document.getElementById("services-business-modal");
+    const frame = document.getElementById("services-business-frame");
+    if (!modal || !frame) return;
+
+    modal.hidden = true;
+    frame.src = "";
 }
 
 function renderServices() {
@@ -119,7 +128,10 @@ function renderServices() {
             <h3>${service.name}</h3>
             <p>${service.description || "Sin descripción disponible."}</p>
             <div class="service-card-meta">
-                ${service.coverage ? `<span class="service-meta-pill">Comunas despacho: ${service.coverage}</span>` : (service.comuna ? `<span class="service-meta-pill">Comuna base: ${service.comuna}</span>` : "")}
+                ${service.coverage
+                    ? `<span class="service-meta-pill">Comunas despacho: ${service.coverage}</span>`
+                    : (service.comuna ? `<span class="service-meta-pill">Comuna base: ${service.comuna}</span>` : "")
+                }
             </div>
             ${service.instagram ? `<div class="service-card-social">Instagram: ${service.instagram}</div>` : ""}
         </article>
@@ -173,34 +185,23 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.querySelectorAll("[data-close-services-modal]").forEach((trigger) => {
-    trigger.addEventListener("click", closeServicesModal);
-});
+        trigger.addEventListener("click", closeServicesModal);
+    });
 
-document.querySelectorAll("[data-open-services-form]").forEach((trigger) => {
-    trigger.addEventListener("click", (event) => {
-        event.preventDefault();
-        openServicesBusinessModal();
+    document.querySelectorAll("[data-open-services-form]").forEach((trigger) => {
+        trigger.addEventListener("click", (event) => {
+            event.preventDefault();
+            openServicesBusinessModal();
+        });
+    });
+
+    document.querySelectorAll("[data-close-services-business-modal]").forEach((trigger) => {
+        trigger.addEventListener("click", closeServicesBusinessModal);
+    });
+
+    window.addEventListener("keydown", (event) => {
+        if (event.key !== "Escape") return;
+        closeServicesModal();
+        closeServicesBusinessModal();
     });
 });
-
-document.querySelectorAll("[data-close-services-business-modal]").forEach((trigger) => {
-    trigger.addEventListener("click", closeServicesBusinessModal);
-});
-
-window.addEventListener("keydown", (event) => {
-    if (event.key !== "Escape") return;
-    closeServicesModal();
-    closeServicesBusinessModal();
-});
-});
-
-function openServicesBusinessModal() {
-    const modal = document.getElementById("services-business-modal");
-    if (modal) modal.hidden = false;
-}
-
-function closeServicesBusinessModal() {
-    const modal = document.getElementById("services-business-modal");
-    if (modal) modal.hidden = true;
-}
-

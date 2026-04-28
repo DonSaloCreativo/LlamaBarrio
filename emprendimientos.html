@@ -140,8 +140,6 @@
         </div>
     </div>
 
-    <script src="emprendimientos.js"></script>
-
     <div id="services-business-modal" class="services-modal" hidden>
         <div class="services-modal-backdrop" data-close-services-business-modal></div>
         <div class="services-modal-card services-modal-card-form">
@@ -149,37 +147,18 @@
             <div class="services-modal-top">
                 <span class="services-modal-tag">Pymes y servicios</span>
                 <h3>Publicita tu servicio</h3>
-                <p>Si tienes un emprendimiento, pyme o servicio y quieres aparecer en esta sección, completa este formulario.</p>
+                <p>Completa tu formulario dentro de la misma página para que la información llegue directamente a tu Sheet.</p>
             </div>
-            <form action="https://formsubmit.co/salomon.creativo@gmail.com" method="POST" class="services-business-form">
-                <input type="hidden" name="_subject" value="Nuevo emprendimiento o servicio desde LlamaBarrio">
-                <input type="hidden" name="_captcha" value="false">
-                <input type="hidden" name="_template" value="table">
-                <input type="hidden" name="_next" value="https://llamabarrio.cl/emprendimientos.html">
-                <label>
-                    <span>Nombre</span>
-                    <input type="text" name="Nombre" required>
-                </label>
-                <label>
-                    <span>Correo</span>
-                    <input type="email" name="Correo" required>
-                </label>
-                <label>
-                    <span>Teléfono</span>
-                    <input type="tel" name="Telefono" required>
-                </label>
-                <label>
-                    <span>Emprendimiento o servicio</span>
-                    <input type="text" name="Emprendimiento o servicio" required>
-                </label>
-                <label style="grid-column: 1 / -1;">
-                    <span>Solicitud</span>
-                    <textarea name="Solicitud" rows="5" required></textarea>
-                </label>
-                <button type="submit" class="services-submit">Enviar solicitud</button>
-            </form>
+            <iframe
+                id="services-business-frame"
+                class="services-business-frame"
+                src=""
+                title="Formulario de Pymes y Servicios"
+                loading="lazy"></iframe>
         </div>
     </div>
+
+    <script src="emprendimientos.js"></script>
 </body>
 </html>
 
