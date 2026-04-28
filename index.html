@@ -3,9 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LlamaBarrio - Tu comunidad conectada</title>
-    <meta name="description" content="Descubre picadas, locales, ofertas y recomendaciones reales de tu comuna en LlamaBarrio. Datos verificados por vecinos como tú.">
+    <title>LlamaBarrio | Picadas, locales y ofertas reales de tu comuna</title>
+    <meta name="description" content="Descubre picadas, locales, ofertas y recomendaciones reales de tu comuna en LlamaBarrio. Datos verificados por vecinos como tú, con búsqueda por comuna y datos útiles del barrio.">
     <link rel="canonical" href="https://llamabarrio.cl/">
+    <meta property="og:locale" content="es_CL">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="LlamaBarrio | Picadas, locales y ofertas reales de tu comuna">
+    <meta property="og:description" content="Descubre picadas, locales y recomendaciones reales del barrio, con datos verificados por vecinos como tú.">
+    <meta property="og:url" content="https://llamabarrio.cl/">
+    <meta property="og:site_name" content="LlamaBarrio">
+    <meta property="og:image" content="https://llamabarrio.cl/images/logo.png">
+    <meta property="og:image:alt" content="Logo de LlamaBarrio">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="LlamaBarrio | Picadas, locales y ofertas reales de tu comuna">
+    <meta name="twitter:description" content="Descubre picadas, locales y recomendaciones reales del barrio con datos verificados por vecinos.">
+    <meta name="twitter:image" content="https://llamabarrio.cl/images/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="images/favicon.png">
@@ -20,7 +34,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <a href="index.html"><img src="images/logo.png" alt="LlamaBarrio" class="logo-img"></a>
+                <a href="index.html"><img src="images/logo.png" alt="LlamaBarrio" class="logo-img" fetchpriority="high" decoding="async"></a>
             </div>
             <div class="nav-right desktop-only">
                 <a href="#" class="btn-recomienda" data-form-modal="tally">+ Recomienda picada</a>
@@ -190,7 +204,7 @@
             <h2 class="destacados-title">✨ Destacados</h2>
             <div class="destacados-wrapper">
                 <div class="destacados-oferta">
-                    <img id="destacados-img" src="images/promocion1.png" alt="Oferta destacada" class="destacados-img">
+                    <img id="destacados-img" src="images/promocion1.png" alt="Oferta destacada" class="destacados-img" loading="lazy" decoding="async">
                 </div>
                 <div class="destacados-trending">
                     <h3 class="trending-title">🔥 Top del barrio</h3>
@@ -499,7 +513,7 @@
         </a>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const destacadosImg = document.querySelector('#destacados-img');
