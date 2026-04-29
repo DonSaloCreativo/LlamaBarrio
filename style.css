@@ -1399,6 +1399,18 @@ a { color: inherit; }
     color: #d85710 !important;
 }
 
+.footer-commercial-note {
+    display: block;
+    color: #6b7a90;
+    font-size: 0.88rem;
+    line-height: 1.65;
+}
+
+.footer-commercial-note strong {
+    color: #445874;
+    font-weight: 700;
+}
+
 .site-footer {
     margin-top: 0;
     padding: 24px 20px 34px;
@@ -1724,7 +1736,11 @@ a { color: inherit; }
     margin-top: 22px;
     padding: 18px;
     border-radius: 20px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(244, 243, 239, 0.92));
+    border: 1px solid rgba(124, 182, 255, 0.22);
+    background:
+        radial-gradient(circle at top left, rgba(128, 196, 255, 0.16), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(170, 200, 255, 0.14), transparent 30%),
+        linear-gradient(180deg, rgba(242, 249, 255, 0.94), rgba(232, 242, 255, 0.92));
     box-shadow: var(--shadow-sm);
     display: grid;
     gap: 14px;
@@ -2772,6 +2788,27 @@ a { color: inherit; }
     font-weight: 800;
     cursor: pointer;
     box-shadow: 0 14px 24px rgba(255, 107, 26, 0.22);
+}
+
+.ads-form-success {
+    margin-top: 18px;
+    padding: 18px 16px;
+    border-radius: 18px;
+    border: 1px solid rgba(71, 156, 92, 0.18);
+    background: rgba(88, 173, 110, 0.1);
+    color: #3d6e4a;
+    font-size: 0.96rem;
+    font-weight: 600;
+    line-height: 1.65;
+}
+
+.hidden-submit-frame {
+    width: 0;
+    height: 0;
+    border: 0;
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
 }
 
 @media (max-width: 760px) {

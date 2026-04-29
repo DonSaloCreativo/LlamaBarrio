@@ -226,6 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupVisualEnhancements();
     setupFooterLegal();
     setupFormTriggers();
+    setupAdsForm();
     setupMobileNav();
     setupMiniHow();
     renderLoadingSkeletons();
@@ -765,6 +766,12 @@ function abrirFormulario(tipoFormulario) {
         return;
     }
 
+    if (tipoFormulario === "ads") {
+        const adsModal = document.getElementById("ads-form-modal");
+        if (adsModal) adsModal.style.display = "flex";
+        return;
+    }
+
     if (tipoFormulario === "offer") {
         const offerModal = document.getElementById("offer-form-modal");
         if (offerModal) offerModal.style.display = "flex";
@@ -802,6 +809,29 @@ function cerrarOfertaFormulario() {
     const form = modal ? modal.querySelector("form") : null;
     if (form) form.reset();
     if (modal) modal.style.display = "none";
+}
+
+function cerrarAdsFormulario() {
+    const modal = document.getElementById("ads-form-modal");
+    const form = document.getElementById("ads-form");
+    const success = document.getElementById("ads-form-success");
+    if (form) form.reset();
+    if (success) success.hidden = true;
+    if (form) form.hidden = false;
+    if (modal) modal.style.display = "none";
+}
+
+function setupAdsForm() {
+    const form = document.getElementById("ads-form");
+    const success = document.getElementById("ads-form-success");
+    if (!form || !success) return;
+
+    form.addEventListener("submit", () => {
+        window.setTimeout(() => {
+            form.hidden = true;
+            success.hidden = false;
+        }, 250);
+    });
 }
 
 function abrirFAQ() {
@@ -930,6 +960,7 @@ window.onclick = function (event) {
     if (event.target === document.getElementById("modal-detalle")) cerrarModal();
     if (event.target === document.getElementById("form-modal")) cerrarFormulario();
     if (event.target === document.getElementById("business-form-modal")) cerrarBusinessFormulario();
+    if (event.target === document.getElementById("ads-form-modal")) cerrarAdsFormulario();
     if (event.target === document.getElementById("offer-form-modal")) cerrarOfertaFormulario();
     if (event.target === document.getElementById("faq-modal")) cerrarFAQ();
     if (event.target === document.getElementById("como-usar-modal")) cerrarComoUsar();

@@ -261,8 +261,9 @@
                 <h3>ℹ️ Información</h3>
                 <ul>
                     <li><a href="javascript:void(0);" onclick="abrirQuienesSomos(); return false;">¿Quiénes somos?</a></li>
-                    <li><a href="#" class="footer-ads-link" data-form-modal="business">Publicidad para mi negocio</a></li>
                     <li><a href="emprendimientos.html">Pymes y servicios</a></li>
+                    <li><a href="#" class="footer-ads-link" data-form-modal="ads">Publicidad para mi negocio</a></li>
+                    <li><span class="footer-commercial-note">Para temas comerciales <strong>comercial@fullcreator.cl</strong></span></li>
                 </ul>
             </div>
         </div>
@@ -367,6 +368,56 @@
 
                     <button type="submit" class="offer-submit-btn">Enviar oferta</button>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="ads-form-modal" class="modal-overlay">
+        <div class="offer-form-card">
+            <button type="button" class="close-btn" onclick="cerrarAdsFormulario()">&times;</button>
+            <div class="offer-form-content">
+                <h2>Publicidad para mi negocio</h2>
+                <p class="offer-form-subtitle">Completa este formulario si quieres cotizar publicidad pagada dentro de LlamaBarrio.</p>
+                <p class="offer-form-note">Nuestro equipo comercial revisará tu solicitud y te contactará prontamente.</p>
+
+                <form id="ads-form" class="offer-form" action="https://formsubmit.co/comercial@fullcreator.cl" method="POST" target="ads-submit-frame">
+                    <input type="hidden" name="_subject" value="Nueva solicitud comercial desde LlamaBarrio">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_template" value="table">
+
+                    <label>
+                        <span>Nombre</span>
+                        <input type="text" name="Nombre" required>
+                    </label>
+
+                    <label>
+                        <span>Correo</span>
+                        <input type="email" name="Correo" required>
+                    </label>
+
+                    <label>
+                        <span>Teléfono</span>
+                        <input type="text" name="Telefono" required>
+                    </label>
+
+                    <label>
+                        <span>Nombre local / empresa / servicio</span>
+                        <input type="text" name="Nombre local empresa servicio" required>
+                    </label>
+
+                    <label>
+                        <span>Comente qué tipo de publicidad busca</span>
+                        <textarea name="Tipo de publicidad buscada" rows="5" required></textarea>
+                    </label>
+
+                    <button type="submit" class="offer-submit-btn">Enviar solicitud</button>
+                </form>
+
+                <div id="ads-form-success" class="ads-form-success" hidden>
+                    Prontamente el área comercial de LlamaBarrio se contactará contigo.
+                </div>
+
+                <iframe name="ads-submit-frame" id="ads-submit-frame" class="hidden-submit-frame" title="Envío de formulario comercial"></iframe>
             </div>
         </div>
     </div>
@@ -482,8 +533,8 @@
                 <h2>¿Quiénes somos?</h2>
                 <p class="about-text">LlamaBarrio conecta personas con picadas, pero no operamos ni vendemos en los locales. Cada negocio es independiente y responsable de su servicio. Nuestro objetivo es fortalecer la comunidad local, generando un espacio donde los vecinos puedan compartir sus mejores recomendaciones y descubrir opciones auténticas en sus barrios.</p>
                 <div class="about-cta-box">
-                    <p class="about-cta-text">Si eres local o persona natural y quieres contactarte por publicidad, escríbenos.</p>
-                    <a href="#" class="btn-contact about-cta-button" data-form-modal="business">Publicitar mi local o negocio</a>
+                    <p class="about-cta-text">Si eres local, empresa o entregas algún servicio, puedes contactarnos por el formulario de nuestra página o escribirnos al área comercial para que puedan ayudarte y ofrecerte las mejores opciones para publicitar tus servicios.</p>
+                    <a href="mailto:comercial@fullcreator.cl" class="btn-contact about-cta-button">comercial@fullcreator.cl</a>
                 </div>
             </div>
         </div>
