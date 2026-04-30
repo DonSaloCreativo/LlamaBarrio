@@ -178,7 +178,7 @@ function renderServices() {
                 : ""
             }
             ${whatsappUrl
-                ? `<div class="service-card-actions"><a class="service-contact-btn" href="${escapeHtml(whatsappUrl)}" target="_blank" rel="noopener noreferrer" data-service-action="contact">Contacto</a></div>`
+                ? `<div class="service-card-actions"><a class="service-contact-btn" href="${escapeHtml(whatsappUrl)}" target="_blank" rel="noopener noreferrer" data-service-action="contact">Contacto: ${escapeHtml(service.whatsapp)}</a></div>`
                 : ""
             }
         </article>
