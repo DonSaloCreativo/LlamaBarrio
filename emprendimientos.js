@@ -1,4 +1,4 @@
-const SERVICES_API_BASE = "https://script.google.com/macros/s/AKfycbzbdLTbh0a9sVSC7DOB04QrLLANsSak2pd4qQE2GqZ1BSDqwtgD69vot3R2MQk-GFV0uw/exec";
+﻿const SERVICES_API_BASE = "https://script.google.com/macros/s/AKfycbzbdLTbh0a9sVSC7DOB04QrLLANsSak2pd4qQE2GqZ1BSDqwtgD69vot3R2MQk-GFV0uw/exec";
 const SERVICES_FORM_URL = "https://forms.gle/mBWHgDvbY17pTk1Y7";
 
 let servicesData = [];
@@ -51,6 +51,42 @@ function getServicesPriority(source) {
     if (value === "destacado" || value === "premium") return 1;
     if (value === "media") return 2;
     return 3;
+}
+
+function escapeHtml(value) {
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function buildInstagramUrl(handle) {
+    const raw = String(handle || "").trim();
+    if (!raw) return "";
+    if (/^https?:\/\//i.test(raw)) return raw;
+
+    const cleanHandle = raw
+        .replace(/^@+/, "")
+        .replace(/^instagram\.com\//i, "")
+        .replace(/^www\.instagram\.com\//i, "")
+        .trim();
+
+    return cleanHandle ? `https://instagram.com/${cleanHandle}` : "";
+}
+
+function normalizeWhatsappNumber(value) {
+    const digits = String(value || "").replace(/\D/g, "");
+    if (!digits) return "";
+    if (digits.startsWith("56")) return digits;
+    if (digits.startsWith("9") && digits.length === 9) return `56${digits}`;
+    return digits;
+}
+
+function buildWhatsappUrl(value) {
+    const digits = normalizeWhatsappNumber(value);
+    return digits ? `https://wa.me/${digits}` : "";
 }
 
 function openServicesModal(service) {
@@ -120,27 +156,45 @@ function renderServices() {
     }
 
     empty.hidden = true;
-    grid.innerHTML = filtered.map((service) => `
+    grid.innerHTML = filtered.map((service) => {
+        const instagramUrl = buildInstagramUrl(service.instagram);
+        const whatsappUrl = buildWhatsappUrl(service.whatsapp);
+
+        return `
         <article class="service-card" data-service-id="${service.id}">
             <div class="service-card-top">
-                <span class="service-card-tag">${service.category || "Servicio"}</span>
+                <span class="service-card-tag">${escapeHtml(service.category || "Servicio")}</span>
             </div>
-            <h3>${service.name}</h3>
-            <p>${service.description || "Sin descripción disponible."}</p>
+            <h3>${escapeHtml(service.name)}</h3>
+            <p>${escapeHtml(service.description || "Sin descripción disponible.")}</p>
             <div class="service-card-meta">
                 ${service.coverage
-                    ? `<span class="service-meta-pill">Comunas despacho: ${service.coverage}</span>`
-                    : (service.comuna ? `<span class="service-meta-pill">Comuna base: ${service.comuna}</span>` : "")
+                    ? `<span class="service-meta-pill">Comunas despacho: ${escapeHtml(service.coverage)}</span>`
+                    : (service.comuna ? `<span class="service-meta-pill">Comuna base: ${escapeHtml(service.comuna)}</span>` : "")
                 }
             </div>
-            ${service.instagram ? `<div class="service-card-social">Instagram: ${service.instagram}</div>` : ""}
+            ${instagramUrl
+                ? `<a class="service-card-social service-card-link" href="${escapeHtml(instagramUrl)}" target="_blank" rel="noopener noreferrer" data-service-action="instagram">Instagram: ${escapeHtml(service.instagram)}</a>`
+                : ""
+            }
+            ${whatsappUrl
+                ? `<div class="service-card-actions"><a class="service-contact-btn" href="${escapeHtml(whatsappUrl)}" target="_blank" rel="noopener noreferrer" data-service-action="contact">Contacto</a></div>`
+                : ""
+            }
         </article>
-    `).join("");
+    `;
+    }).join("");
 
     grid.querySelectorAll(".service-card").forEach((card) => {
         card.addEventListener("click", () => {
             const service = servicesData.find((item) => item.id === card.dataset.serviceId);
             if (service) openServicesModal(service);
+        });
+    });
+
+    grid.querySelectorAll("[data-service-action]").forEach((link) => {
+        link.addEventListener("click", (event) => {
+            event.stopPropagation();
         });
     });
 }
