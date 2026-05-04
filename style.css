@@ -688,6 +688,7 @@ a { color: inherit; }
     overflow: hidden;
 }
 
+.community-section {
     scroll-margin-top: 90px;
     background:
         radial-gradient(circle at top left, rgba(255, 143, 61, 0.24), transparent 30%),
@@ -2844,4 +2845,21 @@ a { color: inherit; }
     .offer-form-row {
         grid-template-columns: 1fr;
     }
+}
+
+
+/* Optimización de carga visual: reduce trabajo de render y mejora carga de imágenes dinámicas */
+.comm-card,
+.local-card,
+.trending-compact-item,
+.offer-item {
+    content-visibility: auto;
+    contain-intrinsic-size: 360px;
+}
+
+.comm-img-box img,
+.local-img-box img,
+.modal-header-img img,
+.destacados-img {
+    background: linear-gradient(135deg, rgba(255, 143, 61, 0.08), rgba(79, 124, 255, 0.08));
 }

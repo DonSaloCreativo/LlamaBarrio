@@ -1,4 +1,4 @@
-const CACHE_NAME = 'llamabarrio-v7';
+const CACHE_NAME = 'llamabarrio-v9';
 const APP_SHELL = [
     './',
     'index.html',

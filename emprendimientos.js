@@ -3,6 +3,8 @@ const SERVICES_FORM_URL = "https://forms.gle/mBWHgDvbY17pTk1Y7";
 
 let servicesData = [];
 let activeServiceCategory = "Todas";
+const SERVICES_CACHE_KEY = "llamabarrio-services-cache-v2";
+const SERVICES_CACHE_TTL = 1000 * 60 * 60 * 6;
 
 function normalizeServicesText(value) {
     return String(value || "")
@@ -199,31 +201,57 @@ function renderServices() {
     });
 }
 
+function processServicesData(data) {
+    return (data || []).map((item, index) => ({
+        id: `service-${index}`,
+        name: getServicesFieldValue(item, ["Nombre", "Emprendimiento", "Negocio"], ["nombre", "emprendimiento", "negocio"]),
+        category: getServicesFieldValue(item, ["Categoria", "Categoría", "Rubro"], ["categoria", "rubro"]),
+        description: getServicesFieldValue(item, ["Qué ofrece", "Que ofrece", "Descripción", "Descripcion"], ["queofrece", "descripcion", "servicio"]),
+        comuna: getServicesFieldValue(item, ["Comuna base", "Comuna", "comuna"], ["comunabase", "comuna"]),
+        coverage: getServicesFieldValue(item, ["Cobertura", "Cobertura comunas"], ["cobertura"]),
+        whatsapp: getServicesFieldValue(item, ["WhatsApp", "Whatsapp", "Telefono", "Teléfono"], ["whatsapp", "telefono"]),
+        instagram: getServicesFieldValue(item, ["Instagram"], ["instagram"]),
+        tags: getServicesFieldValue(item, ["Tags"], ["tags"]),
+        prioridad: getServicesPriority(item),
+        estado: getServicesFieldValue(item, ["Estado", "estado"], ["estado"])
+    })).filter((item) => {
+        const status = String(item.estado || "").trim().toLowerCase();
+        return item.name && (!status || status.includes("aprob"));
+    }).sort((a, b) => {
+        if (a.prioridad !== b.prioridad) return a.prioridad - b.prioridad;
+        return a.name.localeCompare(b.name, "es", { sensitivity: "base" });
+    });
+}
+
+function readServicesCache() {
+    try {
+        const cached = JSON.parse(localStorage.getItem(SERVICES_CACHE_KEY) || "null");
+        if (!cached || !cached.timestamp || Date.now() - cached.timestamp > SERVICES_CACHE_TTL) return null;
+        return cached.items || [];
+    } catch (error) {
+        return null;
+    }
+}
+
+function writeServicesCache(items) {
+    try {
+        localStorage.setItem(SERVICES_CACHE_KEY, JSON.stringify({ timestamp: Date.now(), items }));
+    } catch (error) {}
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+    const cachedServices = readServicesCache();
+    if (cachedServices && cachedServices.length) {
+        servicesData = cachedServices;
+        renderServices();
+    }
+
     fetch(`${SERVICES_API_BASE}?hoja=${encodeURIComponent("Publicaciones Emprendimientos")}`)
         .then((response) => response.json())
         .catch(() => [])
         .then((data) => {
-            servicesData = (data || []).map((item, index) => ({
-                id: `service-${index}`,
-                name: getServicesFieldValue(item, ["Nombre", "Emprendimiento", "Negocio"], ["nombre", "emprendimiento", "negocio"]),
-                category: getServicesFieldValue(item, ["Categoria", "Categoría", "Rubro"], ["categoria", "rubro"]),
-                description: getServicesFieldValue(item, ["Qué ofrece", "Que ofrece", "Descripción", "Descripcion"], ["queofrece", "descripcion", "servicio"]),
-                comuna: getServicesFieldValue(item, ["Comuna base", "Comuna", "comuna"], ["comunabase", "comuna"]),
-                coverage: getServicesFieldValue(item, ["Cobertura", "Cobertura comunas"], ["cobertura"]),
-                whatsapp: getServicesFieldValue(item, ["WhatsApp", "Whatsapp", "Telefono", "Teléfono"], ["whatsapp", "telefono"]),
-                instagram: getServicesFieldValue(item, ["Instagram"], ["instagram"]),
-                tags: getServicesFieldValue(item, ["Tags"], ["tags"]),
-                prioridad: getServicesPriority(item),
-                estado: getServicesFieldValue(item, ["Estado", "estado"], ["estado"])
-            })).filter((item) => {
-                const status = String(item.estado || "").trim().toLowerCase();
-                return item.name && (!status || status.includes("aprob"));
-            }).sort((a, b) => {
-                if (a.prioridad !== b.prioridad) return a.prioridad - b.prioridad;
-                return a.name.localeCompare(b.name, "es", { sensitivity: "base" });
-            });
-
+            servicesData = processServicesData(data);
+            writeServicesCache(servicesData);
             renderServices();
         });
 

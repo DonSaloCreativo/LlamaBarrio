@@ -1,9 +1,53 @@
-﻿const API_BASE = "https://script.google.com/macros/s/AKfycbzbdLTbh0a9sVSC7DOB04QrLLANsSak2pd4qQE2GqZ1BSDqwtgD69vot3R2MQk-GFV0uw/exec";
+const API_BASE = "https://script.google.com/macros/s/AKfycbzbdLTbh0a9sVSC7DOB04QrLLANsSak2pd4qQE2GqZ1BSDqwtgD69vot3R2MQk-GFV0uw/exec";
 const formUrls = {
     tally: "https://tally.so/r/ja7DOQ",
     business: "https://forms.gle/tipCiPctSK1nNjjL9",
     offer: "#"
 };
+
+const DEBUG_MODE = false;
+const IMAGE_PLACEHOLDER = "images/sin-imagen.png";
+
+function debugLog() {
+    if (DEBUG_MODE) console.log.apply(console, arguments);
+}
+
+function extractGoogleDriveFileId(url) {
+    const raw = String(url || "");
+    const patterns = [
+        /\/file\/d\/([a-zA-Z0-9_-]+)/,
+        /[?&]id=([a-zA-Z0-9_-]+)/,
+        /\/uc\?export=view&id=([a-zA-Z0-9_-]+)/
+    ];
+
+    for (const pattern of patterns) {
+        const match = raw.match(pattern);
+        if (match && match[1]) return match[1];
+    }
+
+    return "";
+}
+
+function getOptimizedImageSrc(value, fallback = IMAGE_PLACEHOLDER, width = 720) {
+    const raw = String(value || "").trim();
+    const safeFallback = fallback || IMAGE_PLACEHOLDER;
+
+    if (!raw || raw === "sin-imagen.png") return safeFallback;
+
+    if (/^https?:\/\//i.test(raw)) {
+        // Importante: mantenemos la URL original de Google Drive/Formularios.
+        // Convertirla a thumbnail puede romper imágenes si el archivo no permite ese formato.
+        return raw;
+    }
+
+    if (raw.startsWith("images/")) return raw;
+    return `images/${raw}`;
+}
+
+function imageLoadingAttrs(index = 99, width = 720, height = 480) {
+    const isPriority = index < 2;
+    return `loading="${isPriority ? "eager" : "lazy"}" decoding="async" fetchpriority="${isPriority ? "high" : "low"}" width="${width}" height="${height}"`;
+}
 let locales = [];
 let joyitas = [];
 let ofertasHoy = [];
@@ -221,7 +265,7 @@ function getPhoneHref(value) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("🔄 Iniciando carga de datos...");
+    debugLog("🔄 Iniciando carga de datos...");
     
     setupVisualEnhancements();
     setupFooterLegal();
@@ -230,17 +274,12 @@ document.addEventListener("DOMContentLoaded", () => {
     setupMobileNav();
     setupMiniHow();
     renderLoadingSkeletons();
-    
-    Promise.all([
-        fetchSheetData("Publicaciones Locales"),
-        fetchSheetData("Publicaciones Tally"),
-        fetchOffersData()
-    ]).then(([localesData, joyitasData, ofertasData]) => {
-        console.log("📊 Datos RAW de Locales:", localesData);
-        console.log("📊 Datos RAW de Joyitas:", joyitasData);
-        console.log("📊 Datos RAW de Ofertas:", ofertasData);
-        
-        locales = (localesData || []).map(local => ({
+
+    const DATA_CACHE_KEY = "llamabarrio-cache-v3";
+    const DATA_CACHE_TTL = 1000 * 60 * 60 * 6;
+
+    function processLocalesData(localesData) {
+        return (localesData || []).map(local => ({
             name: getFieldValue(local, ["Nombre", "name"], ["nombre"]),
             comuna: getFieldValue(local, ["Comuna", "comuna"], ["comuna"]),
             loc: getFieldValue(local, ["Dirección", "Direccion", "loc"], ["direccion", "ubicacion", "direccionexacta"]),
@@ -265,23 +304,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
             return a.name.localeCompare(b.name, "es", { sensitivity: "base" });
         });
-        
-        joyitas = (joyitasData || []).map(j => {
-            console.log("🎉 Joyita cruda:", j);
-            return {
-                localName: j["Nombre del Local"] || j.localName || "",
-                name: j["¿Dónde lo encontraste?"] || j.name || j.Nombre || "",
-                desc: j["Comentario sobre la Picada"] || j["Cuéntanos el dato"] || j.desc || j.Descripción || "",
-                img: (j["Untitled file upload field"] || j["Untitled file upload"] || j["Untitled file uplo"] || j.Imagen || j.img || "sin-imagen.png"),
-                price: j["¿Precio? (opcional)"] || j["💰Precio? (opcional)"] || "",
-                autor: j["Tu Nombre"] ? String(j["Tu Nombre"]).trim() : "",
-                category: j.Categoria || j.category || "",
-                comuna: j["Comuna"] || j["Comun"] || j.Comuna || j.comuna || "",
-                ubicacion: j["¿Dónde lo encontraste?"] || j.loc || "",
-                estado: j.Estado || j.estado || "",
-                prioridad: getPriorityValue(j)
-            };
-        }).filter(j => {
+    }
+
+    function processJoyitasData(joyitasData) {
+        return (joyitasData || []).map(j => ({
+            localName: j["Nombre del Local"] || j.localName || "",
+            name: j["¿Dónde lo encontraste?"] || j.name || j.Nombre || "",
+            desc: j["Comentario sobre la Picada"] || j["Cuéntanos el dato"] || j.desc || j.Descripción || "",
+            img: (j["Untitled file upload field"] || j["Untitled file upload"] || j["Untitled file uplo"] || j.Imagen || j.img || "sin-imagen.png"),
+            price: j["¿Precio? (opcional)"] || j["💰Precio? (opcional)"] || "",
+            autor: j["Tu Nombre"] ? String(j["Tu Nombre"]).trim() : "",
+            category: j.Categoria || j.category || "",
+            comuna: j["Comuna"] || j["Comun"] || j.Comuna || j.comuna || "",
+            ubicacion: j["¿Dónde lo encontraste?"] || j.loc || "",
+            estado: j.Estado || j.estado || "",
+            prioridad: getPriorityValue(j)
+        })).filter(j => {
             const estadoLimpio = String(j.estado).trim().toLowerCase();
             return estadoLimpio === "" || estadoLimpio.includes("aprob");
         }).sort((a, b) => {
@@ -293,8 +331,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const tituloB = (b.localName || b.name || "").trim();
             return tituloA.localeCompare(tituloB, "es", { sensitivity: "base" });
         });
+    }
 
-        ofertasHoy = (ofertasData || []).map(oferta => ({
+    function processOfertasData(ofertasData) {
+        return (ofertasData || []).map(oferta => ({
             local: getFieldValue(oferta, ["Local", "Nombre del local", "Nombre", "name"], ["local", "nombre"]),
             texto: getFieldValue(oferta, ["Oferta", "Texto", "Mensaje", "Promocion", "Promoción"], ["oferta", "texto", "mensaje", "promo", "promocion"]),
             comuna: getFieldValue(oferta, ["Comuna", "comuna"], ["comuna"]),
@@ -312,21 +352,83 @@ document.addEventListener("DOMContentLoaded", () => {
             if (prioridadA !== prioridadB) return prioridadA - prioridadB;
             return a.local.localeCompare(b.local, "es", { sensitivity: "base" });
         });
-        
-        console.log("✅ Locales procesados:", locales);
-        console.log("✅ Joyitas procesadas:", joyitas);
-        
-        renderJoyitas();
-        renderTrending();
-        renderLocales();
-        renderOffers();
-        initTrendingCompact();
+    }
+
+    function renderDataSections(options = {}) {
+        if (options.joyitas !== false) {
+            renderJoyitas();
+            renderTrending();
+            initTrendingCompact();
+        }
+        if (options.locales !== false) renderLocales();
+        if (options.ofertas !== false) renderOffers();
         refreshRevealTargets();
-    }).catch(err => {
-        console.error("❌ Error cargando datos:", err);
-        clearLoadingSkeletons();
-        refreshRevealTargets();
-    });
+    }
+
+    function readDataCache() {
+        try {
+            const cached = JSON.parse(localStorage.getItem(DATA_CACHE_KEY) || "null");
+            if (!cached || !cached.timestamp) return null;
+            if (Date.now() - cached.timestamp > DATA_CACHE_TTL) return null;
+            return cached;
+        } catch (error) {
+            return null;
+        }
+    }
+
+    function writeDataCache() {
+        try {
+            localStorage.setItem(DATA_CACHE_KEY, JSON.stringify({
+                timestamp: Date.now(),
+                locales,
+                joyitas,
+                ofertasHoy
+            }));
+        } catch (error) {
+            // Si el navegador no permite localStorage, la web sigue funcionando igual.
+        }
+    }
+
+    const cachedData = readDataCache();
+    if (cachedData) {
+        locales = cachedData.locales || [];
+        joyitas = cachedData.joyitas || [];
+        ofertasHoy = cachedData.ofertasHoy || [];
+        renderDataSections();
+    }
+
+    fetchSheetData("Publicaciones Locales")
+        .then((localesData) => {
+            locales = processLocalesData(localesData);
+            renderDataSections({ joyitas: false, ofertas: false });
+            writeDataCache();
+        })
+        .catch((error) => {
+            console.error("❌ Error cargando locales:", error);
+            if (!cachedData) clearLoadingSkeletons();
+        });
+
+    fetchSheetData("Publicaciones Tally")
+        .then((joyitasData) => {
+            joyitas = processJoyitasData(joyitasData);
+            renderDataSections({ locales: false, ofertas: false });
+            writeDataCache();
+        })
+        .catch((error) => {
+            console.error("❌ Error cargando joyitas:", error);
+            if (!cachedData) clearLoadingSkeletons();
+        });
+
+    fetchOffersData()
+        .then((ofertasData) => {
+            ofertasHoy = processOfertasData(ofertasData);
+            renderDataSections({ locales: false, joyitas: false });
+            writeDataCache();
+        })
+        .catch((error) => {
+            console.error("❌ Error cargando ofertas:", error);
+            if (!cachedData) clearLoadingSkeletons();
+        });
 
     function renderJoyitas(){
         const joyitasGrid = document.getElementById("joyitas-grid");
@@ -335,27 +437,23 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
         joyitasGrid.innerHTML = "";
-        console.log("🎨 Renderizando joyitas, cantidad:", joyitas.length);
+        debugLog("🎨 Renderizando joyitas, cantidad:", joyitas.length);
         
         if (joyitas.length === 0) {
             joyitasGrid.innerHTML = "<p style='padding:2em;text-align:center;color:#bbb;'>No hay recomendaciones aún.</p>";
             return;
         }
         joyitas.forEach((j, idx) => {
-            console.log(`🎴 Card #${idx}:`, j);
+            debugLog(`🎴 Card #${idx}:`, j);
             const c = document.createElement("article");
             c.className = "comm-card";
             c.style.cursor = "pointer";
             
-            const imgSrc = j.img && String(j.img).startsWith("http") 
-                ? j.img 
-                : (j.img && j.img !== "sin-imagen.png" 
-                    ? `images/${j.img}` 
-                    : "images/sin-imagen.png");
+            const imgSrc = getOptimizedImageSrc(j.img, IMAGE_PLACEHOLDER, 720);
             
             c.innerHTML = `
                 <div class="comm-img-box">
-                    <img src="${imgSrc}" alt="Dato recomendado" onerror="this.src='images/sin-imagen.png'">
+                    <img src="${imgSrc}" alt="Dato recomendado" ${imageLoadingAttrs(idx, 720, 480)} onerror="this.onerror=null;this.src='images/sin-imagen.png'">
                     <div class="comm-image-overlay">
                         <span class="comm-tag">${j.comuna || "Sin comuna"}</span>
                         <span class="comm-chip">Joyita</span>
@@ -399,7 +497,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
         grid.innerHTML = "";
-        console.log("🏪 Renderizando locales, cantidad:", locales.length);
+        debugLog("🏪 Renderizando locales, cantidad:", locales.length);
         
         const imagenesPorCategoria = {
             "Almacén": "images/almacen.jpg",
@@ -426,7 +524,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         const localesToRender = locales.slice(0, maxCards);
         
-        localesToRender.forEach((local) => {
+        localesToRender.forEach((local, idx) => {
             const abierta = estaAbiertoAhora(getTodaySchedule(local));
             const card = document.createElement("article");
             card.className = "local-card";
@@ -435,20 +533,16 @@ document.addEventListener("DOMContentLoaded", () => {
             card.dataset.search = normalizeSearchText(`${local.name} ${local.loc} ${local.desc} ${local.category} ${local.tags || ""}`);
             card.dataset.open = abierta ? "true" : "false";
             
-            let imgSrc = "images/sin-imagen.png";
-            
-            if (local.img && String(local.img).startsWith("http")) {
-                imgSrc = local.img;
-            } else if (local.img && local.img !== "sin-imagen.png" && String(local.img).trim() !== "") {
-                imgSrc = `images/${local.img}`;
-            } else {
-                imgSrc = imagenesPorCategoria[local.category] || "images/sin-imagen.png";
-            }
+            const imgSrc = getOptimizedImageSrc(
+                local.img,
+                imagenesPorCategoria[local.category] || IMAGE_PLACEHOLDER,
+                720
+            );
             
             card.innerHTML = `
                 <div class="local-img-wrap">
                     <div class="local-img-box">
-                        <img src="${imgSrc}" alt="${local.name}" onerror="this.src='images/sin-imagen.png'">
+                        <img src="${imgSrc}" alt="${local.name}" ${imageLoadingAttrs(idx, 720, 480)} onerror="this.onerror=null;this.src='images/sin-imagen.png'">
                         <div class="local-image-overlay">
                             <div class="local-headline">
                                 <span class="local-inline-tag">${local.category}</span>
@@ -698,11 +792,7 @@ function abrirDetalle(local) {
     el("modal-precio").innerText = '';
     el("modal-autor").innerText = '';
     
-    const imgSrc = local.img && String(local.img).startsWith("http")
-        ? local.img
-        : (local.img && local.img !== "sin-imagen.png"
-            ? `images/${local.img}`
-            : "images/sin-imagen.png");
+    const imgSrc = getOptimizedImageSrc(local.img, IMAGE_PLACEHOLDER, 1080);
     el("modal-img").src = imgSrc;
     el("modal-img").alt = local.name || "";
     
@@ -739,11 +829,7 @@ function abrirDetalleJoyita(j) {
     el("modal-precio").innerText = "";
     el("modal-autor").innerText = '';
     
-    const imgSrc = j.img && String(j.img).startsWith("http")
-        ? j.img
-        : (j.img && j.img !== "sin-imagen.png"
-            ? `images/${j.img}`
-            : "images/sin-imagen.png");
+    const imgSrc = getOptimizedImageSrc(j.img, IMAGE_PLACEHOLDER, 1080);
     el("modal-img").src = imgSrc;
     el("modal-img").alt = j.localName || j.name || '';
     
@@ -1046,7 +1132,7 @@ function renderTrending() {
     
     const trendingContainer = document.getElementById('trending-section');
     if (!trendingContainer) {
-        console.log("ℹ️ No hay sección de trending configurada");
+        debugLog("ℹ️ No hay sección de trending configurada");
         return;
     }
     

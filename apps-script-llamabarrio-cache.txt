@@ -1,0 +1,79 @@
+function doGet(e) {
+  e = e || { parameter: {} };
+
+  var hoja = e.parameter.hoja || "";
+  var hojasPermitidas = [
+    "Publicaciones Locales",
+    "Publicaciones Tally",
+    "Ofertas de hoy",
+    "Ofertas Hoy",
+    "Publicaciones Emprendimientos"
+  ];
+
+  if (!hojasPermitidas.includes(hoja)) {
+    return respuestaJson([]);
+  }
+
+  var cache = CacheService.getScriptCache();
+  var cacheKey = "llamabarrio_" + hoja.replace(/[^a-zA-Z0-9]/g, "_");
+  var forceRefresh = String(e.parameter.refresh || "") === "1";
+
+  if (!forceRefresh) {
+    var cached = cache.get(cacheKey);
+    if (cached) {
+      return ContentService
+        .createTextOutput(cached)
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+  }
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(hoja);
+
+  if (!sheet) {
+    return respuestaJson([]);
+  }
+
+  var data = sheet.getDataRange().getValues();
+  if (!data || data.length <= 1) {
+    return respuestaJson([]);
+  }
+
+  var headers = data.shift();
+  var estadoIndex = headers.indexOf("Estado");
+
+  var out = data
+    .filter(function(row) {
+      if (estadoIndex === -1) return true;
+
+      var estado = String(row[estadoIndex] || "")
+        .trim()
+        .toLowerCase();
+
+      // Mantiene el comportamiento actual: muestra aprobados y también filas sin Estado.
+      return estado === "" || estado.indexOf("aprob") !== -1;
+    })
+    .map(function(row) {
+      var obj = {};
+      headers.forEach(function(h, i) {
+        obj[h] = row[i];
+      });
+      return obj;
+    });
+
+  var json = JSON.stringify(out);
+
+  // Guarda respuesta durante 2 minutos para que la web cargue más rápido.
+  // Si apruebas una publicación y quieres verla de inmediato, puedes abrir la URL con &refresh=1.
+  cache.put(cacheKey, json, 120);
+
+  return ContentService
+    .createTextOutput(json)
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function respuestaJson(data) {
+  return ContentService
+    .createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON);
+}
