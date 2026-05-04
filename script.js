@@ -228,10 +228,29 @@ function formatDateDisplay(date) {
     return `${day}/${month}/${year}`;
 }
 
+function fetchWithTimeout(url, options = {}, timeoutMs = 18000) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+    return fetch(url, {
+        ...options,
+        signal: controller.signal
+    }).finally(() => clearTimeout(timeoutId));
+}
+
 function fetchSheetData(sheetName) {
-    return fetch(`${API_BASE}?hoja=${encodeURIComponent(sheetName)}`)
-        .then((response) => response.json())
-        .catch(() => []);
+    const url = `${API_BASE}?hoja=${encodeURIComponent(sheetName)}`;
+
+    return fetchWithTimeout(url, {}, 18000)
+        .then((response) => {
+            if (!response.ok) throw new Error(`Error HTTP ${response.status}`);
+            return response.json();
+        })
+        .then((data) => Array.isArray(data) ? data : [])
+        .catch((error) => {
+            console.error(`❌ No se pudo cargar la hoja ${sheetName}:`, error);
+            return [];
+        });
 }
 
 function fetchOffersData() {

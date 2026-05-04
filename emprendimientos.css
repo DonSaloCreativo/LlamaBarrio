@@ -642,13 +642,3 @@ body {
     }
 }
 
-
-
-/* Optimización de render en listados largos */
-.services-card,
-.services-result-card,
-.service-card,
-.services-item {
-    content-visibility: auto;
-    contain-intrinsic-size: 320px;
-}
