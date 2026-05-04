@@ -1,4 +1,4 @@
-const CACHE_NAME = 'llamabarrio-v10';
+const CACHE_NAME = 'llamabarrio-v12';
 const APP_SHELL = [
     './',
     'index.html',
@@ -13,6 +13,13 @@ const APP_SHELL = [
     'images/icon-192.png.png',
     'images/icon-512.png.png'
 ];
+
+function isAppShellAsset(pathname) {
+    return pathname.endsWith('.html') ||
+        pathname.endsWith('.css') ||
+        pathname.endsWith('.js') ||
+        pathname.endsWith('.json');
+}
 
 self.addEventListener('install', (event) => {
     event.waitUntil(
@@ -43,12 +50,8 @@ self.addEventListener('fetch', (event) => {
     }
 
     event.respondWith(
-        caches.match(event.request).then((cachedResponse) => {
-            if (cachedResponse) {
-                return cachedResponse;
-            }
-
-            return fetch(event.request)
+        isAppShellAsset(requestUrl.pathname)
+            ? fetch(event.request)
                 .then((networkResponse) => {
                     if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
                         return networkResponse;
@@ -58,14 +61,35 @@ self.addEventListener('fetch', (event) => {
                     caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
                     return networkResponse;
                 })
-                .catch(() => {
+                .catch(() => caches.match(event.request).then((cachedResponse) => {
+                    if (cachedResponse) return cachedResponse;
                     if (event.request.mode === 'navigate') {
                         return caches.match('index.html');
                     }
-
                     return Response.error();
-                });
-        })
+                }))
+            : caches.match(event.request).then((cachedResponse) => {
+                if (cachedResponse) {
+                    return cachedResponse;
+                }
+
+                return fetch(event.request)
+                    .then((networkResponse) => {
+                        if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
+                            return networkResponse;
+                        }
+
+                        const responseClone = networkResponse.clone();
+                        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
+                        return networkResponse;
+                    })
+                    .catch(() => {
+                        if (event.request.mode === 'navigate') {
+                            return caches.match('index.html');
+                        }
+
+                        return Response.error();
+                    });
+            })
     );
 });
-

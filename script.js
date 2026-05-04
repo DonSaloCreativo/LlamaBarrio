@@ -6,7 +6,7 @@ const formUrls = {
 };
 
 const DEBUG_MODE = false;
-const IMAGE_PLACEHOLDER = "images/sin-imagen.png";
+const IMAGE_PLACEHOLDER = "images/logo.png";
 
 function debugLog() {
     if (DEBUG_MODE) console.log.apply(console, arguments);
@@ -32,7 +32,7 @@ function getOptimizedImageSrc(value, fallback = IMAGE_PLACEHOLDER, width = 720) 
     const raw = String(value || "").trim();
     const safeFallback = fallback || IMAGE_PLACEHOLDER;
 
-    if (!raw || raw === "sin-imagen.png") return safeFallback;
+    if (!raw || raw === "sin-imagen.png" || raw === IMAGE_PLACEHOLDER) return safeFallback;
 
     if (/^https?:\/\//i.test(raw)) {
         // Importante: mantenemos la URL original de Google Drive/Formularios.
@@ -307,7 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
             horLV: getScheduleValue(local, ["Horario_LV", "Horario LV", "HorarioLV"], ["horariolv"]),
             horS: getScheduleValue(local, ["Horario_S", "Horario S", "HorarioS"], ["horarios"]),
             horD: getScheduleValue(local, ["Horario_D", "Horario D", "HorarioD"], ["horariod"]),
-            img: (local.Imagen || local.Img || local.img || "sin-imagen.png"),
+            img: (local.Imagen || local.Img || local.img || ""),
             wa: getFieldValue(local, ["WhatsApp", "Whatsapp", "whatsapp", "wa"], ["whatsapp", "telefono", "contacto", "celular"]),
             category: getFieldValue(local, ["Categoria", "Categoría", "category"], ["categoria"]),
             prioridad: getPriorityValue(local),
@@ -330,7 +330,7 @@ document.addEventListener("DOMContentLoaded", () => {
             localName: j["Nombre del Local"] || j.localName || "",
             name: j["¿Dónde lo encontraste?"] || j.name || j.Nombre || "",
             desc: j["Comentario sobre la Picada"] || j["Cuéntanos el dato"] || j.desc || j.Descripción || "",
-            img: (j["Untitled file upload field"] || j["Untitled file upload"] || j["Untitled file uplo"] || j.Imagen || j.img || "sin-imagen.png"),
+            img: (j["Untitled file upload field"] || j["Untitled file upload"] || j["Untitled file uplo"] || j.Imagen || j.img || ""),
             price: j["¿Precio? (opcional)"] || j["💰Precio? (opcional)"] || "",
             autor: j["Tu Nombre"] ? String(j["Tu Nombre"]).trim() : "",
             category: j.Categoria || j.category || "",
@@ -384,6 +384,16 @@ document.addEventListener("DOMContentLoaded", () => {
         refreshRevealTargets();
     }
 
+    const grid = document.getElementById("locals-grid");
+    const searchInput = document.getElementById("main-search");
+    const searchButton = document.querySelector(".btn-buscar-main");
+    const comunaSelect = document.getElementById("comuna-select");
+    const comunaLabel = document.getElementById("current-comuna-label");
+    const noResults = document.getElementById("no-results");
+    const loadMoreHint = document.getElementById("load-more-hint");
+    const categoryButtons = document.querySelectorAll(".category-pill");
+    const openNowFilter = document.getElementById("open-now-filter");
+
     function readDataCache() {
         try {
             const cached = JSON.parse(localStorage.getItem(DATA_CACHE_KEY) || "null");
@@ -406,6 +416,42 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
             // Si el navegador no permite localStorage, la web sigue funcionando igual.
         }
+    }
+
+    function shouldRunLocalesFallback() {
+        if (!grid) return false;
+        if (grid.querySelector(".local-card")) return false;
+        return Boolean(grid.querySelector(".ui-skeleton")) || !grid.children.length;
+    }
+
+    function applyLocalesFallback(items, sourceIsProcessed = false) {
+        if (!shouldRunLocalesFallback()) return;
+
+        if (sourceIsProcessed) {
+            locales = Array.isArray(items) ? items : [];
+        } else {
+            locales = processLocalesData(Array.isArray(items) ? items : []);
+        }
+
+        renderDataSections({ joyitas: false, ofertas: false });
+        writeDataCache();
+    }
+
+    function runLocalesFallback() {
+        if (!shouldRunLocalesFallback()) return;
+
+        if (cachedData && Array.isArray(cachedData.locales) && cachedData.locales.length) {
+            applyLocalesFallback(cachedData.locales, true);
+            return;
+        }
+
+        fetchSheetData("Publicaciones Locales")
+            .then((localesData) => {
+                applyLocalesFallback(localesData, false);
+            })
+            .catch((error) => {
+                console.error("❌ Error en fallback de locales:", error);
+            });
     }
 
     const cachedData = readDataCache();
@@ -472,7 +518,7 @@ document.addEventListener("DOMContentLoaded", () => {
             
             c.innerHTML = `
                 <div class="comm-img-box">
-                    <img src="${imgSrc}" alt="Dato recomendado" ${imageLoadingAttrs(idx, 720, 480)} onerror="this.onerror=null;this.src='images/sin-imagen.png'">
+                    <img src="${imgSrc}" alt="Dato recomendado" ${imageLoadingAttrs(idx, 720, 480)} onerror="this.onerror=null;this.src='images/logo.png'">
                     <div class="comm-image-overlay">
                         <span class="comm-tag">${j.comuna || "Sin comuna"}</span>
                         <span class="comm-chip">Joyita</span>
@@ -497,16 +543,6 @@ document.addEventListener("DOMContentLoaded", () => {
         refreshRevealTargets();
     }
 
-    const grid = document.getElementById("locals-grid");
-    const searchInput = document.getElementById("main-search");
-    const searchButton = document.querySelector(".btn-buscar-main");
-    const comunaSelect = document.getElementById("comuna-select");
-    const comunaLabel = document.getElementById("current-comuna-label");
-    const noResults = document.getElementById("no-results");
-    const loadMoreHint = document.getElementById("load-more-hint");
-    const categoryButtons = document.querySelectorAll(".category-pill");
-    const openNowFilter = document.getElementById("open-now-filter");
-
     let categoriaActiva = "Todas";
     let soloAbiertos = false;
 
@@ -519,22 +555,22 @@ document.addEventListener("DOMContentLoaded", () => {
         debugLog("🏪 Renderizando locales, cantidad:", locales.length);
         
         const imagenesPorCategoria = {
-            "Almacén": "images/almacen.jpg",
-            "Botillería": "images/botilleria.jpg",
-            "Comida rápida": "images/comida-rapida.jpg",
-            "Comida Rápida": "images/comida-rapida.jpg",
-            "Panadería": "images/panaderia.jpg",
-            "Cafetería": "images/panaderia.jpg",
-            "Cafeterías": "images/panaderia.jpg",
-            "Pastelería": "images/pasteleria.jpg",
-            "Florería": "images/sin-imagen.png",
-            "Pizzería": "images/pizzeria.jpg",
-            "Completos": "images/comida-rapida.jpg",
-            "Sushi": "images/comida-rapida.jpg",
-            "Empanadas": "images/comida-rapida.jpg",
-            "Colaciones": "images/panaderia.jpg",
-            "Pizzas": "images/pizzeria.jpg",
-            "Servicios": "images/sin-imagen.png"
+            "Almacén": "images/almacen.png",
+            "Botillería": "images/botilleria.png",
+            "Comida rápida": "images/comida rapida.png",
+            "Comida Rápida": "images/comida rapida.png",
+            "Panadería": "images/panaderia.png",
+            "Cafetería": "images/panaderia.png",
+            "Cafeterías": "images/panaderia.png",
+            "Pastelería": "images/pasteleria.png",
+            "Florería": IMAGE_PLACEHOLDER,
+            "Pizzería": "images/pizzeria.png",
+            "Completos": "images/comida rapida.png",
+            "Sushi": "images/sushi.jpg",
+            "Empanadas": "images/empanadas.jpg",
+            "Colaciones": "images/panaderia.png",
+            "Pizzas": "images/pizzeria.png",
+            "Servicios": IMAGE_PLACEHOLDER
         };
         
         const isInitialLoad = (searchInput?.value || "").trim() === "" && 
@@ -561,7 +597,7 @@ document.addEventListener("DOMContentLoaded", () => {
             card.innerHTML = `
                 <div class="local-img-wrap">
                     <div class="local-img-box">
-                        <img src="${imgSrc}" alt="${local.name}" ${imageLoadingAttrs(idx, 720, 480)} onerror="this.onerror=null;this.src='images/sin-imagen.png'">
+                        <img src="${imgSrc}" alt="${local.name}" ${imageLoadingAttrs(idx, 720, 480)} onerror="this.onerror=null;this.src='images/logo.png'">
                         <div class="local-image-overlay">
                             <div class="local-headline">
                                 <span class="local-inline-tag">${local.category}</span>
@@ -655,6 +691,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
     updateCategoryButtons();
+    window.setTimeout(runLocalesFallback, 150);
 });
 
 let revealObserver;
@@ -1194,6 +1231,3 @@ function initTrendingCompact() {
     
     trendingCompact.innerHTML = html;
 }
-
-
-
